@@ -32,9 +32,4 @@ def get_arxiv_publication_date(arxiv_id):
     if not paper:
         return f"No paper found for arXiv ID: {arxiv_id}"
     return paper.published
-    
 
-# Example usage
-arxiv_id = "2408.13001"
-citation = get_arxiv_citation(arxiv_id)
-print(citation)

@@ -99,3 +99,56 @@ def process_arxiv_paper(arxiv_id):
     
     return pages_text
 
+def detect_section_start(pages_text, section_keywords, min_page_length=100):
+    """
+    Detects the page index where references or supplementary sections start.
+    Uses formatting and keyword analysis.
+    """
+    for i, page_text in enumerate(pages_text):
+        # Check for keywords near the start of the page (section headers)
+        if any(page_text.strip().lower().startswith(keyword) for keyword in section_keywords):
+            return i
+        
+        # Heuristic: detect sudden shift to citation-heavy text
+        lines = page_text.splitlines()
+        citation_count = sum(1 for line in lines if "[" in line or "]" in line or "et al" in line)
+        if citation_count > 0.3 * len(lines):  # If >30% of lines are citations
+            return i
+
+        # Heuristic: detect formatting typical of references
+        if len(page_text) < min_page_length:  # Short pages often signal non-main content
+            return i
+
+    return len(pages_text)  # If no cutoff section is found, return the entire document
+
+def remove_citations_and_supplements(pages_text):
+    """
+    Removes references and supplementary sections from the text.
+    """
+    section_keywords = [
+        "references", "bibliography", "appendix", "supplementary material",
+        "acknowledgments", "supplement", "citations"
+    ]
+    cutoff_index = detect_section_start(pages_text, section_keywords)
+    return pages_text[:cutoff_index]
+
+def process_arxiv_paper_with_cleanup(arxiv_id):
+    """
+    Processes an arXiv paper, splitting it into pages, and removes references/supplements.
+    """
+    # Step 1: Download and read the paper
+    pdf_path = f"{arxiv_id}.pdf"
+    download_pdf(arxiv_id, pdf_path)
+    try:
+        # Open the PDF
+        with fitz.open(pdf_path) as pdf:
+            pages_text = [pdf[i].get_text() for i in range(len(pdf))]
+    finally:
+        # Clean up the PDF after processing
+        os.remove(pdf_path)
+    
+    # Step 2: Remove citations and supplementary sections
+    filtered_pages = remove_citations_and_supplements(pages_text)
+    return filtered_pages
+
+

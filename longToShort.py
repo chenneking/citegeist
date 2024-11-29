@@ -93,6 +93,33 @@ if json_data:
         print("First paper, first page text:", paper_embeddings[0][0]["text"])
         print("First paper, first page embedding:", paper_embeddings[0][0]["embedding"])
         
+# Example Usage
+input_string = """The dominant sequence transduction models are based on complex recurrent or
+convolutional neural networks that include an encoder and a decoder. The best
+performing models also connect the encoder and decoder through an attention
+mechanism. We propose a new simple network architecture, the Transformer,
+based solely on attention mechanisms, dispensing with recurrence and convolutions
+entirely. Experiments on two machine translation tasks show these models to
+be superior in quality while being more parallelizable and requiring significantly
+less time to train. Our model achieves 28.4 BLEU on the WMT 2014 Englishto-German translation task, improving over the existing best results, including
+ensembles, by over 2 BLEU. On the WMT 2014 English-to-French translation task,
+our model establishes a new single-model state-of-the-art BLEU score of 41.8 after
+training for 3.5 days on eight GPUs, a small fraction of the training costs of the
+best models from the literature. We show that the Transformer generalizes well to
+other tasks by applying it successfully to English constituency parsing both with
+large and limited training data."""  # Input query
+top_k = 20  # Number of most relevant pages to retrieve
+
+# Assuming `paper_embeddings` contains the processed papers with embeddings
+relevant_pages = extract_most_relevant_pages(paper_embeddings, input_string, topic_model, top_k)
+
+# Print the top-k relevant pages
+for result in relevant_pages:
+    print(f"Paper ID: {result['paper_id']}, Page Number: {result['page_number']}")
+    print(f"Similarity: {result['similarity']:.4f}")
+    print(f"Text: {result['text'][:200]}...")  # Print the first 200 characters
+    print("-" * 80)
+        
 #%%
 
 def select_diverse_papers_with_precomputed_distances(paper_data, k):
@@ -148,34 +175,3 @@ k = 2  # Number of papers to select
 selected_paper_ids = select_diverse_papers_with_precomputed_distances(json_data[0], k)
 
 print("Selected paper IDs:", selected_paper_ids)
-
-#%%
-
-
-
-# Example Usage
-input_string = """The dominant sequence transduction models are based on complex recurrent or
-convolutional neural networks that include an encoder and a decoder. The best
-performing models also connect the encoder and decoder through an attention
-mechanism. We propose a new simple network architecture, the Transformer,
-based solely on attention mechanisms, dispensing with recurrence and convolutions
-entirely. Experiments on two machine translation tasks show these models to
-be superior in quality while being more parallelizable and requiring significantly
-less time to train. Our model achieves 28.4 BLEU on the WMT 2014 Englishto-German translation task, improving over the existing best results, including
-ensembles, by over 2 BLEU. On the WMT 2014 English-to-French translation task,
-our model establishes a new single-model state-of-the-art BLEU score of 41.8 after
-training for 3.5 days on eight GPUs, a small fraction of the training costs of the
-best models from the literature. We show that the Transformer generalizes well to
-other tasks by applying it successfully to English constituency parsing both with
-large and limited training data."""  # Input query
-top_k = 20  # Number of most relevant pages to retrieve
-
-# Assuming `paper_embeddings` contains the processed papers with embeddings
-relevant_pages = extract_most_relevant_pages(paper_embeddings, input_string, topic_model, top_k)
-
-# Print the top-k relevant pages
-for result in relevant_pages:
-    print(f"Paper ID: {result['paper_id']}, Page Number: {result['page_number']}")
-    print(f"Similarity: {result['similarity']:.4f}")
-    print(f"Text: {result['text'][:200]}...")  # Print the first 200 characters
-    print("-" * 80)

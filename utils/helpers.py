@@ -7,7 +7,7 @@ def load_api_key(file_path: str) -> str:
         return data["secret_key"]
 
 
-def generate_summary_prompt(abstract_source_paper: str, abstract_to_be_cited: str):
+def generate_summary_prompt(abstract_source_paper: str, abstract_to_be_cited: str) -> str:
     return f'''
     Below are two abstracts:
     My abstract:
@@ -18,6 +18,33 @@ def generate_summary_prompt(abstract_source_paper: str, abstract_to_be_cited: st
     
     Please exclusively respond with the summary. Do not add any filler text before or after the summary. Also, do not use any type of markdown formatting. I want a pure text output only.
     '''
+
+
+def generate_summary_prompt_with_page_content(abstract_source_paper: str, abstract_to_be_cited: str, page_text_to_be_cited: list[str]) -> str:
+    output = f'''
+    Below are two abstracts and some content from a page of a paper:
+    My abstract:
+    "{abstract_source_paper}"
+    
+    Abstract of the paper I want to cite:
+    "{abstract_to_be_cited}"
+    
+    Relevant content of {len(page_text_to_be_cited)} pages within the paper I want to cite:
+    '''
+
+    for i in range(len(page_text_to_be_cited)):
+        text = page_text_to_be_cited[i]
+        output += f'''
+        Page {i+1}:
+        "{text}"
+        '''
+
+    output += f'''
+    Based on the two abstracts and the content from the page, write a brief few-sentence (at most 8) summary of the cited paper in relation to my work. Emphasize how the cited paper relates to my research.
+
+    Please exclusively respond with the summary. Do not add any filler text before or after the summary. Also, do not use any type of markdown formatting. I want a pure text output only.
+    '''
+    return output
 
 
 def generate_related_work_prompt(source_abstract: str, data: list[object]) -> str:

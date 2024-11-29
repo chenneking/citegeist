@@ -57,7 +57,7 @@ class AzureClient:
         :return: LLM output string
         """
 
-        def call_model():
+        def call_model() -> str:
             """
             Defines the HTTP request to trigger a model response in Azure
             :return: Model output
@@ -88,7 +88,7 @@ class AzureClient:
 
         return exponential_backoff_retry(call_model)
 
-    def get_embeddings(self, input_list: list[str], api_version: str):
+    def get_embeddings(self, input_list: list[str], api_version: str) -> list[float]:
         """
         Prompts an OpenAI embedding model and returns it's output.
         :param input_list: list of tokens
@@ -96,7 +96,7 @@ class AzureClient:
         :return:
         """
 
-        def call_model():
+        def call_model() -> list[float]:
             headers: dict = {
                 "Content-Type": "application/json",
                 "api-key": f"{self.api_key}",

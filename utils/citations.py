@@ -3,9 +3,10 @@ import requests
 import os
 import time
 import fitz
+from bertopic import BERTopic
 
 
-def get_arxiv_citation(arxiv_id):
+def get_arxiv_citation(arxiv_id: str) -> str:
     # Use the Client for fetching paper details
     client = arxiv.Client()
     search = arxiv.Search(id_list=[arxiv_id])
@@ -21,7 +22,7 @@ def get_arxiv_citation(arxiv_id):
     return f"{authors} ({year}). {title}. arXiv:{arxiv_id}. https://arxiv.org/abs/{arxiv_id}"
 
 
-def get_arxiv_abstract(arxiv_id):
+def get_arxiv_abstract(arxiv_id: str) -> str:
     client = arxiv.Client()
     search = arxiv.Search(id_list=[arxiv_id])
     paper = next(client.results(search), None)
@@ -31,7 +32,7 @@ def get_arxiv_abstract(arxiv_id):
     return paper.summary
 
 
-def get_arxiv_publication_date(arxiv_id):
+def get_arxiv_publication_date(arxiv_id: str) -> str:
     client = arxiv.Client()
     search = arxiv.Search(id_list=[arxiv_id])
     paper = next(client.results(search), None)
@@ -41,7 +42,7 @@ def get_arxiv_publication_date(arxiv_id):
     return paper.published
 
 
-def download_pdf(arxiv_id, save_path="paper.pdf", retries=3):
+def download_pdf(arxiv_id: str, save_path: str = "paper.pdf", retries: int = 3) -> bool:
     """
     Download the PDF from arXiv using the arXiv ID with retry logic.
     """
@@ -74,7 +75,7 @@ def download_pdf(arxiv_id, save_path="paper.pdf", retries=3):
     return False
 
 
-def extract_text_by_page(pdf_path):
+def extract_text_by_page(pdf_path: str) -> list[str]:
     """
     Extract text from each page of the downloaded PDF using PyMuPDF (fitz).
     """
@@ -88,7 +89,7 @@ def extract_text_by_page(pdf_path):
     return pages_text
 
 
-def process_arxiv_paper(arxiv_id):
+def process_arxiv_paper(arxiv_id: str) -> list[str]:
     """
     Full process to download the paper, extract text, and delete the PDF.
     """
@@ -109,7 +110,9 @@ def process_arxiv_paper(arxiv_id):
     return pages_text
 
 
-def detect_section_start(pages_text, section_keywords, min_page_length=100):
+def detect_section_start(
+    pages_text: list[str], section_keywords: list[str], min_page_length: int = 100
+) -> int:
     """
     Detects the page index where references or supplementary sections start.
     Uses formatting and keyword analysis.
@@ -139,7 +142,7 @@ def detect_section_start(pages_text, section_keywords, min_page_length=100):
     return len(pages_text)  # If no cutoff section is found, return the entire document
 
 
-def remove_citations_and_supplements(pages_text):
+def remove_citations_and_supplements(pages_text: list[str]) -> list[str]:
     """
     Removes references and supplementary sections from the text.
     """
@@ -156,7 +159,9 @@ def remove_citations_and_supplements(pages_text):
     return pages_text[:cutoff_index]
 
 
-def process_arxiv_paper_with_embeddings(arxiv_id, topic_model):
+def process_arxiv_paper_with_embeddings(
+    arxiv_id: str, topic_model: BERTopic
+) -> list[dict]:
     """
     Processes an arXiv paper, splits it into pages, removes references/supplements,
     and returns text and embeddings for each page.
@@ -210,6 +215,13 @@ def process_arxiv_paper_with_embeddings(arxiv_id, topic_model):
 def find_most_relevant_pages(
     relevant_pages: list[dict], abstracts: list[str], paper_count_limit: int
 ) -> dict[str, dict]:
+    """
+    Identifies all pages for the top {paper_count_limit} papers. (i.e. if there's multiple pages of one paper that are deemed relevant, all pages will be included)
+    :param relevant_pages:
+    :param abstracts: List of paper abstracts
+    :param paper_count_limit: Max number of source papers of all pages that are returned
+    :return: Dictionary consisting of paper_id: dict pairs
+    """
     if paper_count_limit > len(relevant_pages):
         paper_count_limit = len(relevant_pages)
 

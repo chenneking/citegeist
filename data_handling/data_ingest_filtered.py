@@ -1,8 +1,10 @@
 from pymilvus import MilvusClient, DataType
 import jsonlines
 
+# Initiate Milvus Client
 client = MilvusClient('../database_mini.db')
 
+# Define Milvus DB Schema
 schema = client.create_schema(
     auto_id=False
 )
@@ -18,6 +20,8 @@ client.create_collection(
 )
 
 print('Starting insertion process')
+
+# Read in the entire jsonl file data and only insert the entries into the DB that are assigned the right topics
 
 # List of accepted topics for the mini db
 accepted_keys = [79, 77, 76, 63, 62, 60, 40, 30, 19, 16]
@@ -39,6 +43,7 @@ with jsonlines.open('/Users/carl/Downloads/arxivDrag/processed_data_final_noAbst
 print('Completed insertion process')
 print(f'Final stats: {key_counts}')
 
+# Add index on the embedding vector values
 print('Starting indexing')
 index_params = MilvusClient.prepare_index_params()
 

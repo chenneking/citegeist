@@ -1,10 +1,9 @@
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from pymilvus import MilvusClient
-import json
-from helpers import load_api_key, generate_summary_prompt
-from azure_client import AzureClient
-from citations import get_arxiv_abstract
+from utils.helpers import load_api_key, generate_summary_prompt
+from utils.azure_client import AzureClient
+from utils.citations import get_arxiv_abstract
 import time
 import random
 

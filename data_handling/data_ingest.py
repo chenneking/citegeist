@@ -1,7 +1,7 @@
 from pymilvus import MilvusClient, DataType
 import jsonlines
 
-client = MilvusClient('./database.db')
+client = MilvusClient('../database.db')
 
 schema = client.create_schema(
     auto_id=False

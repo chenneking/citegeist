@@ -175,3 +175,27 @@ def process_arxiv_paper_with_embeddings(arxiv_id, topic_model):
 #     print("No content remains after filtering.")
 # 
 # =============================================================================
+
+
+def find_most_relevant_pages(relevant_pages: list[dict], abstracts: list[str], paper_count_limit: int) -> dict[str, dict]:
+    if paper_count_limit > len(relevant_pages):
+        paper_count_limit = len(relevant_pages)
+
+    page_ids = set()
+    output = {}
+    index = 0
+    while len(page_ids) < paper_count_limit:
+        paper_id = relevant_pages[index]['paper_id']
+        if paper_id in page_ids:
+            output[paper_id]['text'].append(relevant_pages[index]['text'])
+        else:
+            tmp = {
+                'abstract': abstracts[index],
+                'text': [
+                    relevant_pages[index]['text']
+                ]
+            }
+            output[paper_id] = tmp
+        page_ids.add(paper_id)
+        index += 1
+    return output

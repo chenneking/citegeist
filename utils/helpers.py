@@ -22,16 +22,18 @@ def generate_summary_prompt(abstract_source_paper: str, abstract_to_be_cited: st
 
 def generate_related_work_prompt(source_abstract: str, data: list[object]) -> str:
     output = f'''
-    I am working on a research paper, and I need a well-written "Related Work" section. Below, I provide:
-    The abstract of my paper:
+    I am working on a research paper, and I need a well-written "Related Work" section. Below I'm providing you with the abstract of the paper I'm writing and a list of summaries of related works I've identified.
+    
+    Here's the abstract of my paper:
     "{source_abstract}"
+    
+    Here's the list of summaries of the other related works I've found:
     '''
 
     for i in range(len(data)):
         summary = data[i]['summary']
         citation = data[i]['citation']
         output += f'''
-        
         Paper {i+1}:
         Summary: {summary}
         Citation: {citation}
@@ -40,13 +42,11 @@ def generate_related_work_prompt(source_abstract: str, data: list[object]) -> st
     output += '''
     
     Instructions:
-    Using the above information:
-    Write a cohesive and well-structured "Related Work" section that integrates the provided summaries and citations.
-    Make meaningful connections between the related papers and my research, highlighting similarities, differences, and how the related work contextualizes my study.
-    Ensure the text flows logically, grouped into thematic paragraphs as needed.
-    Use the provided citations where relevant to indicate references to the papers.
+    Using all the information given above, your goal is to write a cohesive and well-structured "Related Work" section. 
+    Draw connections between the related papers and my research and highlight similarities and differences. 
+    Please also make sure to put my work into the overall context of the provided related works in a summarizing paragraph at the end. 
+    If multiple related works have a common point/theme, make sure to group them and refer to them in the same paragraph. 
+    When referring to content from specific papers you must also cite the respective paper properly (i.e. cite right after your direct/indirect quotes).
+    Also, make sure the related works section consists of multiple paragraphs (6 at most) which are concise, but not too concise (e.g. avoid 2-sentence paragraphs).
     '''
-    # summarize multiple related papers/citations into one paragraph
-    # don't be as repetitive
-
     return output

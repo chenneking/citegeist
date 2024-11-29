@@ -24,7 +24,7 @@ def read_json_file(file_path):
         print(f"Error decoding JSON: {e}")
     return None
 
-def extract_most_relevant_pages(paper_embeddings, input_string, topic_model, top_k=5):
+def extract_most_relevant_pages(paper_embeddings, input_string, topic_model, top_k=5, skip_first=False):
     """
     Extracts the most relevant pages based on cosine similarity with an input string.
     
@@ -46,6 +46,8 @@ def extract_most_relevant_pages(paper_embeddings, input_string, topic_model, top
     for paper_idx, paper in enumerate(paper_embeddings):
         paper_id = paper_idx  # Replace with actual paper ID if available in `paper_embeddings`
         for page_number, page_data in enumerate(paper):
+            if(skip_first and page_number==0):
+                continue
             page_text = page_data["text"]
             page_embedding = page_data["embedding"]
             
@@ -68,68 +70,6 @@ def extract_most_relevant_pages(paper_embeddings, input_string, topic_model, top
     # Return the top-k most relevant pages
     return results[:top_k]
 
-# =============================================================================
-# # Example Usage
-# file_path = "sample_data/attention-paper.json"  # Replace with the actual file path
-# json_data = read_json_file(file_path)
-# 
-# if json_data:
-#     topic_model = BERTopic.load("MaartenGr/BERTopic_ArXiv")  # Load BERTopic model
-# 
-#     paper_embeddings = []
-#     for paper in json_data[0][:10]:  # Process only the first 10 papers
-#         arxiv_id = paper['id']  # Replace with the actual paper ID key in your JSON
-#         
-#         print(f"Processing paper: {arxiv_id}")
-#         result = process_arxiv_paper_with_embeddings(arxiv_id, topic_model)
-#         
-#         if result:
-#             paper_embeddings.append(result)
-#             print(f"Paper {arxiv_id}: Processed successfully.")
-#         else:
-#             print(f"Paper {arxiv_id}: No content remains after filtering.")
-# 
-#     # Print an example: First page text and embedding of the first processed paper
-#     if paper_embeddings:
-#         print("First paper, first page text:", paper_embeddings[0][0]["text"])
-#         print("First paper, first page embedding:", paper_embeddings[0][0]["embedding"])
-# =============================================================================
-        
-# Example Usage
-# =============================================================================
-# input_string = """The dominant sequence transduction models are based on complex recurrent or
-# convolutional neural networks that include an encoder and a decoder. The best
-# performing models also connect the encoder and decoder through an attention
-# mechanism. We propose a new simple network architecture, the Transformer,
-# based solely on attention mechanisms, dispensing with recurrence and convolutions
-# entirely. Experiments on two machine translation tasks show these models to
-# be superior in quality while being more parallelizable and requiring significantly
-# less time to train. Our model achieves 28.4 BLEU on the WMT 2014 Englishto-German translation task, improving over the existing best results, including
-# ensembles, by over 2 BLEU. On the WMT 2014 English-to-French translation task,
-# our model establishes a new single-model state-of-the-art BLEU score of 41.8 after
-# training for 3.5 days on eight GPUs, a small fraction of the training costs of the
-# best models from the literature. We show that the Transformer generalizes well to
-# other tasks by applying it successfully to English constituency parsing both with
-# large and limited training data."""  # Input query
-# top_k = 20  # Number of most relevant pages to retrieve
-# 
-# # Assuming `paper_embeddings` contains the processed papers with embeddings
-# relevant_pages = extract_most_relevant_pages(paper_embeddings, input_string, topic_model, top_k)
-# 
-# # Print the top-k relevant pages
-# for result in relevant_pages:
-#     print(f"Paper ID: {result['paper_id']}, Page Number: {result['page_number']}")
-#     print(f"Similarity: {result['similarity']:.4f}")
-#     print(f"Text: {result['text'][:200]}...")  # Print the first 200 characters
-#     print("-" * 80)
-#
-# k = 2  # Number of papers to select
-# selected_paper_ids = select_diverse_papers_with_precomputed_distances(json_data[0], k)
-#
-#  print("Selected paper IDs:", selected_paper_ids)
-# =============================================================================
-        
-#%%
 
 def select_diverse_papers_with_precomputed_distances(paper_data, k):
     """

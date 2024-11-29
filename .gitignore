@@ -1,3 +1,5 @@
 venv
 database.db
 api_key.json
+.database.db.lock
+testing.py

@@ -132,15 +132,16 @@ def remove_citations_and_supplements(pages_text):
     cutoff_index = detect_section_start(pages_text, section_keywords)
     return pages_text[:cutoff_index]
 
-def process_arxiv_paper_with_cleanup(arxiv_id):
+def process_arxiv_paper_with_embeddings(arxiv_id, topic_model):
     """
-    Processes an arXiv paper, splitting it into pages, and removes references/supplements.
+    Processes an arXiv paper, splits it into pages, removes references/supplements,
+    and returns text and embeddings for each page.
     """
     # Step 1: Download and read the paper
     pdf_path = f"{arxiv_id}.pdf"
     download_pdf(arxiv_id, pdf_path)
     try:
-        # Open the PDF
+        # Open the PDF and extract text per page
         with fitz.open(pdf_path) as pdf:
             pages_text = [pdf[i].get_text() for i in range(len(pdf))]
     finally:
@@ -149,6 +150,28 @@ def process_arxiv_paper_with_cleanup(arxiv_id):
     
     # Step 2: Remove citations and supplementary sections
     filtered_pages = remove_citations_and_supplements(pages_text)
-    return filtered_pages
+    
+    # Step 3: Generate embeddings for the filtered pages
+    embedding_model = topic_model.embedding_model
+    embeddings = embedding_model.embedding_model.encode(filtered_pages, show_progress_bar=True)
 
+    # Combine pages and embeddings into a structured format
+    result = [{"text": text, "embedding": embedding} for text, embedding in zip(filtered_pages, embeddings)]
+    return result
 
+# =============================================================================
+# from bertopic import BERTopic
+# 
+# # Example Usage
+# arxiv_id = "2301.12345"  # Replace with the actual paper ID
+# topic_model = BERTopic.load("MaartenGr/BERTopic_ArXiv")  # Load the pre-trained BERTopic model
+# 
+# result = process_arxiv_paper_with_embeddings(arxiv_id, topic_model)
+# 
+# if result:
+#     print("First page text:", result[0]["text"])  # Text of the first page
+#     print("First page embedding:", result[0]["embedding"])  # Embedding of the first page
+# else:
+#     print("No content remains after filtering.")
+# 
+# =============================================================================

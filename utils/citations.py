@@ -234,7 +234,7 @@ def find_most_relevant_pages(
             output[paper_id]["text"].append(relevant_pages[index]["text"])
         else:
             tmp = {
-                "abstract": abstracts[index],
+                "abstract": abstracts[paper_id],
                 "text": [relevant_pages[index]["text"]],
             }
             output[paper_id] = tmp

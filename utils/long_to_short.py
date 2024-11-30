@@ -61,6 +61,67 @@ def extract_most_relevant_pages(
     return results[:top_k]
 
 
+def extract_most_relevant_pages_for_each_paper(
+    paper_embeddings: list[dict],
+    input_string: str,
+    topic_model: BERTopic,
+    top_k: int = 5,
+    skip_first: bool = False,
+) -> list[dict]:
+    """
+    Extracts the top-k most relevant pages for each paper based on cosine similarity with an input string.
+
+    Args:
+        paper_embeddings (list): A list of papers, each containing dictionaries with "text" and "embedding".
+        input_string (str): The string to compare against.
+        topic_model (BERTopic): The BERTopic model for generating embeddings.
+        top_k (int): The number of most relevant pages to return for each paper.
+        skip_first (bool): Whether to skip the first page of the input string.
+
+    Returns:
+        list: A list of dictionaries with "paper_id", "page_number", "text", and "similarity".
+    """
+    # Encode the input string to get its embedding
+    embedding_model = topic_model.embedding_model
+    input_embedding = embedding_model.encode(input_string)
+
+    all_results = []
+
+    # Loop through each paper
+    for paper_idx, paper in enumerate(paper_embeddings):
+        paper_id = paper_idx  # Replace with actual paper ID if available in `paper_embeddings`
+        paper_results = []
+
+        # Loop through each page in the paper
+        for page_number, page_data in enumerate(paper):
+            if skip_first and page_number == 0:
+                continue
+            page_text = page_data["text"]
+            page_embedding = page_data["embedding"]
+
+            # Compute cosine similarity between input string and the current page
+            similarity = cosine_similarity([input_embedding], [page_embedding])[0][0]
+
+            # Add the page's data and similarity to the paper's results
+            paper_results.append(
+                {
+                    "paper_id": paper_id,  # Or use a specific ID if available
+                    "page_number": page_number + 1,  # Pages are 1-indexed
+                    "text": page_text,
+                    "similarity": similarity,
+                }
+            )
+
+        # Sort the pages for the current paper by similarity score in descending order
+        paper_results_sorted = sorted(paper_results, key=lambda x: x["similarity"], reverse=True)
+
+        # Add the top-k pages for the current paper to the final results
+        all_results.extend(paper_results_sorted[:top_k])
+
+    return all_results
+
+
+
 def select_diverse_papers_with_precomputed_distances(
     paper_data: list, k: int
 ) -> list[str]:

@@ -173,7 +173,7 @@ def select_diverse_papers_with_precomputed_distances(
         selected_indices.append(next_index)
 
     # Return the IDs of the selected papers
-    return [paper_data[i]["id"] for i in selected_indices]
+    return [paper_data[i] for i in selected_indices]
 
 def select_diverse_papers_with_weighted_similarity(paper_data, k, diversity_weight=0.5):
     """
@@ -224,4 +224,4 @@ def select_diverse_papers_with_weighted_similarity(paper_data, k, diversity_weig
         selected_indices.append(next_index)
     
     # Return the IDs of the selected papers
-    return [paper_data[i]["id"] for i in selected_indices]
+    return [paper_data[i] for i in selected_indices]

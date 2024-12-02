@@ -104,7 +104,7 @@ def generate_related_work_prompt(source_abstract: str, data: list[object]) -> st
     Please also make sure to put my work into the overall context of the provided related works in a summarizing paragraph at the end. 
     If multiple related works have a common point/theme, make sure to group them and refer to them in the same paragraph. 
     When referring to content from specific papers you must also cite the respective paper properly (i.e. cite right after your direct/indirect quotes).
-    Insert paragraphs where appropriate which are concise, but not too short (e.g. avoid 2-sentence paragraphs).
+    Group papers with similar topics or implications into the same paragraph. Limit yourself to at most 5 paragraphs, which should not be too short (e.g. avoid 2/3-sentence paragraphs).
     """
     return output
 

@@ -236,7 +236,7 @@ def select_diverse_pages_for_top_b_papers(
     input_string: str,
     topic_model: BERTopic,
     k: int = 5,
-    b: int = 10,
+    b: int = 3,
     diversity_weight: float = 0.25,
     skip_first: bool = False,
 ) -> list[dict]:
@@ -255,13 +255,13 @@ def select_diverse_pages_for_top_b_papers(
         skip_first (bool): Whether to skip the first page of the input string.
 
     Returns:
-        list: A list of dictionaries with "paper_id", "page_number", "text", and "similarity".
+        list: A list of dictionaries, each containing "paper_id" and "text" (list of selected page texts).
     """
     from sklearn.metrics.pairwise import cosine_similarity
     import numpy as np
 
     # Encode the input string to get its embedding
-    embedding_model = topic_model.embedding_model.embedding_model
+    embedding_model = topic_model.embedding_model
     input_embedding = embedding_model.encode(input_string)
 
     paper_results = []
@@ -343,10 +343,13 @@ def select_diverse_pages_for_top_b_papers(
     # Sort papers by their average similarity in descending order
     top_b_papers = sorted(paper_results, key=lambda x: x["avg_similarity"], reverse=True)[:b]
 
-    # Flatten the selected pages of the top `b` papers into the final results
+    # Construct the final results, one object per paper
     final_results = []
     for paper in top_b_papers:
-        final_results.extend(paper["selected_pages"])
+        final_results.append({
+            "paper_id": paper["paper_id"],
+            "text": [page["text"] for page in paper["selected_pages"]],
+        })
 
     return final_results
 

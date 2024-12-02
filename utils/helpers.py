@@ -145,6 +145,37 @@ def generate_related_work_analysis_prompt(source_abstract: str, data: list[objec
     """
     return output
 
+def generate_relevance_evaluation_prompt(source_abstract:str, target_abstract:str):
+    """
+    Generates an evaluation prompt to utilize LLM as a judge to determine the relevance with regard to the source abstract
+    :param source_abstract: Abstract of source paper
+    :param target_abstract: Abstract of target paper
+    :return: Prompt String
+    """
+    prompt = f"""
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+
+        Source Paper Abstract:
+        {source_abstract}
+
+        Related Work Paper Abstract:
+        {target_abstract}
+
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    """
+    return prompt
+
 
 def read_json_file(file_path: str) -> dict | list | None:
     """

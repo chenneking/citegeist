@@ -64,8 +64,15 @@ df = pd.DataFrame(
 print(df)
 
 
-from pymilvus import MilvusClient
+from pymilvus import MilvusClient, utility
 
 EMBEDDING_PATH = "./database_mini.db"
 # Connect to Milvus server
 mini_client = MilvusClient(EMBEDDING_PATH)
+# print the first row of the database
+# print(utility.list_collections())
+
+query = mini_client.query(collection_name="abstracts", limit=1)
+
+
+print(query)

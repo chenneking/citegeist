@@ -70,6 +70,8 @@
             cursor: pointer;
         }
         .slider-value {
+            min-width: 40px;
+            text-align: center;
             display: inline-block;
             margin-left: 10px;
             padding: 5px 10px;
@@ -221,7 +223,7 @@
                 document.getElementById('citationsSection').style.display = 'block';
 
                 document.getElementById('relatedWorksOutput').innerText = result['related_works'] || 'No related works found.';
-                document.getElementById('citationsOutput').innerText = result.citations?.join('\n') || 'No citations found.';
+                document.getElementById('citationsOutput').innerText = result.citations?.join('\n\n') || 'No citations found.';
             } catch (error) {
                 console.error('Error:', error);
                 document.getElementById('relatedWorksOutput').innerText = 'Error fetching related works.';

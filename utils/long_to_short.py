@@ -175,7 +175,7 @@ def select_diverse_papers_with_precomputed_distances(
     # Return the IDs of the selected papers
     return [paper_data[i] for i in selected_indices]
 
-def select_diverse_papers_with_weighted_similarity(paper_data, k, diversity_weight=0.5):
+def select_diverse_papers_with_weighted_similarity(paper_data, k, diversity_weight=0.25):
     """
     Selects `k` papers that balance diversity and similarity to the input paper based on the `diversity_weight`.
     
@@ -225,3 +225,106 @@ def select_diverse_papers_with_weighted_similarity(paper_data, k, diversity_weig
     
     # Return the IDs of the selected papers
     return [paper_data[i] for i in selected_indices]
+
+def select_diverse_pages_for_each_paper(
+    paper_embeddings: list[dict],
+    input_string: str,
+    topic_model: BERTopic,
+    k: int = 5,
+    diversity_weight: float = 0.25,
+    skip_first: bool = False,
+) -> list[dict]:
+    """
+    Selects `k` pages for each paper that balance similarity to the input string
+    and diversity among the selected pages.
+
+    Args:
+        paper_embeddings (list): A list of papers, each containing dictionaries with "text" and "embedding".
+        input_string (str): The string to compare against.
+        topic_model (BERTopic): The BERTopic model for generating embeddings.
+        k (int): The number of pages to select for each paper.
+        diversity_weight (float): Weight between similarity and diversity (0 to 1).
+                                  1 means prioritizing diversity, 0 means prioritizing similarity.
+        skip_first (bool): Whether to skip the first page of the input string.
+
+    Returns:
+        list: A list of dictionaries with "paper_id", "page_number", "text", and "similarity".
+    """
+    from sklearn.metrics.pairwise import cosine_similarity
+    import numpy as np
+
+    # Encode the input string to get its embedding
+    embedding_model = topic_model.embedding_model
+    input_embedding = embedding_model.encode(input_string)
+
+    final_results = []
+
+    # Loop through each paper
+    for paper_idx, paper in enumerate(paper_embeddings):
+        paper_id = paper_idx  # Replace with actual paper ID if available in `paper_embeddings`
+        page_candidates = []
+
+        # Loop through each page in the paper
+        for page_number, page_data in enumerate(paper):
+            if skip_first and page_number == 0:
+                continue
+
+            page_text = page_data["text"]
+            page_embedding = page_data["embedding"]
+
+            # Compute cosine similarity between input string and the current page
+            similarity = cosine_similarity([input_embedding], [page_embedding])[0][0]
+
+            # Add the page's data and similarity to candidates
+            page_candidates.append(
+                {
+                    "paper_id": paper_id,
+                    "page_number": page_number + 1,  # Pages are 1-indexed
+                    "text": page_text,
+                    "embedding": page_embedding,
+                    "similarity": similarity,
+                }
+            )
+
+        # Sort pages by similarity score in descending order
+        page_candidates_sorted = sorted(
+            page_candidates, key=lambda x: x["similarity"], reverse=True
+        )
+
+        # Select pages iteratively based on similarity and diversity
+        selected_pages = [page_candidates_sorted[0]]  # Start with the most similar page
+        for _ in range(1, k):
+            max_combined_score = -np.inf
+            next_page = None
+
+            for candidate in page_candidates:
+                if candidate in selected_pages:
+                    continue
+
+                # Compute the diversity score: minimum similarity to selected pages
+                diversity_score = min(
+                    cosine_similarity(
+                        [candidate["embedding"]],
+                        [selected["embedding"]],
+                    )[0][0]
+                    for selected in selected_pages
+                )
+
+                # Combined score: similarity to input string and diversity
+                combined_score = (
+                    (1 - diversity_weight) * candidate["similarity"]
+                    + diversity_weight * (1 - diversity_score)
+                )
+
+                if combined_score > max_combined_score:
+                    max_combined_score = combined_score
+                    next_page = candidate
+
+            if next_page:
+                selected_pages.append(next_page)
+
+        # Add the selected pages for this paper to the final results
+        final_results.extend(selected_pages)
+
+    return final_results
+

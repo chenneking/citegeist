@@ -108,6 +108,42 @@ def generate_related_work_prompt(source_abstract: str, data: list[object]) -> st
     """
     return output
 
+def generate_related_work_analysis_prompt(source_abstract: str, data: list[object]) -> str:
+    """
+    Generates the related work analysis prompt for an abstract and a set of summaries & citation strings.
+    :param source_abstract: Abstract of source paper
+    :param data: List of objects that each contain a paper summary and the respective citation string
+    :return: Prompt string
+    """
+    output = f"""
+    I am working on a research paper, and I would like to get a sense of related work for a specific section of my paper. Below I'm providing you with the section whose background I am interested in and a list of summaries of related works I've identified.
+    
+    Here's the section of my paper:
+    "{source_abstract}"
+    
+    Here's the list of summaries of the other related works I've found:
+    """
+
+    for i in range(len(data)):
+        summary = data[i]["summary"]
+        citation = data[i]["citation"]
+        output += f"""
+        Paper {i+1}:
+        Summary: {summary}
+        Citation: {citation}
+        """
+
+    output += """
+    
+    Instructions:
+    Using all the information given above, your goal is to write a cohesive and well-structured analysis of the related work. 
+    Draw connections between the related papers and my research section and highlight similarities and differences. 
+    Please also make sure to put my section into the overall context of the provided related works in a summarizing paragraph at the end. 
+    If multiple related works have a common points or themes, make sure to group them and refer to them in the same paragraph. 
+    When referring to content from specific papers you must also cite the respective paper properly (i.e. cite right after your direct/indirect quotes).
+    """
+    return output
+
 
 def read_json_file(file_path: str) -> dict | list | None:
     """

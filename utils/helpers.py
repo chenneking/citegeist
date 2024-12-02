@@ -103,7 +103,8 @@ def generate_related_work_prompt(source_abstract: str, data: list[dict], paragra
     Draw connections between the related papers and my research and highlight similarities and differences. 
     Please also make sure to put my work into the overall context of the provided related works in a summarizing paragraph at the end. 
     If multiple related works have a common point/theme, make sure to group them and refer to them in the same paragraph. 
-    When referring to content from specific papers you must also cite the respective paper properly (i.e. cite right after your direct/indirect quotes).
+    Please ensure that your generated section employs all the papers from above.
+    When referring to content from specific papers you must also cite the respective paper properly (i.e. cite right after your direct/indirect quotes, do not use [x]).
     Group papers with similar topics or implications into the same paragraph. Limit yourself to at most {str(paragraph_count)} paragraphs, which should not be too short (e.g. avoid 2/3-sentence paragraphs).
     """
     return output

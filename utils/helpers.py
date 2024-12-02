@@ -71,7 +71,7 @@ def generate_summary_prompt_with_page_content(
     """
     return output
 
-def generate_related_work_prompt(source_abstract: str, data: list[dict]) -> str:
+def generate_related_work_prompt(source_abstract: str, data: list[dict], paragraph_count: int = 5) -> str:
     """
     Generates the related work prompt for an abstract and a set of summaries & citation strings.
     :param source_abstract: Abstract of source paper
@@ -79,7 +79,7 @@ def generate_related_work_prompt(source_abstract: str, data: list[dict]) -> str:
     :return: Prompt string
     """
     output = f"""
-    I am working on a research paper, and I need a well-written "Related Work" section. Below I'm providing you with the abstract of the paper I'm writing and a list of summaries of related works I've identified.
+    I am working on a research paper, and I need a well-written "Related Work" section. Below I'm providing you with the abstract of my paper and a list of summaries of related works I've identified.
     
     Here's the abstract of my paper:
     "{source_abstract}"
@@ -96,7 +96,7 @@ def generate_related_work_prompt(source_abstract: str, data: list[dict]) -> str:
         Citation: {citation}
         """
 
-    output += """
+    output += f"""
     
     Instructions:
     Using all the information given above, your goal is to write a cohesive and well-structured "Related Work" section. 
@@ -104,7 +104,7 @@ def generate_related_work_prompt(source_abstract: str, data: list[dict]) -> str:
     Please also make sure to put my work into the overall context of the provided related works in a summarizing paragraph at the end. 
     If multiple related works have a common point/theme, make sure to group them and refer to them in the same paragraph. 
     When referring to content from specific papers you must also cite the respective paper properly (i.e. cite right after your direct/indirect quotes).
-    Group papers with similar topics or implications into the same paragraph. Limit yourself to at most 5 paragraphs, which should not be too short (e.g. avoid 2/3-sentence paragraphs).
+    Group papers with similar topics or implications into the same paragraph. Limit yourself to at most {str(paragraph_count)} paragraphs, which should not be too short (e.g. avoid 2/3-sentence paragraphs).
     """
     return output
 

@@ -37,6 +37,7 @@ def generate_summary_prompt_with_page_content(
     abstract_source_paper: str,
     abstract_to_be_cited: str,
     page_text_to_be_cited: list[str],
+    sentence_count: int = 8
 ) -> str:
     """
     Generates the summary prompt for a given pair of abstracts and a list of relevant pages.
@@ -64,7 +65,7 @@ def generate_summary_prompt_with_page_content(
         """
 
     output += f"""
-    Based on the two abstracts and the content from the page, write a brief few-sentence (at most 8) summary of the cited paper in relation to my work. Emphasize how the cited paper relates to my research.
+    Based on the two abstracts and the content from the page, write a brief few-sentence (at most {str(sentence_count)}) summary of the cited paper in relation to my work. Emphasize how the cited paper relates to my research.
 
     Please exclusively respond with the summary. Do not add any filler text before or after the summary. Also, do not use any type of markdown formatting. I want a pure text output only.
     """

@@ -168,7 +168,11 @@ def process_arxiv_paper_with_embeddings(
     """
     # Step 1: Download and read the paper
     pdf_path = f"{arxiv_id}.pdf"
-    download_pdf(arxiv_id, pdf_path)
+    downloaded = download_pdf(arxiv_id, pdf_path)
+    
+    if(not downloaded):
+        return None
+    
     try:
         # Open the PDF and extract text per page
         with fitz.open(pdf_path) as pdf:

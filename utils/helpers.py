@@ -71,8 +71,7 @@ def generate_summary_prompt_with_page_content(
     """
     return output
 
-
-def generate_related_work_prompt(source_abstract: str, data: list[object]) -> str:
+def generate_related_work_prompt(source_abstract: str, data: list[dict]) -> str:
     """
     Generates the related work prompt for an abstract and a set of summaries & citation strings.
     :param source_abstract: Abstract of source paper

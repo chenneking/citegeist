@@ -178,7 +178,7 @@ def select_diverse_papers_with_precomputed_distances(
     # Return the IDs of the selected papers
     return [paper_data[i] for i in selected_indices]
 
-def select_diverse_papers_with_weighted_similarity(paper_data, k, diversity_weight=0.25):
+def select_diverse_papers_with_weighted_similarity(paper_data: list[dict], k: int, diversity_weight:float=0.25) -> list[dict]:
     """
     Selects `k` papers that balance diversity and similarity to the input paper based on the `diversity_weight`.
 
@@ -192,7 +192,7 @@ def select_diverse_papers_with_weighted_similarity(paper_data, k, diversity_weig
                                   1 means prioritizing diversity, 0 means prioritizing similarity.
 
     Returns:
-        list: IDs of the selected papers.
+        list: List of dictionaries with the original data of the selected papers.
     """
     # Extract distances and embeddings
     distances = np.array([paper["distance"] for paper in paper_data])
@@ -232,7 +232,7 @@ def select_diverse_papers_with_weighted_similarity(paper_data, k, diversity_weig
     return [paper_data[i] for i in selected_indices]
 
 def select_diverse_pages_for_top_b_papers(
-    paper_embeddings: list[dict],
+    paper_embeddings: list[list[dict]],
     input_string: str,
     topic_model: BERTopic,
     k: int = 5,

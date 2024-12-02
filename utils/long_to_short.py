@@ -82,7 +82,7 @@ def extract_most_relevant_pages_for_each_paper(
         list: A list of dictionaries with "paper_id", "page_number", "text", and "similarity".
     """
     # Encode the input string to get its embedding
-    embedding_model = topic_model.embedding_model
+    embedding_model = topic_model.embedding_model.embedding_model
     input_embedding = embedding_model.encode(input_string)
 
     all_results = []

@@ -231,23 +231,25 @@ def select_diverse_papers_with_weighted_similarity(paper_data, k, diversity_weig
     # Return the IDs of the selected papers
     return [paper_data[i] for i in selected_indices]
 
-def select_diverse_pages_for_each_paper(
+def select_diverse_pages_for_top_b_papers(
     paper_embeddings: list[dict],
     input_string: str,
     topic_model: BERTopic,
     k: int = 5,
+    b: int = 3,
     diversity_weight: float = 0.25,
     skip_first: bool = False,
 ) -> list[dict]:
     """
-    Selects `k` pages for each paper that balance similarity to the input string
-    and diversity among the selected pages.
+    Selects `k` pages for the top `b` papers based on average similarity to the input string,
+    while balancing similarity to the input and diversity among the selected pages.
 
     Args:
         paper_embeddings (list): A list of papers, each containing dictionaries with "text" and "embedding".
         input_string (str): The string to compare against.
         topic_model (BERTopic): The BERTopic model for generating embeddings.
         k (int): The number of pages to select for each paper.
+        b (int): The number of papers to select based on the highest average similarity.
         diversity_weight (float): Weight between similarity and diversity (0 to 1).
                                   1 means prioritizing diversity, 0 means prioritizing similarity.
         skip_first (bool): Whether to skip the first page of the input string.
@@ -262,7 +264,7 @@ def select_diverse_pages_for_each_paper(
     embedding_model = topic_model.embedding_model
     input_embedding = embedding_model.encode(input_string)
 
-    final_results = []
+    paper_results = []
 
     # Loop through each paper
     for paper_idx, paper in enumerate(paper_embeddings):
@@ -328,8 +330,24 @@ def select_diverse_pages_for_each_paper(
             if next_page:
                 selected_pages.append(next_page)
 
-        # Add the selected pages for this paper to the final results
-        final_results.extend(selected_pages)
+        # Compute the average similarity of the selected pages
+        avg_similarity = np.mean([page["similarity"] for page in selected_pages])
+
+        # Store the results for the current paper
+        paper_results.append({
+            "paper_id": paper_id,
+            "selected_pages": selected_pages,
+            "avg_similarity": avg_similarity,
+        })
+
+    # Sort papers by their average similarity in descending order
+    top_b_papers = sorted(paper_results, key=lambda x: x["avg_similarity"], reverse=True)[:b]
+
+    # Flatten the selected pages of the top `b` papers into the final results
+    final_results = []
+    for paper in top_b_papers:
+        final_results.extend(paper["selected_pages"])
 
     return final_results
+
 

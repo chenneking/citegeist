@@ -236,7 +236,7 @@ def select_diverse_pages_for_top_b_papers(
     input_string: str,
     topic_model: BERTopic,
     k: int = 5,
-    b: int = 3,
+    b: int = 10,
     diversity_weight: float = 0.25,
     skip_first: bool = False,
 ) -> list[dict]:

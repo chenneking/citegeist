@@ -261,7 +261,7 @@ def select_diverse_pages_for_top_b_papers(
     import numpy as np
 
     # Encode the input string to get its embedding
-    embedding_model = topic_model.embedding_model
+    embedding_model = topic_model.embedding_model.embedding_model
     input_embedding = embedding_model.encode(input_string)
 
     paper_results = []

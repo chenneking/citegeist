@@ -71,7 +71,7 @@ def generate_summary_prompt_with_page_content(
     """
     return output
 
-def generate_related_work_prompt(source_abstract: str, data: list[dict], paragraph_count: int = 5) -> str:
+def generate_related_work_prompt(source_abstract: str, data: list[dict], paragraph_count: int = 5, add_summary: bool = True) -> str:
     """
     Generates the related work prompt for an abstract and a set of summaries & citation strings.
     :param source_abstract: Abstract of source paper
@@ -101,12 +101,13 @@ def generate_related_work_prompt(source_abstract: str, data: list[dict], paragra
     Instructions:
     Using all the information given above, your goal is to write a cohesive and well-structured "Related Work" section. 
     Draw connections between the related papers and my research and highlight similarities and differences. 
-    Please also make sure to put my work into the overall context of the provided related works in a summarizing paragraph at the end. 
     If multiple related works have a common point/theme, make sure to group them and refer to them in the same paragraph. 
     Please ensure that your generated section employs all the papers from above.
     When referring to content from specific papers you must also cite the respective paper properly (i.e. cite right after your direct/indirect quotes, do not use [x]).
     Group papers with similar topics or implications into the same paragraph. Limit yourself to at most {str(paragraph_count)} paragraphs, which should not be too short (e.g. avoid 2/3-sentence paragraphs).
     """
+    if add_summary:
+        output += "Please also make sure to put my work into the overall context of the provided related works in a summarizing paragraph at the end."
     return output
 
 def generate_related_work_analysis_prompt(source_abstract: str, data: list[object]) -> str:
@@ -145,7 +146,7 @@ def generate_related_work_analysis_prompt(source_abstract: str, data: list[objec
     """
     return output
 
-def generate_relevance_evaluation_prompt(source_abstract:str, target_abstract:str):
+def generate_relevance_evaluation_prompt(source_abstract:str, target_abstract:str) -> str:
     """
     Generates an evaluation prompt to utilize LLM as a judge to determine the relevance with regard to the source abstract
     :param source_abstract: Abstract of source paper
@@ -175,6 +176,7 @@ def generate_relevance_evaluation_prompt(source_abstract:str, target_abstract:st
         Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
     """
     return prompt
+
 
 
 def read_json_file(file_path: str) -> dict | list | None:

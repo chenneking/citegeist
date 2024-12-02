@@ -2,7 +2,6 @@
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from pymilvus import MilvusClient
-import json
 from utils.helpers import (
     load_api_key,
     generate_summary_prompt_with_page_content,
@@ -13,16 +12,14 @@ from utils.citations import (
     get_arxiv_abstract,
     get_arxiv_citation,
     process_arxiv_paper_with_embeddings,
-    find_most_relevant_pages,
 )
 from utils.long_to_short import (
-    extract_most_relevant_pages,
     select_diverse_papers_with_weighted_similarity,
-    extract_most_relevant_pages_for_each_paper,
     select_diverse_pages_for_top_b_papers
 )
 from dotenv import load_dotenv
 import os
+import math
 
 # Load environment variables
 load_dotenv()
@@ -103,7 +100,8 @@ def generate_related_work(abstract: str, breadth: int, depth: int, diversity: fl
             generate_summary_prompt_with_page_content(
                 abstract_source_paper=abstract,
                 abstract_to_be_cited=arxiv_abstract,
-                page_text_to_be_cited=text_segments
+                page_text_to_be_cited=text_segments,
+                sentence_count=5
             ),
             os.getenv("AZURE_PROMPTING_MODEL_VERSION")
         )
@@ -116,7 +114,9 @@ def generate_related_work(abstract: str, breadth: int, depth: int, diversity: fl
     related_works_section: str = prompting_client.get_completions(
         generate_related_work_prompt(
             source_abstract=abstract,
-            data=relevant_pages
+            data=relevant_pages,
+            paragraph_count=math.ceil(breadth/2),
+            add_summary=False
         ),
         os.getenv("AZURE_PROMPTING_MODEL_VERSION")
     )
@@ -127,12 +127,4 @@ def generate_related_work(abstract: str, breadth: int, depth: int, diversity: fl
         'related_works': related_works_section,
         'citations': [obj['citation'] for obj in relevant_pages]
     }
-
-# if __name__ == "__main__":
-#     print(generate_related_work(
-#         "Large Language Models have shown impressive performance across a wide array of tasks involving both structured and unstructured textual data. More recently, adaptions of these models have drawn attention to their abilities to work with code across different programming languages. On this notion, different benchmarks for code generation, repair, or completion suggest that certain models have programming abilities comparable to or even surpass humans. In this work, we demonstrate that the performance on this benchmark does not translate to the innate ability of humans to appreciate the structural control flow of code. For this purpose, we extract code solutions from the Hu- manEval benchmark, which the relevant models perform very strongly on, and trace their execution path using function calls sampled from the respective test set. Using this dataset, we investigate the ability of 5 state-of-the-art LLMs to match the execution trace and find that, despite the model’s abilities to generate semantically identical code, they possess only limited ability to trace the execution path, especially for traces with increased length. We find that even the top-performing model, Gemini 1.5 Pro can only fully correctly generate the trace of 47% of HumanEval tasks. In addition, we introduce a specific subset for three key structures not, or only contained to a limited extent in Hu- manEval: Recursion, Parallel Processing, and Object Oriented Programming principles, including concepts like Inheritance and Polymorphism. Besides OOP, we show that none of the investigated models achieve an average accuracy of over 5% on the relevant traces. Aggregating these specialized parts with the ubiquitous HumanEval tasks, we present the Benchmark CoCoNUT: Code Control Flow for Navigation Understanding and Testing, which measures a models ability to trace the execu- tion of code upon relevant calls, including advanced structural components. We conclude that the current generation LLMs still need to significantly improve to enhance their code reasoning abilities. We hope our dataset can help researchers bridge this gap in the near future.",
-#         10,
-#         2,
-#         0.1
-#     ))
 

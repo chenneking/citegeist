@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Response
 from pydantic import BaseModel
+from generator import generate_related_work
 
 
 class Item(BaseModel):
@@ -21,10 +22,9 @@ def frontpage():
 
 @app.post("/generate")
 def generate(item: Item):
-    # TODO: link this to the logic
-    print(item)
-    data = {
-        "related_works": "Testing123",
-        "citations": ["Abraham Lincoln (1910)", "Sample Author"],
-    }
-    return data
+    return generate_related_work(
+        item.abstract,
+        item.breadth,
+        item.depth,
+        item.diversity
+    )

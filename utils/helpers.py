@@ -243,6 +243,15 @@ def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_wor
         target_related_work = tmp
 
     return f"""
+    Source Abstract:
+    {source_abstract}
+    
+    Related Works Section A:
+    {source_related_work}
+    
+    Related Works Section B:
+    {target_related_work}
+    
     Objective:
     Evaluate which related works section better complements the source abstract provided.
     
@@ -255,15 +264,6 @@ def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_wor
         •	Clarity and Coherence: Is the section well-written, easy to follow, and logically structured?
         •	Insightfulness: Does the section provide meaningful connections or insights into the topic described in the abstract?
         4.	Based on your assessment, choose which section (A or B) is better overall. If both are equally good, you can indicate a tie. Exclusively respond with your rating. Do not include any markdown whatsoever.
-    
-    Source Abstract:
-    {source_abstract}
-    
-    Related Works Section A:
-    {source_related_work}
-    
-    Related Works Section B:
-    {target_related_work}
     
     Exclusively respond with your choice of rating from one of the following options:
     Your Decision:

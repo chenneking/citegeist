@@ -1,6 +1,8 @@
 import json
 import random
 
+from scipy.stats import random_correlation
+
 
 def load_api_key(file_path: str) -> str:
     """
@@ -33,25 +35,40 @@ def generate_summary_prompt(
     Please exclusively respond with the summary. Do not add any filler text before or after the summary. Also, do not use any type of markdown formatting. I want a pure text output only.
     """
     
-def generate_summary_prompt(
-        question: str, abstract_to_be_considered: str) -> str:
+def generate_summary_prompt_question_with_page_content(
+        question: str, abstract_to_be_considered: str, page_text_to_be_cited: list[str]) -> str:
     """
     Generates the summary prompt for a given pair of abstracts.
     :param abstract_source_paper: Abstract of source paper
     :param abstract_to_be_cited: Abstract of a related work
     :return: Prompt string
     """
-    return f"""
+    output = f"""
     Below is a question and the abstract of a paper which may contain relevant information:
     My question:
     "{question}"
+    
     Abstract of the paper that may contain relevant information:
     "{abstract_to_be_considered}"
+    
+    Relevant content of {len(page_text_to_be_cited)} pages within the paper:
+    """
+
+    for i in range(len(page_text_to_be_cited)):
+        text = page_text_to_be_cited[i]
+        output += f"""
+        Page {i+1}:
+        "{text}"
+        """
+
+    output += f"""
+    
     Based on the question and the paper abstract, write a brief few-sentence summary of the abstract in relation to the question. If the abstract does not contain relevant information, please reply with 'No relevant Information'.
     
     Please exclusively respond with the summary. Do not add any filler text before or after the summary. Also, do not use any type of markdown formatting. I want a pure text output only.
     """
 
+    return output
 
 def generate_summary_prompt_with_page_content(
     abstract_source_paper: str,
@@ -230,7 +247,8 @@ def generate_relevance_evaluation_prompt(source_abstract:str, target_abstract:st
 
 
 def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_work: str, target_related_work: str) -> tuple[str, list[str]]:
-    random_choice = random.randint(0,1)
+    # random_choice = random.randint(0,1)
+    random_choice = 0
     order = []
     if random_choice == 0:
         order = ['source', 'target']
@@ -255,22 +273,14 @@ def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_wor
     Objective:
     Evaluate which related works section better complements the source abstract provided.
     
-    Instructions:
-        1.	Carefully read the source abstract of the paper.
-        2.	Review Related Works Section A and Related Works Section B in detail.
-        3.	Compare both sections based on the following criteria:
-        •	Relevance: Does the section appropriately relate to and support the ideas or topics in the abstract?
-        •	Comprehensiveness: Does the section include key works and sufficiently cover the scope of related literature?
-        •	Clarity and Coherence: Is the section well-written, easy to follow, and logically structured?
-        •	Insightfulness: Does the section provide meaningful connections or insights into the topic described in the abstract?
-        4.	Based on your assessment, choose which section (A or B) is better overall. If both are equally good, you can indicate a tie. Exclusively respond with your rating. Do not include any markdown whatsoever.
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false!).
+     
+    Provide a numeric rating from 1 to 10 for both options and output those two ratings as your answer in the following format:
+    Section 1: SCORE
+    Section 2: SCORE
     
-    Exclusively respond with your choice of rating from one of the following options:
-    Your Decision:
-        •	Section A
-        •	Section B
-        •	Tie
-        
+    Do not include anything else in your output.
     """, order
 
 

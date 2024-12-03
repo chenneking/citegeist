@@ -1,4 +1,5 @@
 import json
+import random
 
 
 def load_api_key(file_path: str) -> str:
@@ -176,6 +177,51 @@ def generate_relevance_evaluation_prompt(source_abstract:str, target_abstract:st
         Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
     """
     return prompt
+
+
+def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_work: str, target_related_work: str) -> tuple[str, list[str]]:
+    random_choice = random.randint(0,1)
+    order = []
+    if random_choice == 0:
+        order = ['source', 'target']
+    else:
+        order = ['target', 'source']
+    # 0 represents source here, 1 represents alternative option
+    if random_choice == 1:
+        tmp = source_related_work
+        source_related_work = target_related_work
+        target_related_work = tmp
+
+    return f"""
+    Objective:
+    Evaluate which related works section better complements the source abstract provided.
+    
+    Instructions:
+        1.	Carefully read the source abstract of the paper.
+        2.	Review Related Works Section A and Related Works Section B in detail.
+        3.	Compare both sections based on the following criteria:
+        •	Relevance: Does the section appropriately relate to and support the ideas or topics in the abstract?
+        •	Comprehensiveness: Does the section include key works and sufficiently cover the scope of related literature?
+        •	Clarity and Coherence: Is the section well-written, easy to follow, and logically structured?
+        •	Insightfulness: Does the section provide meaningful connections or insights into the topic described in the abstract?
+        4.	Based on your assessment, choose which section (A or B) is better overall. If both are equally good, you can indicate a tie. Exclusively respond with your rating. Do not include any markdown whatsoever.
+    
+    Source Abstract:
+    {source_abstract}
+    
+    Related Works Section A:
+    {source_related_work}
+    
+    Related Works Section B:
+    {target_related_work}
+    
+    Exclusively respond with your choice of rating from one of the following options:
+    Your Decision:
+        •	Section A
+        •	Section B
+        •	Tie
+        
+    """, order
 
 
 

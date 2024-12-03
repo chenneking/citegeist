@@ -5,13 +5,14 @@ from pymilvus import MilvusClient
 from utils.helpers import (
     load_api_key,
     generate_summary_prompt_with_page_content,
-    generate_related_work_prompt,
+    generate_related_work_prompt
 )
 from utils.azure_client import AzureClient
 from utils.citations import (
     get_arxiv_abstract,
     get_arxiv_citation,
     process_arxiv_paper_with_embeddings,
+    filter_citations
 )
 from utils.long_to_short import (
     select_diverse_papers_with_weighted_similarity,
@@ -121,10 +122,15 @@ def generate_related_work(abstract: str, breadth: int, depth: int, diversity: fl
         os.getenv("AZURE_PROMPTING_MODEL_VERSION")
     )
 
-    print('Generated related work section.')
+    filtered_citations: list[str] = filter_citations(
+        related_works_section=related_works_section,
+        citation_strings=[obj['citation'] for obj in relevant_pages]
+    )
+
+    print(f'Generated related work section with {len(filtered_citations)} citations.')
 
     return {
         'related_works': related_works_section,
-        'citations': [obj['citation'] for obj in relevant_pages]
+        'citations': filtered_citations
     }
 

@@ -4,6 +4,7 @@ import os
 import time
 import fitz
 from bertopic import BERTopic
+import re
 
 
 def get_arxiv_citation(arxiv_id: str) -> str:
@@ -245,3 +246,17 @@ def find_most_relevant_pages(
         page_ids.add(paper_id)
         index += 1
     return output
+
+
+def filter_citations(related_works_section: str, citation_strings: list[str]) -> list[str]:
+    matched_citations = set()
+    for citation in citation_strings:
+        split_citation = citation.split(' ')
+        if len(split_citation) > 2:
+            first_author = split_citation[1]
+            if first_author[-1] == ',':
+                first_author = first_author[:-1]
+            if f' {first_author}' in related_works_section or f'{first_author} ' in related_works_section:
+                matched_citations.add(citation)
+
+    return list(matched_citations)

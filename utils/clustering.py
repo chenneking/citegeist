@@ -235,30 +235,36 @@ source_embedding = np.array([ 5.14202751e-03,  5.66691570e-02, -4.27120104e-02, 
         2.84555443e-02, -7.38758221e-03,  9.08145960e-03, -2.64234003e-02],
       dtype=float)  # Example: using the first document's embedding as the source
 
-# Compute the cosine distance between each embedding and the source embedding
-distances = cosine_distances(embeddings, source_embedding.reshape(1, -1)).flatten()
-
 # Train BERTopic model
 topic_model = BERTopic().fit(labels, embeddings)
 
 # Reduce dimensionality of embeddings (optional but recommended for visualization)
 reduced_embeddings = UMAP(n_neighbors=10, n_components=2, min_dist=0.0, metric='cosine').fit_transform(embeddings)
 
-# Run the visualization with the original embeddings
-topic_model.visualize_document_datamap(labels, embeddings=embeddings)
+# Compute the cosine distance between each reduced embedding and the source embedding
+distances = cosine_distances(reduced_embeddings, reduced_embeddings[0].reshape(1, -1)).flatten()
 
-# Or, if you have reduced the original embeddings already:
-topic_model.visualize_document_datamap(labels, reduced_embeddings=reduced_embeddings)
+# Center the visualization around the source embedding
+source_coordinates = reduced_embeddings[0]  # Coordinates of the source embedding after reduction
+centered_embeddings = reduced_embeddings - source_coordinates  # Shift all embeddings
 
-# Optionally, you can plot the reduced embeddings manually
-# Get the topic assignments for each document
-doc_info = topic_model.get_document_info(labels)
-topic_labels = doc_info['Topic']  # Extract topic assignments
-
-# Plot the reduced embeddings with distance to the source as colors
-plt.scatter(reduced_embeddings[:, 0], reduced_embeddings[:, 1], c=distances, cmap='coolwarm')
-plt.colorbar(label="Distance to Source Embedding")  # Show color mapping for distances
-plt.scatter(reduced_embeddings[0, 0], reduced_embeddings[0, 1], color='red', s=100, label="Source Embedding")  # Highlight source
-plt.title("Reduced Embeddings Visualization with Distance to Source")
+# Plot the centered reduced embeddings with distance to the source as colors
+plt.figure(figsize=(8, 6))
+scatter = plt.scatter(
+    centered_embeddings[:, 0], 
+    centered_embeddings[:, 1], 
+    c=distances, 
+    cmap='coolwarm', 
+    alpha=0.7, 
+    edgecolor='k'
+)
+plt.colorbar(scatter, label="Distance to Source Embedding")  # Show color mapping for distances
+plt.scatter(0, 0, color='red', s=150, label="Source Embedding", edgecolor='black')  # Highlight source at (0, 0)
+plt.axhline(0, color='gray', linestyle='--', linewidth=0.5)  # Add horizontal axis line
+plt.axvline(0, color='gray', linestyle='--', linewidth=0.5)  # Add vertical axis line
+plt.title("Centered Embedding Visualization with Distance to Source")
+plt.xlabel("UMAP Dimension 1 (Centered)")
+plt.ylabel("UMAP Dimension 2 (Centered)")
 plt.legend()
+plt.grid(True, alpha=0.3)
 plt.show()

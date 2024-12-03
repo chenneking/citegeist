@@ -32,6 +32,25 @@ def generate_summary_prompt(
     
     Please exclusively respond with the summary. Do not add any filler text before or after the summary. Also, do not use any type of markdown formatting. I want a pure text output only.
     """
+    
+def generate_summary_prompt(
+        question: str, abstract_to_be_considered: str) -> str:
+    """
+    Generates the summary prompt for a given pair of abstracts.
+    :param abstract_source_paper: Abstract of source paper
+    :param abstract_to_be_cited: Abstract of a related work
+    :return: Prompt string
+    """
+    return f"""
+    Below is a question and the abstract of a paper which may contain relevant information:
+    My question:
+    "{question}"
+    Abstract of the paper that may contain relevant information:
+    "{abstract_to_be_considered}"
+    Based on the question and the paper abstract, write a brief few-sentence summary of the abstract in relation to the question. If the abstract does not contain relevant information, please reply with 'No relevant Information'.
+    
+    Please exclusively respond with the summary. Do not add any filler text before or after the summary. Also, do not use any type of markdown formatting. I want a pure text output only.
+    """
 
 
 def generate_summary_prompt_with_page_content(
@@ -69,6 +88,37 @@ def generate_summary_prompt_with_page_content(
     Based on the two abstracts and the content from the page, write a brief few-sentence (at most {str(sentence_count)}) summary of the cited paper in relation to my work. Emphasize how the cited paper relates to my research.
 
     Please exclusively respond with the summary. Do not add any filler text before or after the summary. Also, do not use any type of markdown formatting. I want a pure text output only.
+    """
+    return output
+
+def generate_question_answer_prompt(question: str, data: list[dict]):
+    
+    output = f"""
+    I am wondering about a scientific question, and I need a well-written answer that is based on scientific papers. Below I'm providing you with my question and a list of summaries of potentially relevant papers I've identified.
+    
+    Here's the question:
+    "{question}"
+    
+    Here's the list of summaries of the other related works I've found:
+    """
+    
+    for i in range(len(data)):
+        summary = data[i]["summary"]
+        citation = data[i]["citation"]
+        output += f"""
+        Paper {i+1}:
+        Summary: {summary}
+        Citation: {citation}
+        """
+
+    output += f"""
+    
+    Instructions:
+    Using all the information given above, your goal is to write a cohesive and well-structured answer to the given question. 
+    Draw connections between the related papers and my question. 
+    If multiple related works have a common point/theme, make sure to group them and refer to them in the same paragraph. 
+    When referring to content from specific papers you must also cite the respective paper properly (i.e. cite right after your direct/indirect quotes, do not use [x]).
+    Group papers with similar topics or implications into the same paragraph. 
     """
     return output
 

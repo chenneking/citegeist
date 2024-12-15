@@ -18,15 +18,17 @@ prompting_client = AzureClient(
 for i, row in papers_df.iterrows():
     abstract = row['Abstract']
     source_related_works = row['Related Works']
-    gpt_related_works = row['Related Works (GPT-4o-min)']
+    gpt_related_works = row['Related Works (GPT-4o-mini)']
 
     output_row = output_df.loc[i]
     our_related_works = output_row['related_works']
 
+    # first pair, first round
     win_rate_prompt, order = generate_win_rate_evaluation_prompt(
         source_abstract=abstract,
         source_related_work=source_related_works,
-        target_related_work=our_related_works
+        target_related_work=our_related_works,
+        reverse_order=False
     )
 
     win_rate_response: str = prompting_client.get_completions(
@@ -36,25 +38,20 @@ for i, row in papers_df.iterrows():
 
     print(win_rate_response)
     # Modify the results to account for reordering
-    selected_winner_paper_source_ours: str = ''
+    winner_paper_1: str = ''
     if win_rate_response == 'Section A':
-        if order[0] == 'source':
-            selected_winner_paper_source_ours = order[0]
-        elif order[0] == 'target':
-            selected_winner_paper_source_ours = 'our_approach'
+        winner_paper_1 = 'source'
     elif win_rate_response == 'Section B':
-        if order[1] == 'source':
-            selected_winner_paper_source_ours = order[1]
-        elif order[1] == 'target':
-            selected_winner_paper_source_ours = 'our_approach'
+        winner_paper_1 = 'ours'
     elif win_rate_response == 'Tie':
-        print(f'There was a tie.')
-        selected_winner_paper_source_ours = 'tie'
+        winner_paper_1 = 'tie'
 
+    # first pair, second round
     win_rate_prompt2, order2 = generate_win_rate_evaluation_prompt(
         source_abstract=abstract,
-        source_related_work=our_related_works,
-        target_related_work=gpt_related_works
+        source_related_work=source_related_works,
+        target_related_work=our_related_works,
+        reverse_order=True
     )
 
     win_rate_response2: str = prompting_client.get_completions(
@@ -64,22 +61,99 @@ for i, row in papers_df.iterrows():
 
     print(win_rate_response2)
     # Modify the results to account for reordering
-    selected_winner_paper_ours_gpt: str = ''
-    if win_rate_response2 == 'Section A':
-        if order2[0] == 'source':
-            selected_winner_paper_ours_gpt = 'our_approach'
-        elif order2[0] == 'target':
-            selected_winner_paper_ours_gpt = 'gpt'
-    elif win_rate_response2 == 'Section B':
-        if order2[1] == 'source':
-            selected_winner_paper_ours_gpt = 'our_approach'
-        elif order2[1] == 'target':
-            selected_winner_paper_ours_gpt = 'gpt'
-    elif win_rate_response2 == 'Tie':
-        print(f'There was a tie.')
-        selected_winner_paper_ours_gpt = 'tie'
+    winner_paper_2: str = ''
+    if win_rate_response == 'Section A':
+        winner_paper_2 = 'ours'
+    elif win_rate_response == 'Section B':
+        winner_paper_2 = 'source'
+    elif win_rate_response == 'Tie':
+        winner_paper_2 = 'tie'
+
+    score_first_pair = 0
+    if winner_paper_1 == 'source' and winner_paper_2 == 'source':
+        score_first_pair = -1
+    elif winner_paper_1 == 'source' and winner_paper_2 == 'ours' or winner_paper_1 == 'ours' and winner_paper_2 == 'source':
+        score_first_pair = 0
+    elif winner_paper_1 == 'ours' and winner_paper_2 == 'ours':
+        score_first_pair = 1
+    elif winner_paper_1 == 'tie' and winner_paper_2 == 'source':
+        score_first_pair = -1
+    elif winner_paper_1 == 'tie' and winner_paper_2 == 'ours':
+        score_first_pair = 1
+    elif winner_paper_1 == 'source' and winner_paper_2 == 'tie':
+        score_first_pair = -1
+    elif winner_paper_1 == 'ours' and winner_paper_2 == 'tie':
+        score_first_pair = 1
+    elif winner_paper_1 == 'tie' and winner_paper_2 == 'tie':
+        score_first_pair = 0
 
 
-    print(f'Paper {i}: {selected_winner_paper_source_ours}, {selected_winner_paper_ours_gpt}')
+
+    # second pair, first round
+    win_rate_prompt3, order3 = generate_win_rate_evaluation_prompt(
+        source_abstract=abstract,
+        source_related_work=our_related_works,
+        target_related_work=gpt_related_works,
+        reverse_order=False
+    )
+
+    win_rate_response3: str = prompting_client.get_completions(
+        win_rate_prompt3,
+        os.getenv("AZURE_PROMPTING_MODEL_VERSION")
+    )
+
+    print(win_rate_response3)
+    # Modify the results to account for reordering
+    winner_paper_3: str = ''
+    if win_rate_response3 == 'Section A':
+        winner_paper_3 = 'ours'
+    elif win_rate_response3 == 'Section B':
+        winner_paper_3 = 'gpt'
+    elif win_rate_response3 == 'Tie':
+        winner_paper_3 = 'tie'
+
+
+    # second pair, second round
+    win_rate_prompt4, order4 = generate_win_rate_evaluation_prompt(
+        source_abstract=abstract,
+        source_related_work=source_related_works,
+        target_related_work=our_related_works,
+        reverse_order=True
+    )
+
+    win_rate_response4: str = prompting_client.get_completions(
+        win_rate_prompt4,
+        os.getenv("AZURE_PROMPTING_MODEL_VERSION")
+    )
+
+    print(win_rate_response4)
+    # Modify the results to account for reordering
+    winner_paper_4: str = ''
+    if win_rate_response == 'Section A':
+        winner_paper_4 = 'gpt'
+    elif win_rate_response == 'Section B':
+        winner_paper_4 = 'ours'
+    elif win_rate_response == 'Tie':
+        winner_paper_4 = 'tie'
+
+    score_second_pair = 0
+    if winner_paper_3 == 'gpt' and winner_paper_4 == 'gpt':
+        score_second_pair = -1
+    elif winner_paper_3 == 'ours' and winner_paper_4 == 'gpt' or winner_paper_3 == 'gpt' and winner_paper_4 == 'ours':
+        score_second_pair = 0
+    elif winner_paper_3 == 'ours' and winner_paper_4 == 'ours':
+        score_second_pair = 1
+    elif winner_paper_3 == 'tie' and winner_paper_4 == 'gpt':
+        score_second_pair = -1
+    elif winner_paper_3 == 'tie' and winner_paper_4 == 'ours':
+        score_second_pair = 1
+    elif winner_paper_3 == 'gpt' and winner_paper_4 == 'tie':
+        score_second_pair = -1
+    elif winner_paper_3 == 'ours' and winner_paper_4 == 'tie':
+        score_second_pair = 1
+    elif winner_paper_3 == 'tie' and winner_paper_4 == 'tie':
+        score_second_pair = 0
+
+    print(f'Paper {i}: {score_first_pair}, {score_second_pair}')
     print('------------')
 

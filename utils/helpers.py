@@ -246,19 +246,16 @@ def generate_relevance_evaluation_prompt(source_abstract:str, target_abstract:st
     return prompt
 
 
-def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_work: str, target_related_work: str) -> tuple[str, list[str]]:
-    # random_choice = random.randint(0,1)
-    random_choice = 0
+def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_work: str, target_related_work: str,
+                                        reverse_order: bool = False) -> tuple[str, list[str]]:
     order = []
-    if random_choice == 0:
-        order = ['source', 'target']
-    else:
+    if reverse_order:
         order = ['target', 'source']
-    # 0 represents source here, 1 represents alternative option
-    if random_choice == 1:
         tmp = source_related_work
         source_related_work = target_related_work
         target_related_work = tmp
+    else:
+        order = ['source', 'target']
 
     return f"""
     Source Abstract:
@@ -276,9 +273,10 @@ def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_wor
     Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
     If invalid citations occur, consider the information to be invalid (or even completely false!).
      
-    Provide a numeric rating from 1 to 10 for both options and output those two ratings as your answer in the following format:
-    Section 1: SCORE
-    Section 2: SCORE
+    Exclusively respond with your choice of rating from one of the following options:
+        •	Section A
+        •	Section B
+        •	Tie
     
     Do not include anything else in your output.
     """, order

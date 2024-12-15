@@ -280,7 +280,7 @@ def generate_related_work_from_paper(pages: list[str], breadth: int, depth: int,
     
     for page_results in all_query_data:
         for result in page_results:
-            paper_id = result['entity']['id']
+            paper_id = result['id']
             similarity_score = result['distance']  # Assuming this is the similarity score
             
             if paper_id in paper_scores:

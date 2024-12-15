@@ -244,6 +244,138 @@ def generate_answer_to_scientific_question(question: str, breadth: int, depth: i
         'citations': filtered_citations
     }
 
+def generate_related_work_from_paper(pages: list[str], breadth: int, depth: int, diversity: float) -> dict[str, str | list[str]]:
+    # Initialize clients
+    topic_model = BERTopic.load("MaartenGr/BERTopic_ArXiv")
+    embedding_model = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
+    client = MilvusClient("./database.db")
+    prompting_client = AzureClient(
+        endpoint=os.getenv("AZURE_ENDPOINT"),
+        deployment_id=os.getenv("AZURE_PROMPTING_MODEL"),
+        api_key=load_api_key(os.getenv("KEY_LOCATION")),
+    )
+
+    # Create embeddings for all pages
+    page_embeddings = [embedding_model.encode(page) for page in pages]
+    # Get topics for all pages
+    topics = topic_model.transform(pages)
+    topic_ids = [topic[0][0] for topic in topics]
+
+    # Query Milvus Vector DB for each page
+    all_query_data: list[list[dict]] = []
+    for embedding in page_embeddings:
+        query_result = client.search(
+            collection_name="abstracts",
+            data=[embedding],
+            limit=6*breadth,
+            anns_field="embedding",
+            # filter = f'topic == {topic_id}',  # Could potentially use topic_ids here
+            search_params={"metric_type": "COSINE", "params": {}},
+            output_fields=["embedding"],
+        )
+        all_query_data.extend(query_result)
+
+    print(f'Retrieved papers from DB for {len(all_query_data)} pages.')
+
+    # Aggregate similarity scores for papers that appear multiple times
+    paper_scores: dict[str, float] = {}
+    paper_data: dict[str, dict] = {}
+    
+    for page_results in all_query_data:
+        for result in page_results:
+            paper_id = result['entity']['id']
+            similarity_score = result['distance']  # Assuming this is the similarity score
+            
+            if paper_id in paper_scores:
+                paper_scores[paper_id] += similarity_score
+            else:
+                paper_scores[paper_id] = similarity_score
+                paper_data[paper_id] = {
+                    'id': paper_id,
+                    'embedding': result['entity']['embedding']
+                }
+
+    # Convert aggregated results back to format expected by select_diverse_papers
+    aggregated_query_data = [
+        {**paper_data[paper_id], 'distance': score}
+        for paper_id, score in paper_scores.items()
+    ]
+
+    # Select a longlist of papers using aggregated scores
+    selected_papers: list[dict] = select_diverse_papers_with_weighted_similarity(
+        paper_data=aggregated_query_data,
+        k=3*breadth,
+        diversity_weight=diversity
+    )
+
+    print(f'Selected {len(selected_papers)} papers for the longlist.')
+
+    # Generate embeddings of each page of every paper in the longlist
+    page_embeddings_papers: list[list[dict]] = []
+    for paper in selected_papers:
+        arxiv_id = paper["id"]
+        result = process_arxiv_paper_with_embeddings(arxiv_id, topic_model)
+        if result:
+            page_embeddings_papers.append(result)
+
+    print(f'Generated page embeddings for {len(page_embeddings_papers)} papers.')
+
+    # Generate shortlist of papers using first page as reference
+    # (you might want to modify this to consider all input pages)
+    relevant_pages: list[dict] = select_diverse_pages_for_top_b_papers(
+        paper_embeddings=page_embeddings_papers,
+        input_string=pages[0],  # Using first page as reference
+        topic_model=topic_model,
+        k=depth,
+        b=breadth,
+        diversity_weight=diversity,
+        skip_first=False
+    )
+
+    print(f'Selected {len(relevant_pages)} papers for the shortlist.')
+
+    # Generate summaries for individual papers
+    for obj in relevant_pages:
+        arxiv_id = paper_data[obj['paper_id']]["id"]
+        arxiv_abstract = get_arxiv_abstract(arxiv_id)
+        text_segments = obj["text"]
+        response: str = prompting_client.get_completions(
+            generate_summary_prompt_with_page_content(
+                abstract_source_paper=pages[0],  # Using first page as reference
+                abstract_to_be_cited=arxiv_abstract,
+                page_text_to_be_cited=text_segments,
+                sentence_count=5
+            ),
+            os.getenv("AZURE_PROMPTING_MODEL_VERSION")
+        )
+        obj["summary"] = response
+        obj["citation"] = get_arxiv_citation(arxiv_id)
+
+    print('Generated summaries of papers (and their pages).')
+
+    # Generate the final related works section text
+    related_works_section: str = prompting_client.get_completions(
+        generate_related_work_prompt(
+            source_abstract=pages[0],  # Using first page as reference
+            data=relevant_pages,
+            paragraph_count=math.ceil(breadth/2),
+            add_summary=False
+        ),
+        os.getenv("AZURE_PROMPTING_MODEL_VERSION")
+    )
+
+    filtered_citations: list[str] = filter_citations(
+        related_works_section=related_works_section,
+        citation_strings=[obj['citation'] for obj in relevant_pages]
+    )
+
+    print(f'Generated related work section with {len(filtered_citations)} citations.')
+
+    return {
+        'related_works': related_works_section,
+        'citations': filtered_citations
+    }
+
 if __name__ == '__main__':
     print(generate_answer_to_scientific_question(
         question="What are the most recent research developments in the field of AI Safety?",

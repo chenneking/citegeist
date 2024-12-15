@@ -257,9 +257,6 @@ def generate_related_work_from_paper(pages: list[str], breadth: int, depth: int,
 
     # Create embeddings for all pages
     page_embeddings = [embedding_model.encode(page) for page in pages]
-    # Get topics for all pages
-    topics = topic_model.transform(pages)
-    topic_ids = [topic[0][0] for topic in topics]
 
     # Query Milvus Vector DB for each page
     all_query_data: list[list[dict]] = []
@@ -296,10 +293,23 @@ def generate_related_work_from_paper(pages: list[str], breadth: int, depth: int,
                 }
 
     # Convert aggregated results back to format expected by select_diverse_papers
-    aggregated_query_data = [
-        {**paper_data[paper_id], 'distance': score}
-        for paper_id, score in paper_scores.items()
-    ]
+     # Sort papers by aggregated score and take top 6*breadth papers
+    top_paper_ids = sorted(
+        paper_scores.items(), 
+        key=lambda x: x[1], 
+        reverse=True
+    )[:6*breadth]
+    
+    # Convert back to original format expected by select_diverse_papers
+    # Each entry should be a list with one dict per query result
+    aggregated_query_data = [[{
+        'id': paper_id,
+        'entity': {
+            'id': paper_id,
+            'embedding': paper_data[paper_id]['embedding']
+        },
+        'distance': score
+    }] for paper_id, score in top_paper_ids]
 
     # Select a longlist of papers using aggregated scores
     selected_papers: list[dict] = select_diverse_papers_with_weighted_similarity(

@@ -9,6 +9,7 @@ from tqdm import tqdm
 import time
 import torch
 
+
 from bertopic import BERTopic
 
 EMBEDDING_PATH = "../database_mini.db"
@@ -25,17 +26,25 @@ def compute_embedding(abstract, embedding_model):
     print("Embedding time: ", time.time()-start)
     return res
 
-def get_embedding(id, abstract, embedding_model):
-    mini_client = MilvusClient(EMBEDDING_PATH)
-    result = mini_client.query(
-        collection_name="abstracts", 
-        filter=f'id == "{id}"',  # Use 'filter' instead of 'expr'
-        output_fields=["embedding"]
-    )
-    if not result:
-        return compute_embedding(abstract, embedding_model)
+def get_embedding(id, abstract, embedding_model=None):
+    # mini_client = MilvusClient(EMBEDDING_PATH)
+    # result = mini_client.query(
+    #     collection_name="abstracts", 
+    #     filter=f'id == "{id}"',  # Use 'filter' instead of 'expr'
+    #     output_fields=["embedding"]
+    # )
+    # if not result:
+    #     if embedding_model is None:
+    #         return torch.zeros(128)
+    #     else:
+    #         return compute_embedding(abstract, embedding_model)
+    # else:
+    #     return result[0]["embedding"]
+
+    if embedding_model is None:
+        return torch.zeros(128)
     else:
-        return result[0]["embedding"]
+        return compute_embedding(abstract, embedding_model)
 
 
 # Add hash to existing database entries
@@ -45,7 +54,7 @@ def compute_hash(entry: dict) -> str:
     return hashlib.sha256(entry_str.encode('utf-8')).hexdigest()
 
 # Assuming the database has been loaded into a collection
-def hash_table(collection_name: str):
+def create_hash_table(collection_name: str):
     client = MilvusClient(EMBEDDING_PATH)
     hash_table = {}
     for entry in client.query(collection_name=collection_name, output_fields=["id", "hash", "embedding"]):
@@ -53,21 +62,28 @@ def hash_table(collection_name: str):
     return
 
 
-def add_hash_to_database(metadata, client):
+def add_hash_to_database(dataset_file, client):
 
-    for paper in tqdm(get_metadata(metadata)):
+    total_items = sum(1 for _ in get_metadata(dataset_file))
+    progress = tqdm(total=total_items, desc="Processing papers", unit="paper")
+    i = 0
+    for paper in tqdm(get_metadata(dataset_file)):
+        i+=1
+        if i>=10000:
+            break
         hash_key = hashlib.sha256(paper.encode('utf-8')).hexdigest()
         paper = json.loads(paper)
         id = paper["id"]
-        print(id, hash_key)
+        # print(id, hash_key)
         # Get embedding from client mini
         embedding = get_embedding(id, abstract=paper["abstract"])
         # for k, v in json.loads(paper).items():
         #     print(k, v)
         # Add the hash key and metadata to the original database under the column hash based 
         # on the id of the paper
-        client.insert(collection_name="arxiv_meta", data={"id": id, "hash": hash_key, "abstract": paper["abstract"], "embedding": embedding})
-
+        client.insert(collection_name="abstracts", data={"id": id, "hash": hash_key, "abstract": paper["abstract"], "embedding": embedding})
+        progress.update(1)
+    progress.close()
     
 
 
@@ -98,26 +114,30 @@ def reload_and_lookup(dataset_file, database_file):
     kaggle_path = dataset_file
     client = MilvusClient(database_file)
 
+    # write tqdm to show the progress of the loop by showing the total length and expected finish time
     for paper in tqdm(get_metadata(kaggle_path)):
+
         hash_key = hashlib.sha256(paper.encode('utf-8')).hexdigest()
         # Search for the hash in the database 
         paper = json.loads(paper)
         existing_hash = client.query(
-            collection_name="arxiv_meta",
+            collection_name="abstracts",
             filter=f'hash == "{hash_key}"',
             output_fields=["id", "hash", "abstract"]
         )
         # Case 1: Entry with hash already exists
         if len(existing_hash)>0:
             continue
-        # Case 2: Hash doesn't exist but ID is found
+
+
 
         existing_id = client.query(
-            collection_name="arxiv_meta",
+            collection_name="abstracts",
             filter=f'id == "{paper["id"]}"',
             output_fields=["id", "hash", "abstract"]
         )
         if len(existing_id)>0:
+            # Case 2: Hash doesn't exist but ID is found
 
             existing_entry = existing_id[0]
             if existing_entry["abstract"] != paper["abstract"]:
@@ -127,18 +147,24 @@ def reload_and_lookup(dataset_file, database_file):
                 updated_entry["embedding"] = get_embedding(paper["id"], abstract=paper["abstract"], embedding_model=embedding_model)
                 updated_entry["id"] = paper["id"]
                 updated_entry["abstract"] = paper["abstract"]
+                # updated_entry["topic"] = existing_entry["topic"]
                 
-                client.update(collection_name="arxiv_metadata", data=[updated_entry])
+                client.update(collection_name="abstracts", data=[updated_entry])
                 print(f"Updated entry for ID {paper['id']}.")
             continue
+
+        import pdb
+        pdb.set_trace()
+
         # Case 3: ID not found; insert new row
         new_entry = paper.copy()
         new_entry["hash"] = hash_key
         new_entry["embedding"] = get_embedding(paper["id"], abstract=paper["abstract"], embedding_model=embedding_model)
         new_entry["id"] = paper["id"]
         new_entry["abstract"] = paper["abstract"]
+        # new_entry["topic"] = topic_model.transform([paper["abstract"]])[0]
 
-        client.insert(collection_name="arxiv_metadata", data=[new_entry])
+        client.insert(collection_name="abstracts", data=[new_entry])
         print(f"Inserted new entry for ID {paper['id']}.")
 
 
@@ -179,7 +205,7 @@ def hashing_database(dataset_file, database_file):
 
     # Create collection
     client.create_collection(
-        collection_name="arxiv_meta", 
+        collection_name="abstracts", 
         schema=schema
     )
     hash_table = add_hash_to_database(dataset_file, client)

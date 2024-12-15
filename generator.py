@@ -258,8 +258,8 @@ def generate_related_work_from_paper(pages: list[str], breadth: int, depth: int,
     # Create embeddings for all pages
     page_embeddings = [embedding_model.encode(page) for page in pages]
     # Get topics for all pages
-    topics = topic_model.transform(pages)
-    topic_ids = [topic[0][0] for topic in topics]
+    # topics = topic_model.transform(pages)
+    # topic_ids = topic[0][0]
 
     # Query Milvus Vector DB for each page
     all_query_data: list[list[dict]] = []
@@ -283,7 +283,7 @@ def generate_related_work_from_paper(pages: list[str], breadth: int, depth: int,
     
     for page_results in all_query_data:
         for result in page_results:
-            paper_id = result['entity']['id']
+            paper_id = result['id']
             similarity_score = result['distance']  # Assuming this is the similarity score
             
             if paper_id in paper_scores:

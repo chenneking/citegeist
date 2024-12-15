@@ -1,3 +1,5 @@
+from io import BytesIO
+
 import arxiv
 import requests
 import os
@@ -89,6 +91,18 @@ def extract_text_by_page(pdf_path: str) -> list[str]:
 
     return pages_text
 
+def extract_text_by_page_from_pdf(pdf_content: bytes) -> list[str]:
+    """
+    Extract text from each page of the downloaded PDF using PyMuPDF (fitz).
+    """
+    doc = fitz.open(stream=BytesIO(pdf_content), filetype="pdf")
+    pages_text = []
+
+    for page_num in range(doc.page_count):
+        page = doc.load_page(page_num)  # Load each page
+        pages_text.append(page.get_text())  # Extract text from the page
+
+    return pages_text
 
 def process_arxiv_paper(arxiv_id: str) -> list[str]:
     """

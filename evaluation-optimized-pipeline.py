@@ -247,11 +247,11 @@ if __name__ == '__main__':
     input_df = pd.read_csv(input_file)
     output_df = None
     for i, row in input_df.iterrows():
-        print(f'Starting process for paper: {row['Title']}')
+        print(f'Starting process for paper: {row['title']}')
         row_df: pd.DataFrame = run_evaluation(
-            source_abstract=row['Abstract'],
-            source_related_work=row['Related Works'],
-            gpt_related_work=row['Related Works (GPT-4o-mini)']
+            source_abstract=row['abstract'],
+            source_related_work=row['related_works'],
+            gpt_related_work=row['related_works_gpt4o_mini']
         )
         if output_df is None:
             output_df = row_df

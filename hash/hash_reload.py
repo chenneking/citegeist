@@ -111,8 +111,12 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
     client = MilvusClient(database_file)
 
     # write tqdm to show the progress of the loop by showing the total length and expected finish time
+
+    update_ids = 0
+    inserted_ids = 0
     for paper in tqdm(get_metadata(kaggle_path)):
         # Search for the hash in the database 
+        start = time.time()
         try:   
             paper = json.loads(paper)
         except:
@@ -121,6 +125,7 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
         new_hash_key = compute_hash(paper)
         paper_id = paper["id"]
         old_hash_key = hash_table.get(paper_id, 0)
+        print(f"Hash computation time: {time.time()-start}")
 
 
         # Case 0: Hashes are the same, abstract is the same
@@ -130,17 +135,20 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
         # Case 1: Hash is different, but ID is found, update database and hash table
         if old_hash_key:
             # Update entry: replace abstract and recompute hash and embedding
+
             updated_entry = {}
             updated_entry["hash"] = new_hash_key
             updated_entry["embedding"] = get_embedding(abstract=paper["abstract"], embedding_model=embedding_model)
+            print(f"Embedding computation time: {time.time()-start}")
             updated_entry["id"] = paper["id"]
             # updated_entry["abstract"] = paper["abstract"]
             updated_entry["topic"] = topic_model.transform([paper["abstract"]])[0].item()
             # client.update(collection_name=collection_name, data=[updated_entry], filter=f'id == "{paper_id}"')
             
-
+            update_ids += 1
             #client.delete(collection_name=collection_name, filter=f'id == "{paper_id}"')
             client.insert(collection_name=collection_name, data=[updated_entry])
+            print(f"Entry insertion time: {time.time()-start}")
             hash_table[paper_id] = new_hash_key
             print(f"Updated entry for ID {paper['id']}.")
 
@@ -153,12 +161,20 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
             new_entry["embedding"] = get_embedding(abstract=paper["abstract"], embedding_model=embedding_model)
             new_entry["id"] = paper["id"]
             # new_entry["abstract"] = paper["abstract"]
+
+            inserted_ids += 1
             new_entry["topic"] = int(topic_model.transform([paper["abstract"]])[0].item())
             client.insert(collection_name=collection_name, data=[new_entry])
             hash_table[paper_id] = new_hash_key
             print(f"Inserted new entry for ID {paper['id']}.")
 
-    print("Database update completed.")
+    print(f"Database update completed.{update_ids} entries updated, {inserted_ids} entries inserted")
+    return hash_table
+
+def test():
+    client = MilvusClient("/Users/yushixing/Cornell/database.db")
+    entry = client.query(collection_name="abstracts", output_fields=["id", "hash", "embedding"], filter="id == '2412.00036'")
+    print(entry)
 
 
 if __name__ == "__main__":
@@ -176,8 +192,7 @@ if __name__ == "__main__":
     collection_name = "abstracts"
     hash_table_from_database = False
 
-    hash_table_file = "./id_hash_table.json"
-
+    hash_table_file = "/Users/yushixing/Cornell/id_hash_table.json"
 
     id_hash_table = json.load(open(hash_table_file, "r"))
     if not id_hash_table:
@@ -190,5 +205,5 @@ if __name__ == "__main__":
     
 
     # Reload and lookup
-    reload_and_lookup(dataset_file, database_file, id_hash_table, collection_name=collection_name)
-
+    updated_hash_table = reload_and_lookup(dataset_file, database_file, id_hash_table, collection_name=collection_name)
+    json.dump(updated_hash_table, open(hash_table_file, "w"))

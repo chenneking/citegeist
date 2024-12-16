@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-papers_df = pd.read_csv('sample_data/papers.csv')
-output_df = pd.read_csv('sample_data/output.csv')
+papers_df = pd.read_csv('data/papers.csv')
+output_df = pd.read_csv('data/output.csv')
 
 prompting_client = AzureClient(
         endpoint=os.getenv("AZURE_ENDPOINT"),

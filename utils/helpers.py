@@ -281,6 +281,35 @@ def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_wor
     Do not include anything else in your output.
     """, order
 
+def generate_related_work_score_prompt(source_abstract: str, related_work: str) -> tuple[str, list[str]]:
+
+    return f"""
+    Source Abstract:
+    {source_abstract}
+    
+    Related Works Section:
+    {related_work}
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+     
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+
+    - **0**: Completely irrelevant, unclear, or inaccurate.  
+    *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.  
+
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.  
+    *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.  
+
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.  
+     *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    """
+
 
 
 def read_json_file(file_path: str) -> dict | list | None:

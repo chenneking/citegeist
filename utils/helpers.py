@@ -281,7 +281,7 @@ def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_wor
     Do not include anything else in your output.
     """, order
 
-def generate_related_work_score_prompt(source_abstract: str, related_work: str) -> tuple[str, list[str]]:
+def generate_related_work_score_prompt(source_abstract: str, related_work: str) -> str:
 
     return f"""
     Source Abstract:

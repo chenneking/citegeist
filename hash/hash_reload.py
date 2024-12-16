@@ -11,6 +11,11 @@ import torch
 
 
 from bertopic import BERTopic
+import logging
+import numpy  as np
+
+# Suppress BERTopic output
+logging.getLogger('bertopic').setLevel(logging.WARNING)
 
 def get_metadata(filename):
     with open(filename, 'r') as f:
@@ -20,7 +25,7 @@ def get_metadata(filename):
 def compute_embedding(abstract, embedding_model):
     start = time.time()
     res = embedding_model.encode(abstract)
-    print("Embedding time: ", time.time()-start)
+    # print("Embedding time: ", time.time()-start)
     return res
 
 def get_embedding(abstract, embedding_model=None):
@@ -31,11 +36,29 @@ def get_embedding(abstract, embedding_model=None):
         return compute_embedding(abstract, embedding_model)
 
 
+
+def convert_to_serializable(obj):
+    if isinstance(obj, np.generic):
+        return obj.item()
+    elif isinstance(obj, list):
+        return [convert_to_serializable(item) for item in obj]
+    elif isinstance(obj, dict):
+        return {key: convert_to_serializable(value) for key, value in obj.items()}
+    else:
+        return obj
+    
 # Add hash to existing database entries
-def compute_hash(entry: dict) -> str:
-    """Compute a SHA256 hash for a given entry."""
-    entry_str = json.dumps(entry, sort_keys=True)
-    return hashlib.sha256(entry_str.encode('utf-8')).hexdigest()
+def compute_hash(entry):
+    serializable_entry = convert_to_serializable(
+        entry
+    )  # Ensure JSON serialization compatibility
+    json_string = json.dumps(
+        serializable_entry, sort_keys=True
+    )  # Serialize entry for hashing
+    return hashlib.sha256(
+        json_string.encode("utf-8")
+    ).hexdigest()  # Compute SHA-256 hash
+
 
 # Assuming the database has been loaded into a collection
     
@@ -89,12 +112,16 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
 
     # write tqdm to show the progress of the loop by showing the total length and expected finish time
     for paper in tqdm(get_metadata(kaggle_path)):
-
-        new_hash_key = hashlib.sha256(paper.encode('utf-8')).hexdigest()
         # Search for the hash in the database 
-        paper = json.loads(paper)
+        try:   
+            paper = json.loads(paper)
+        except:
+            print("Error loading paper")
+            continue
+        new_hash_key = compute_hash(paper)
         paper_id = paper["id"]
         old_hash_key = hash_table.get(paper_id, 0)
+
 
         # Case 0: Hashes are the same, abstract is the same
         if old_hash_key == new_hash_key:
@@ -107,13 +134,17 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
             updated_entry["hash"] = new_hash_key
             updated_entry["embedding"] = get_embedding(abstract=paper["abstract"], embedding_model=embedding_model)
             updated_entry["id"] = paper["id"]
-            updated_entry["abstract"] = paper["abstract"]
-            # updated_entry["topic"] = existing_entry["topic"]
-            client.delete(collection_name=collection_name, filter=f'id == "{paper_id}"')
+            # updated_entry["abstract"] = paper["abstract"]
+            updated_entry["topic"] = topic_model.transform([paper["abstract"]])[0].item()
+            # client.update(collection_name=collection_name, data=[updated_entry], filter=f'id == "{paper_id}"')
+            
+
+            #client.delete(collection_name=collection_name, filter=f'id == "{paper_id}"')
             client.insert(collection_name=collection_name, data=[updated_entry])
             hash_table[paper_id] = new_hash_key
+            print(f"Updated entry for ID {paper['id']}.")
 
-            import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
 
         # Case 2: id not found, insert new row
         else:
@@ -121,8 +152,8 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
             new_entry["hash"] = new_hash_key
             new_entry["embedding"] = get_embedding(abstract=paper["abstract"], embedding_model=embedding_model)
             new_entry["id"] = paper["id"]
-            new_entry["abstract"] = paper["abstract"]
-            # new_entry["topic"] = topic_model.transform([paper["abstract"]])[0]
+            # new_entry["abstract"] = paper["abstract"]
+            new_entry["topic"] = int(topic_model.transform([paper["abstract"]])[0].item())
             client.insert(collection_name=collection_name, data=[new_entry])
             hash_table[paper_id] = new_hash_key
             print(f"Inserted new entry for ID {paper['id']}.")
@@ -133,14 +164,19 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
 if __name__ == "__main__":
 
     # Use the dataset loaded from Kaggle to build the hash table
-    dataset_file = "/home/sy774/fall2024/arxiv-metadata-oai-snapshot.json" 
+    dataset_file = "/Users/yushixing/Cornell/arxiv-metadata-oai-snapshot.json" 
+
+
+    # import kagglehub
+    # dataset_file = kagglehub.dataset_download("Cornell-University/arxiv", path="/Users/yushixing/Cornell/") + "/arxiv-metadata-oai-snapshot.json"
+    # print("Path to dataset files:", dataset_file)
     hash_table_from_dataset = False
 
-    database_file = "/home/sy774/fall2024/database.db"
-    collection_name = "arxiv_meta"
+    database_file = "/Users/yushixing/Cornell/database.db"
+    collection_name = "abstracts"
     hash_table_from_database = False
 
-    hash_table_file = "/home/sy774/id_hash_table.json"
+    hash_table_file = "./id_hash_table.json"
 
 
     id_hash_table = json.load(open(hash_table_file, "r"))

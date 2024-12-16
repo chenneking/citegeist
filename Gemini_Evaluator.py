@@ -1,3 +1,4 @@
+import google
 from google.cloud import aiplatform_v1beta1 as aiplatform
 from google.oauth2 import service_account
 import vertexai
@@ -10,11 +11,14 @@ from google.auth.transport.requests import Request
 
 # Google Cloud setup
 scopes = ["https://www.googleapis.com/auth/cloud-platform"]
-key_path = "decision-442720-f4ac216a07fa.json"
-#key_path = "cs6158-structuralunderstanding-2647462afe3e.json"
-credentials = service_account.Credentials.from_service_account_file(key_path, scopes=scopes)
-aiplatform.init(project="decision-442720", location="us-central1", credentials=credentials)
+# Path to your service account key file
+key_path = "/Users/carl/Downloads/stellar_depth_account_1.json"
 
+# Create credentials using the service account key
+credentials = service_account.Credentials.from_service_account_file(key_path, scopes=scopes)
+
+# Initialize Google Cloud AI Platform
+google.cloud.aiplatform.init(project="stellar-depth-441503-q5", location="us-central1", credentials=credentials)
 
 def prompt_gemini(project_id: str, model_name: str, prompt: str, temperature: float = 0., max_tokens: int = 4096):
     """Prompt the Gemini model via Google Vertex AI."""

@@ -119,7 +119,8 @@ def run_evaluation(source_abstract: str, source_related_work: str, gpt_related_w
 
     shortlist_ratings: dict[str, int] = {}
     for obj in relevant_pages:
-        arxiv_id = query_data[obj['paper_id']]["id"]
+        # this seems to have to be selected_papers instead of query data
+        arxiv_id = selected_papers[obj['paper_id']]["id"]
         shortlist_ratings[arxiv_id] = relevance_ratings[arxiv_id]
 
     avg_shortlist_rating: float = sum(shortlist_ratings.values()) / len(shortlist_ratings)

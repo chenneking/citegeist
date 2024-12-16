@@ -16,9 +16,9 @@ prompting_client = AzureClient(
     )
 
 for i, row in papers_df.iterrows():
-    abstract = row['Abstract']
-    source_related_works = row['Related Works']
-    gpt_related_works = row['Related Works (GPT-4o-mini)']
+    abstract = row['abstract']
+    source_related_works = row['related_works']
+    gpt_related_works = row['papers.csv']
 
     output_row = output_df.loc[i]
     our_related_works = output_row['related_works']

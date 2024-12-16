@@ -56,7 +56,7 @@ def prompt_mistral_with_backoff(
     region: str,
     model_name: str,
     prompt: str,
-    credentials,
+    # credentials = credentials,
     retries: int = 10,
     backoff_factor: int = 2,
     max_wait: int = 120,

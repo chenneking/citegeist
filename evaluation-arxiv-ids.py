@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 from dotenv import load_dotenv
-
+from tqdm import tqdm
 from utils.azure_client import AzureClient
 from utils.citations import get_arxiv_abstract
 from utils.helpers import generate_relevance_evaluation_prompt, load_api_key, generate_related_work_score_prompt
@@ -68,14 +68,22 @@ output_full_pdf_df = pd.read_csv('data/output_full_pdf.csv')
 # source & source, source & gpt4o_mini, source & ours, source & ours (with full page)
 
 # Switch logic to gemini here.
-from Gemini_Evaluator import prompt_gemini_with_backoff
+# from Gemini_Evaluator import prompt_gemini_with_backoff
+# project_id = "stellar-depth-441503-q5"
+# model_name = "gemini-1.5-pro-002"
+# OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = 'data/output_related_work_scores_gemini.csv'
+
+# Switch logic to Mistral Large here
+from Gemini_Evaluator import prompt_mistral_with_backoff
 project_id = "stellar-depth-441503-q5"
-model_name = "gemini-1.5-pro-002"
-OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = 'data/output_related_work_scores_gemini.csv'
+model_name = "mistral-large-2411"
+region = "us-central1"
+OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = 'data/output_related_work_scores_mistral.csv'
+
 
 output_related_work_scores_data = []
 
-for i, row in papers_df.iterrows():
+for i, row in tqdm(papers_df.iterrows()):
     abstract = papers_df['abstract'][i]
     source_related_work = papers_df['related_works'][i]
     gpt4o_mini_related_work = papers_df['related_works_gpt4o_mini'][i]
@@ -91,28 +99,32 @@ for i, row in papers_df.iterrows():
     #     prompt_source,
     #     os.getenv("AZURE_PROMPTING_MODEL_VERSION")
     # )
-    result_source: str = prompt_gemini_with_backoff(project_id, model_name, prompt_source)
+    # result_source: str = prompt_gemini_with_backoff(project_id, model_name, prompt_source)
+    result_source: str = prompt_mistral_with_backoff(project_id, region, model_name, prompt_source)
     rating_source: int = int(result_source)
 
     # result_gpt4o_mini: str = prompting_client.get_completions(
     #     prompt_gpt4o_mini,
     #     os.getenv("AZURE_PROMPTING_MODEL_VERSION")
     # )
-    result_gpt4o_mini: str = prompt_gemini_with_backoff(project_id, model_name, prompt_gpt4o_mini)
+    # result_gpt4o_mini: str = prompt_gemini_with_backoff(project_id, model_name, prompt_gpt4o_mini)
+    result_gpt4o_mini: str = prompt_mistral_with_backoff(project_id, region, model_name, prompt_gpt4o_mini)
     rating_gpt4o_mini: int = int(result_gpt4o_mini)
 
     # result_our: str = prompting_client.get_completions(
     #     prompt_our,
     #     os.getenv("AZURE_PROMPTING_MODEL_VERSION")
     # )
-    result_our: str = prompt_gemini_with_backoff(project_id, model_name, prompt_our)
+    # result_our: str = prompt_gemini_with_backoff(project_id, model_name, prompt_our)
+    result_our: str = prompt_mistral_with_backoff(project_id, region, model_name, prompt_our)
     rating_our: int = int(result_our)
 
     # result_our_full_pdf: str = prompting_client.get_completions(
     #     prompt_our_full_pdf,
     #     os.getenv("AZURE_PROMPTING_MODEL_VERSION")
     # )
-    result_our_full_pdf: str = prompt_gemini_with_backoff(project_id, model_name, prompt_our_full_pdf)
+    # result_our_full_pdf: str = prompt_gemini_with_backoff(project_id, model_name, prompt_our_full_pdf)
+    result_our_full_pdf: str = prompt_mistral_with_backoff(project_id, region, model_name, prompt_our_full_pdf)
     rating_our_full_pdf: int = int(result_our_full_pdf)
 
 

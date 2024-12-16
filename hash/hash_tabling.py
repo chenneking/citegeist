@@ -131,7 +131,7 @@ def create_hash_table_from_dataset(dataset_file):
 if __name__ == "__main__":
 
     # Use the dataset loaded from Kaggle to build the hash table
-    dataset_file = "/Users/yushixing/Cornell/arxiv-metadata-oai-snapshot.json" 
+    dataset_file = "/Users/yushixing/Cornell/arxiv-metadata-oai-init.json" 
     hash_table_from_dataset = True
 
     # database_file = "/home/sy774/fall2024/database.db"
@@ -143,7 +143,7 @@ if __name__ == "__main__":
     hash_table_from_database = False
 
 
-    hash_table_file = "/Users/yushixing/Cornell/id_hash_table.json"
+    hash_table_file = "./id_hash_table.json"
 
 
     if hash_table_from_database:

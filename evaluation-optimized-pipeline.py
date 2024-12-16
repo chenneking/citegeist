@@ -1,4 +1,6 @@
 # Imports
+import sys
+
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from pymilvus import MilvusClient
@@ -26,11 +28,8 @@ import os
 import math
 import pandas as pd
 
-def run_evaluation(source_abstract: str, source_related_work: str, gpt_related_work: str) -> pd.DataFrame:
+def run_evaluation(source_abstract: str, source_related_work: str, gpt_related_work: str, breadth: int = 10, depth: int = 2, diversity: float = 0) -> pd.DataFrame:
     IS_THIS_PAPER_ON_ARXIV = False
-    breadth = 10
-    depth = 2
-    diversity = 0
 
     # Initialize clients
     topic_model = BERTopic.load("MaartenGr/BERTopic_ArXiv")
@@ -246,12 +245,26 @@ if __name__ == '__main__':
 
     input_df = pd.read_csv(input_file)
     output_df = None
+
+    breadth = 10
+    depth = 2
+    diversity = 0.0
+    if len(sys.argv) == 5:
+        breadth = int(sys.argv[1])
+        depth = int(sys.argv[2])
+        diversity = float(sys.argv[3])
+        output_file = sys.argv[4]
+
     for i, row in input_df.iterrows():
         print(f'Starting process for paper: {row['title']}')
+
         row_df: pd.DataFrame = run_evaluation(
             source_abstract=row['abstract'],
             source_related_work=row['related_works'],
-            gpt_related_work=row['related_works_gpt4o_mini']
+            gpt_related_work=row['related_works_gpt4o_mini'],
+            breadth=breadth,
+            depth=depth,
+            diversity=diversity
         )
         if output_df is None:
             output_df = row_df

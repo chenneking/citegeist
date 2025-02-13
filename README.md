@@ -13,7 +13,7 @@ A preprint describing the system in detail can be found here: [arXiv link (todo)
 - **Efficient database updates** to incorporate newly published arXiv papers.
 
 ## System Overview
-![System Overview](https://github.com/chenneking/citegeist/blob/main/img/citegeist.jpeg?raw=true)
+![System Overview](https://github.com/chenneking/citegeist/blob/main/img/citegeist.jpg?raw=true)
 
 ## Installation
 

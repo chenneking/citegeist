@@ -42,7 +42,7 @@ fastapi run server.py
 ```
 Then, access the UI at `http://localhost:8000`.
 
-## Web-UI
+### Web-UI
 ![Web-UI Overview](https://github.com/chenneking/citegeist/blob/main/img/citegeist.jpg?raw=true)
 
 

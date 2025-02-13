@@ -12,9 +12,6 @@ A preprint describing the system in detail can be found here: [arXiv link (todo)
 - **Customizable parameters** for breadth, depth, and diversity of retrieved papers.
 - **Efficient database updates** to incorporate newly published arXiv papers.
 
-## System Overview
-![System Overview](https://github.com/chenneking/citegeist/blob/main/img/citegeist.jpg?raw=true)
-
 ## Installation
 
 ### Requirements
@@ -44,6 +41,10 @@ Citegeist also provides a **web-based interface** to input abstracts or upload f
 fastapi run server.py
 ```
 Then, access the UI at `http://localhost:8000`.
+
+## Web-UI
+![System Overview](https://github.com/chenneking/citegeist/blob/main/img/citegeist.jpg?raw=true)
+
 
 ## Customization
 Citegeist allows users to adjust three key parameters:

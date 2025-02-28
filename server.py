@@ -1,6 +1,11 @@
 import io
-from typing import Optional
-from fastapi import FastAPI, Response, Form, UploadFile, File
+import os
+import uuid
+import asyncio
+from typing import Optional, Dict, Any
+from fastapi import FastAPI, Response, Form, UploadFile, File, BackgroundTasks, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from generator import generate_related_work, generate_related_work_from_paper
 from utils.citations import extract_text_by_page_from_pdf, remove_citations_and_supplements
@@ -15,12 +20,16 @@ class Item(BaseModel):
 
 app = FastAPI()
 
+# Mount static files directory for assets (CSS, JS)
+app.mount("/static", StaticFiles(directory="./static"), name="static")
+
+# In-memory job storage
+jobs: Dict[str, JobStatus] = {}
+
 
 @app.get("/")
 def frontpage():
-    with open("./frontend/index.html") as f:
-        data = f.read()
-    return Response(content=data, media_type="text/html")
+    return FileResponse("./static/index.html")
 
 
 @app.post("/generate")

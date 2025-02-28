@@ -1,0 +1,175 @@
+body {
+    background-color: #f8f9fa;
+}
+.content-container {
+    width: 60%;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+}
+textarea {
+    height: 150px;
+}
+.output-field {
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+}
+.citations-field {
+    height: 150px;
+    overflow-y: scroll;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+}
+.slider-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+.slider-container label {
+    flex: 1;
+}
+.slider-container input[type="range"] {
+    flex: 3;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: #e9ecef;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.slider-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #B31B1B;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.slider-container input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #B31B1B;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.slider-value {
+    min-width: 40px;
+    text-align: center;
+    display: inline-block;
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #B31B1B;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+}
+.btn-primary {
+    background-color: #B31B1B;
+    border-color: #B31B1B;
+}
+.btn-primary:hover {
+    background-color: #8e1616;
+    border-color: #8e1616;
+}
+.btn-primary:disabled {
+    background-color: #d06060;
+    border-color: #d06060;
+    cursor: not-allowed;
+}
+.navbar {
+    background-color: #B31B1B;
+}
+.navbar-brand {
+    color: white !important;
+}
+.info-text {
+    color: gray;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 10px;
+}
+/* Toggle switch styles */
+.toggle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.toggle-container label {
+    margin-right: 10px;
+}
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .toggle-slider {
+    background-color: #B31B1B;
+}
+input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+#pdfFileInput {
+    display: none;
+}
+#pdfFileName {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    color: #555;
+    height: 38px;
+}
+.pdf-upload-container {
+    display: flex;
+    align-items: center;
+}
+.pdf-upload-container .btn {
+    border-radius: 0.375rem;
+}
+#progressSection {
+    display: block;
+}
+.progress {
+    height: 10px;
+}
+.progress-bar {
+    width: 33%;
+    background-color: #B31B1B;
+    border-radius: inherit;
+}

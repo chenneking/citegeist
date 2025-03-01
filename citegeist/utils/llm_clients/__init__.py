@@ -8,6 +8,8 @@ from .base_client import LLMClient
 from .azure_client import AzureClient
 from .mistral_client import MistralClient
 from .gemini_client import GeminiClient
+from .openai_client import OpenAIClient
+
 
 # Factory function to create appropriate client
 def create_client(provider: str, **kwargs) -> LLMClient:
@@ -32,5 +34,7 @@ def create_client(provider: str, **kwargs) -> LLMClient:
         return GeminiClient(**kwargs)
     elif provider == 'mistral':
         return MistralClient(**kwargs)
+    elif provider == 'openai':
+        return OpenAIClient(**kwargs)
     else:
         raise ValueError(f"Unsupported LLM provider: {provider}")

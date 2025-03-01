@@ -49,7 +49,7 @@ Then, access the UI at `http://localhost:8000`.
 
 ## Customization
 Citegeist allows users to adjust three key parameters:
-- **Breadth** (`n`): Number of candidate papers retrieved.
-- **Depth** (`k`): Number of relevant pages extracted from each paper.
-- **Diversity** (`w`): Balancing factor between similarity and variety in retrieved papers.
+- **Breadth**`n`: Number of candidate papers retrieved.
+- **Depth**`k`: Number of relevant pages extracted from each paper.
+- **Diversity**`w`: Balancing factor between similarity and variety in retrieved papers.
 The parameters can either be set in the API calls in Python, or when using the Web-Interface.

@@ -1,11 +1,10 @@
+import time
 import uuid
 from typing import Optional, Dict, Any
 from fastapi import FastAPI, Form, UploadFile, File, BackgroundTasks, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
-from citegeist.generator import generate_related_work, generate_related_work_from_paper
-from citegeist.utils.citations import extract_text_by_page_from_pdf, remove_citations_and_supplements
 
 
 class Item(BaseModel):
@@ -37,8 +36,8 @@ def frontpage():
     return FileResponse("static/index.html")
 
 
-@app.post("/generate")
-async def generate(
+@app.post("/create-job")
+async def create_job(
         breadth: int = Form(...),
         depth: int = Form(...),
         diversity: float = Form(...),
@@ -119,6 +118,7 @@ async def process_job(
         abstract: Optional[str] = None,
         pdf_content: Optional[bytes] = None
 ):
+    time.sleep(5)
     # Initialize job status
     jobs[job_id].status = "processing"
     jobs[job_id].progress = 1

@@ -157,8 +157,8 @@ document.getElementById('generateButton').addEventListener('click', async () => 
     }
 
     try {
-        // Send POST request to /generate to create a job
-        const response = await fetch('/generate', {
+        // Send POST request to /create-job to create a job
+        const response = await fetch('/create-job', {
             method: 'POST',
             body: formData,
         });

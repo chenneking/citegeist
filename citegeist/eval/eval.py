@@ -1,6 +1,9 @@
-
-
-def evaluate_relevance(input_abstract: str, identified_abstracts: list, prompting_client, model_version: str):
+def evaluate_relevance(
+        input_abstract: str,
+        identified_abstracts: list,
+        prompting_client,
+        model_version: str
+):
     """Evaluate the relevance of identified abstracts to the input abstract."""
     relevance_scores = []
     for identified_abstract in identified_abstracts:
@@ -23,7 +26,12 @@ def evaluate_relevance(input_abstract: str, identified_abstracts: list, promptin
 
 
 
-def compare_related_works(input_related_work: str, synthetic_related_work: str, prompting_client, model_version: str):
+def compare_related_works(
+        input_related_work: str,
+        synthetic_related_work: str,
+        prompting_client,
+        model_version: str
+):
     """Compare input and synthetic related works sections."""
     # Generate a comparison prompt
     prompt = f"""

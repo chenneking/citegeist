@@ -1,12 +1,9 @@
 import logging
 import time
 from typing import Callable
-from abc import ABC, abstractmethod
 import requests
 import random
 
-class LLMClient(ABC):
-    pass
 
 class AzureClient:
     def __init__(self, endpoint: str, deployment_id: str, api_key: str):

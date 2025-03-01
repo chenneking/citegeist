@@ -74,22 +74,6 @@ def prompt_mistral_with_backoff(
     return exponential_backoff_retry(call_mistral, retries, backoff_factor, max_wait)
 
 
-def exponential_backoff_retry(func, retries=10, backoff_factor=2, max_wait=120):
-    """Retry with exponential backoff in case of rate limit error (429)."""
-    wait = 1
-    for attempt in range(retries):
-        try:
-            return func()  # Call the function
-        except Exception as e:
-            if "429" in str(e) or "529" in str(e):  # Rate limit errors
-                logging.warning(f"Rate limit exceeded. Attempt {attempt + 1} of {retries}. Retrying in {wait} seconds.")
-                time.sleep(wait + random.uniform(0, 1))  # Adding jitter to prevent thundering herd problem
-                wait = min(wait * backoff_factor, max_wait)
-            else:
-                raise e
-    logging.error("Exceeded maximum retries due to rate limit.")
-    raise Exception("Exceeded maximum retries due to rate limit.")
-
 
 def prompt_mistral_pre_authenticated(
     project_id: str,

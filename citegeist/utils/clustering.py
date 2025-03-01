@@ -27,7 +27,7 @@ from sklearn.metrics.pairwise import cosine_distances
 # =============================================================================
 # Load your custom JSON file with embeddings
 # Load the JSON data
-with open("../out/claas-paper.json", "r") as f:
+with open("../out/sample_embeddings/claas-paper.json", "r") as f:
     embedding_data = json.load(f)
     
 # Unwrap the list by accessing the first element

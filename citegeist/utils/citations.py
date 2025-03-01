@@ -6,7 +6,6 @@ import os
 import time
 import fitz
 from bertopic import BERTopic
-import re
 
 
 def get_arxiv_citation(arxiv_id: str) -> str:

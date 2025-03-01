@@ -10,11 +10,11 @@ document.getElementById('slider-diversity').addEventListener('input', (e) => {
 });
 
 // Toggle input type
-const inputToggle = document.getElementById('inputToggle');
-const textInputSection = document.getElementById('textInputSection');
-const pdfInputSection = document.getElementById('pdfInputSection');
-const pdfFileInput = document.getElementById('pdfFileInput');
-const pdfFileName = document.getElementById('pdfFileName');
+const inputToggle = document.getElementById('input-toggle');
+const textInputSection = document.getElementById('text-input-section');
+const pdfInputSection = document.getElementById('pdf-input-section');
+const pdfFileInput = document.getElementById('pdf-file-input');
+const pdfFileName = document.getElementById('pdf-file-name');
 
 inputToggle.addEventListener('change', () => {
     if (inputToggle.checked) {
@@ -36,11 +36,11 @@ pdfFileInput.addEventListener('change', (e) => {
     }
 });
 
-// Function to update progress bar and text
+// Update progress bar and text
 function updateProgress(progress, statusText) {
-    const progressBar = document.getElementById('progressBar');
-    const progressText = document.getElementById('progressText');
-    const progressPercentage = document.getElementById('progressPercentage');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const progressPercentage = document.getElementById('progress-percentage');
     
     progressBar.style.width = `${progress}%`;
     progressBar.setAttribute('aria-valuenow', progress);
@@ -48,12 +48,12 @@ function updateProgress(progress, statusText) {
     progressPercentage.innerText = `${progress}%`;
 }
 
-// Function to poll job status
+// Poll Job status
 async function pollJobStatus(jobId, intervalMs = 1000) {
     // Show progress section and hide output sections
-    document.getElementById('progressSection').style.display = 'block';
-    document.getElementById('relatedWorksSection').style.display = 'none';
-    document.getElementById('citationsSection').style.display = 'none';
+    document.getElementById('progress-section').style.display = 'block';
+    document.getElementById('related-works-section').style.display = 'none';
+    document.getElementById('citations-section').style.display = 'none';
     
     let pollInterval;
     
@@ -76,17 +76,17 @@ async function pollJobStatus(jobId, intervalMs = 1000) {
                     clearInterval(pollInterval);
                     
                     // Show result sections
-                    document.getElementById('relatedWorksSection').style.display = 'block';
-                    document.getElementById('citationsSection').style.display = 'block';
+                    document.getElementById('related-works-section').style.display = 'block';
+                    document.getElementById('citations-section').style.display = 'block';
                     
                     // Populate results
-                    document.getElementById('relatedWorksOutput').innerText = 
+                    document.getElementById('related-works-output').innerText =
                         jobStatus.result['related_works'] || 'No related works found.';
-                    document.getElementById('citationsOutput').innerText = 
+                    document.getElementById('citations-output').innerText =
                         jobStatus.result.citations?.join('\n\n') || 'No citations found.';
                         
                     // Re-enable generate button
-                    document.getElementById('generateButton').disabled = false;
+                    document.getElementById('generate-button').disabled = false;
                 }
                 
                 // Check if job failed
@@ -99,30 +99,30 @@ async function pollJobStatus(jobId, intervalMs = 1000) {
                 clearInterval(pollInterval);
                 console.error('Error polling job status:', error);
                 alert(`Error: ${error.message}`);
-                document.getElementById('generateButton').disabled = false;
+                document.getElementById('generate-button').disabled = false;
             }
         }, intervalMs);
     } catch (error) {
         if (pollInterval) clearInterval(pollInterval);
         console.error('Error setting up polling:', error);
         alert(`Error: ${error.message}`);
-        document.getElementById('generateButton').disabled = false;
+        document.getElementById('generate-button').disabled = false;
     }
 }
 
 // Handle the Generate button click
-document.getElementById('generateButton').addEventListener('click', async () => {
+document.getElementById('generate-button').addEventListener('click', async () => {
     // Disable the button
-    const button = document.getElementById('generateButton');
+    const button = document.getElementById('generate-button');
     button.disabled = true;
 
     // Clear previous outputs
-    document.getElementById('relatedWorksOutput').innerText = '';
-    document.getElementById('citationsOutput').innerText = '';
+    document.getElementById('related-works-output').innerText = '';
+    document.getElementById('citations-output').innerText = '';
 
     // Initialize progress 
     updateProgress(0, 'Starting job...');
-    document.getElementById('progressSection').style.display = 'block';
+    document.getElementById('progress-section').style.display = 'block';
 
     // Collect input data
     const breadth = document.getElementById('slider-breadth').value;
@@ -147,7 +147,7 @@ document.getElementById('generateButton').addEventListener('click', async () => 
         formData.append('pdf', pdfFile);
     } else {
         // Text input
-        const abstract = document.getElementById('abstractInput').value;
+        const abstract = document.getElementById('abstract-input').value;
         if (!abstract.trim()) {
             alert('Please enter an abstract');
             button.disabled = false;
@@ -182,6 +182,6 @@ document.getElementById('generateButton').addEventListener('click', async () => 
         console.error('Error starting job:', error);
         alert(`Error: ${error.message}`);
         button.disabled = false;
-        document.getElementById('progressSection').style.display = 'none';
+        document.getElementById('progress-section').style.display = 'none';
     }
 });

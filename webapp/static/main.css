@@ -145,10 +145,10 @@ input:checked + .toggle-slider {
 input:checked + .toggle-slider:before {
     transform: translateX(26px);
 }
-#pdfFileInput {
+#pdf-file-input {
     display: none;
 }
-#pdfFileName {
+#pdf-file-name {
     display: flex;
     align-items: center;
     margin-left: 10px;
@@ -162,7 +162,7 @@ input:checked + .toggle-slider:before {
 .pdf-upload-container .btn {
     border-radius: 0.375rem;
 }
-#progressSection {
+#progress-section {
     display: block;
 }
 .progress {

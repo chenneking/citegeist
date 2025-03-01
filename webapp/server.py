@@ -1,5 +1,5 @@
-import time
 import uuid
+import asyncio
 from typing import Optional, Dict, Any
 from fastapi import FastAPI, Form, UploadFile, File, BackgroundTasks, HTTPException
 from fastapi.staticfiles import StaticFiles
@@ -22,7 +22,10 @@ class JobStatus(BaseModel):
     error: Optional[str] = None
 
 
-app = FastAPI()
+app = FastAPI(
+    title="Citegeist",
+    summary="Delivers a related works section and all the included citations."
+)
 
 # Mount static files directory for assets (CSS, JS)
 app.mount("/static", StaticFiles(directory="./static"), name="static")
@@ -53,17 +56,17 @@ async def create_job(
         raise HTTPException(status_code=400, detail="Invalid breadth, depth, or diversity value")
 
     # Create a new job ID
-    job_id = str(uuid.uuid4())
+    job_id: uuid = str(uuid.uuid4())
     
     # Initialize job status
     jobs[job_id] = JobStatus(
         status="created",
         progress=0,
-        status_text="Job created, waiting to start processing"
+        status_text="Starting..."
     )
     
     # Read PDF content if provided
-    pdf_content = None
+    pdf_content: bytes = None
     if pdf:
         try:
             pdf_content = await pdf.read()
@@ -102,14 +105,6 @@ def status(job_id: str):
     }
 
 
-def update_job_progress(job_id: str, progress_percent: int, status_text: str):
-    """Callback function to update job progress"""
-    if job_id in jobs:
-        jobs[job_id].status = "processing"
-        jobs[job_id].progress = progress_percent
-        jobs[job_id].status_text = status_text
-
-
 async def process_job(
         job_id: str,
         breadth: int,
@@ -118,8 +113,37 @@ async def process_job(
         abstract: Optional[str] = None,
         pdf_content: Optional[bytes] = None
 ):
-    time.sleep(5)
-    # Initialize job status
-    jobs[job_id].status = "processing"
-    jobs[job_id].progress = 1
-    jobs[job_id].status_text = "Initializing"
+    try:
+        # Initialize job status
+        jobs[job_id].status = "processing"
+        jobs[job_id].progress = 1
+        jobs[job_id].status_text = "Initializing"
+
+        await asyncio.sleep(5)
+        jobs[job_id].status = "processing"
+        jobs[job_id].progress = 10
+        jobs[job_id].status_text = "Step 1"
+
+        await asyncio.sleep(5)
+        jobs[job_id].status = "processing"
+        jobs[job_id].progress = 50
+        jobs[job_id].status_text = "Step 2"
+
+        await asyncio.sleep(5)
+        jobs[job_id].status = "processing"
+        jobs[job_id].progress = 80
+        jobs[job_id].status_text = "Step 3"
+
+        await asyncio.sleep(5)
+        jobs[job_id].status = "completed"
+        jobs[job_id].progress = 100
+        jobs[job_id].status_text = "Generated related works section!"
+        jobs[job_id].result = {
+            'related_works': 'Dummy value',
+            'citations': ['Citation 1', 'Citation 2']
+        }
+    except Exception as e:
+        # Handle exceptions
+        jobs[job_id].status = "failed"
+        jobs[job_id].error = str(e)
+

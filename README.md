@@ -38,6 +38,7 @@ TODO
 ### Running the Web Interface
 Citegeist also provides a **web-based interface** to input abstracts or upload full papers.
 ```bash
+cd webapp
 fastapi run server.py
 ```
 Then, access the UI at `http://localhost:8000`.

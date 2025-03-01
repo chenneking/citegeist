@@ -4,7 +4,8 @@ import pandas as pd
 from dotenv import load_dotenv
 
 from citegeist.utils.azure_client import AzureClient
-from citegeist.utils.helpers import load_api_key, generate_related_work_score_prompt
+from citegeist.utils.helpers import load_api_key
+from citegeist.utils.prompts import generate_related_work_score_prompt
 
 load_dotenv()
 

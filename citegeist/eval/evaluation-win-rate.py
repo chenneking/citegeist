@@ -1,6 +1,7 @@
 import pandas as pd
 from citegeist.utils.azure_client import AzureClient
-from citegeist.utils.helpers import generate_win_rate_evaluation_prompt, load_api_key
+from citegeist.utils.helpers import load_api_key
+from citegeist.utils.prompts import generate_win_rate_evaluation_prompt
 import os
 from dotenv import load_dotenv
 

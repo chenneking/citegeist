@@ -2,9 +2,9 @@
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from pymilvus import MilvusClient
-from citegeist.utils.helpers import (
-    load_api_key,
-    generate_summary_prompt_with_page_content,
+from citegeist.utils.helpers import load_api_key
+from citegeist.utils.prompts import (
+generate_summary_prompt_with_page_content,
     generate_related_work_prompt,
     generate_question_answer_prompt,
     generate_summary_prompt_question_with_page_content

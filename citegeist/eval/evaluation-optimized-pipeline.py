@@ -5,8 +5,8 @@ from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from pymilvus import MilvusClient
 
-from citegeist.utils.helpers import (
-    load_api_key,
+from citegeist.utils.helpers import load_api_key
+from citegeist.utils.prompts import (
     generate_summary_prompt_with_page_content,
     generate_related_work_prompt,
     generate_relevance_evaluation_prompt,
@@ -19,7 +19,7 @@ from citegeist.utils.citations import (
     process_arxiv_paper_with_embeddings,
     filter_citations
 )
-from citegeist.utils import (
+from citegeist.utils.long_to_short import (
     select_diverse_papers_with_weighted_similarity,
     select_diverse_pages_for_top_b_papers
 )

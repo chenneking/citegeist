@@ -1,10 +1,10 @@
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from pymilvus import MilvusClient
-from citegeist.utils.helpers import (
-    load_api_key,
+from citegeist.utils.helpers import load_api_key
+from citegeist.utils.prompts import (
     generate_summary_prompt,
-    generate_related_work_prompt,
+    generate_related_work_prompt
 )
 from citegeist.utils.azure_client import AzureClient
 from citegeist.utils.citations import get_arxiv_abstract, get_arxiv_citation

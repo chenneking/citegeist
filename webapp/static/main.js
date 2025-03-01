@@ -1,3 +1,6 @@
+// Constants
+const POLLING_RATE_MS = 1000;
+
 // Update slider values live
 document.getElementById('slider-breadth').addEventListener('input', (e) => {
     document.getElementById('slider-breadth-value').textContent = e.target.value;
@@ -49,7 +52,7 @@ function updateProgress(progress, statusText) {
 }
 
 // Poll Job status
-async function pollJobStatus(jobId, intervalMs = 1000) {
+async function pollJobStatus(jobId, intervalMs = POLLING_RATE_MS) {
     // Show progress section and hide output sections
     document.getElementById('progress-section').style.display = 'block';
     document.getElementById('related-works-section').style.display = 'none';

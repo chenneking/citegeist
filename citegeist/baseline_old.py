@@ -6,8 +6,9 @@ from citegeist.utils.prompts import (
     generate_summary_prompt,
     generate_related_work_prompt
 )
-from citegeist.utils.azure_client import AzureClient
+# from citegeist.utils.azure_client import AzureClient
 from citegeist.utils.citations import get_arxiv_abstract, get_arxiv_citation
+from citegeist.utils.llm_clients import create_client
 import time
 import random
 
@@ -19,10 +20,16 @@ KEY_LOCATION = "carl_config.json"
 topic_model = BERTopic.load("MaartenGr/BERTopic_ArXiv")
 embedding_model = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
 client = MilvusClient("./database.db")
-prompting_client = AzureClient(
+# prompting_client = AzureClient(
+#     endpoint=AZURE_ENDPOINT,
+#     deployment_id=AZURE_PROMPTING_MODEL,
+#     api_key=load_api_key(KEY_LOCATION),
+# )
+llm_client = create_client(
+    provider="azure",
     endpoint=AZURE_ENDPOINT,
-    deployment_id=AZURE_PROMPTING_MODEL,
-    api_key=load_api_key(KEY_LOCATION),
+    deployment_id=AZURE_PROMPTING_MODEL_VERSION,
+    api_key=load_api_key(KEY_LOCATION)
 )
 
 import google.generativeai as genai

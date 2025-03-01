@@ -1,38 +1,12 @@
 import logging
 import time
 from typing import Callable
-
+from abc import ABC, abstractmethod
 import requests
 import random
 
-
-def exponential_backoff_retry(
-    func: Callable, retries: int = 10, backoff_factor: int = 2, max_wait: int = 120
-):
-    """
-    Repeatedly calls a function with exponential backoff if it fails.
-    :param func: callable function
-    :param retries: max number of retries before giving up
-    :param backoff_factor: factor by which exponential retry is increased
-    :param max_wait: max number of seconds to sleep before retrying
-    :return:
-    """
-    wait: int = 1
-    for attempt in range(retries):
-        try:
-            return func()
-        except Exception as e:
-            if "429" in str(e) or "529" in str(e):
-                logging.warning(
-                    f"Rate limit exceeded. Attempt {attempt + 1} of {retries}. Retrying in {wait} seconds."
-                )
-                time.sleep(wait + random.uniform(0, 1))  # Adding jitter
-                wait = min(wait * backoff_factor, max_wait)
-            else:
-                raise e
-    logging.error("Exceeded maximum retries due to rate limit.")
-    raise Exception("Exceeded maximum retries due to rate limit.")
-
+class LLMClient(ABC):
+    pass
 
 class AzureClient:
     def __init__(self, endpoint: str, deployment_id: str, api_key: str):
@@ -117,3 +91,31 @@ class AzureClient:
             return json_response["data"]
 
         return exponential_backoff_retry(call_model)
+
+
+def exponential_backoff_retry(
+    func: Callable, retries: int = 10, backoff_factor: int = 2, max_wait: int = 120
+):
+    """
+    Repeatedly calls a function with exponential backoff if it fails.
+    :param func: callable function
+    :param retries: max number of retries before giving up
+    :param backoff_factor: factor by which exponential retry is increased
+    :param max_wait: max number of seconds to sleep before retrying
+    :return:
+    """
+    wait: int = 1
+    for attempt in range(retries):
+        try:
+            return func()
+        except Exception as e:
+            if "429" in str(e) or "529" in str(e):
+                logging.warning(
+                    f"Rate limit exceeded. Attempt {attempt + 1} of {retries}. Retrying in {wait} seconds."
+                )
+                time.sleep(wait + random.uniform(0, 1))  # Adding jitter
+                wait = min(wait * backoff_factor, max_wait)
+            else:
+                raise e
+    logging.error("Exceeded maximum retries due to rate limit.")
+    raise Exception("Exceeded maximum retries due to rate limit.")

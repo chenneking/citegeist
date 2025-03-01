@@ -2,21 +2,21 @@
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from pymilvus import MilvusClient
-from utils.helpers import (
+from citegeist.utils.helpers import (
     load_api_key,
     generate_summary_prompt_with_page_content,
     generate_related_work_prompt,
     generate_question_answer_prompt,
     generate_summary_prompt_question_with_page_content
 )
-from utils.azure_client import AzureClient
-from utils.citations import (
+from citegeist.utils.azure_client import AzureClient
+from citegeist.utils.citations import (
     get_arxiv_abstract,
     get_arxiv_citation,
     process_arxiv_paper_with_embeddings,
     filter_citations
 )
-from utils.long_to_short import (
+from citegeist.utils.long_to_short import (
     select_diverse_papers_with_weighted_similarity,
     select_diverse_pages_for_top_b_papers
 )
@@ -27,7 +27,13 @@ import math
 # Load environment variables
 load_dotenv()
 
+class Generator:
+    def __init__(self):
+        pass
+
 def generate_related_work(abstract: str, breadth: int, depth: int, diversity: float) -> dict[str, str | list[str]]:
+    print(f'Initializing.')
+    # Status: Initializing
     # Initialize clients
     topic_model = BERTopic.load("MaartenGr/BERTopic_ArXiv")
     embedding_model = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
@@ -39,10 +45,11 @@ def generate_related_work(abstract: str, breadth: int, depth: int, diversity: fl
     )
 
     embedded_abstract = embedding_model.encode(abstract)
-    topic = topic_model.transform(abstract)
-    topic_id = topic[0][0]
+    # topic = topic_model.transform(abstract)
+    # topic_id = topic[0][0]
 
     # Query Milvus Vector DB
+    print(f'Querying Vector DB for matches.')
     query_data: list[list[dict]] = client.search(
         collection_name="abstracts",
         data=[embedded_abstract],

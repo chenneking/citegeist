@@ -1,24 +1,25 @@
 # Imports
+import sys
+
 from bertopic import BERTopic
-from pandas import DataFrame
 from sentence_transformers import SentenceTransformer
 from pymilvus import MilvusClient
 
-from utils.helpers import (
+from citegeist.utils.helpers import (
     load_api_key,
     generate_summary_prompt_with_page_content,
     generate_related_work_prompt,
     generate_relevance_evaluation_prompt,
     generate_win_rate_evaluation_prompt
 )
-from utils.azure_client import AzureClient
-from utils.citations import (
+from citegeist.utils.azure_client import AzureClient
+from citegeist.utils.citations import (
     get_arxiv_abstract,
     get_arxiv_citation,
     process_arxiv_paper_with_embeddings,
-    filter_citations, process_arxiv_paper, extract_text_by_page, remove_citations_and_supplements
+    filter_citations
 )
-from utils.long_to_short import (
+from citegeist.utils import (
     select_diverse_papers_with_weighted_similarity,
     select_diverse_pages_for_top_b_papers
 )
@@ -27,12 +28,8 @@ import os
 import math
 import pandas as pd
 
-
-def run_evaluation(pages: list[str], source_abstract: str, source_related_work: str, gpt_related_work: str) -> DataFrame:
+def run_evaluation(source_abstract: str, source_related_work: str, gpt_related_work: str, breadth: int = 10, depth: int = 2, diversity: float = 0) -> pd.DataFrame:
     IS_THIS_PAPER_ON_ARXIV = False
-    breadth = 10
-    depth = 2
-    diversity = 0
 
     # Initialize clients
     topic_model = BERTopic.load("MaartenGr/BERTopic_ArXiv")
@@ -44,63 +41,37 @@ def run_evaluation(pages: list[str], source_abstract: str, source_related_work: 
         api_key=load_api_key(os.getenv("KEY_LOCATION")),
     )
 
-    # Create embeddings for all pages
-    page_embeddings = [embedding_model.encode(page) for page in pages]
+    embedded_abstract = embedding_model.encode(source_abstract)
+    # topic = topic_model.transform(source_abstract)
+    # topic_id = topic[0][0]
 
-    # Query Milvus Vector DB for each page
-    all_query_data: list[list[dict]] = []
-    for embedding in page_embeddings:
-        query_result = client.search(
-            collection_name="abstracts",
-            data=[embedding],
-            limit=6 * breadth,
-            anns_field="embedding",
-            # filter = f'topic == {topic_id}',  # Could potentially use topic_ids here
-            search_params={"metric_type": "COSINE", "params": {}},
-            output_fields=["embedding"],
-        )
-        all_query_data.extend(query_result)
+    # Query Milvus Vector DB
+    query_data: list[list[dict]] = client.search(
+        collection_name="abstracts",
+        data=[embedded_abstract],
+        limit=6*breadth,
+        anns_field="embedding",
+        # filter = f'topic == {topic_id}',
+        search_params={"metric_type": "COSINE", "params": {}},
+        output_fields=["embedding"],
+    )
 
-    print(f'Retrieved papers from DB for {len(all_query_data)} pages.')
+    # Clean DB response data
+    query_data: list[dict] = query_data[0]
+    for obj in query_data:
+        obj['embedding'] = obj['entity']['embedding']
+        obj.pop('entity')
 
-    # Aggregate similarity scores for papers that appear multiple times
-    paper_scores: dict[str, float] = {}
-    paper_data: dict[str, dict] = {}
+    # Remove first entry (this is the paper we're searching for). As it has already been published, it will show up with large similarity
+    if IS_THIS_PAPER_ON_ARXIV:
+        query_data = query_data[1:]
 
-    for page_results in all_query_data:
-        for result in page_results:
-            paper_id = result['id']
-            similarity_score = result['distance']  # Assuming this is the similarity score
+    print(f'Retrieved {len(query_data)} papers from the DB.')
 
-            if paper_id in paper_scores:
-                paper_scores[paper_id] += similarity_score
-            else:
-                paper_scores[paper_id] = similarity_score
-                paper_data[paper_id] = {
-                    'id': paper_id,
-                    'embedding': result['entity']['embedding']
-                }
-
-    # Convert aggregated results back to format expected by select_diverse_papers
-    # Sort papers by aggregated score and take top 6*breadth papers
-    top_paper_ids = sorted(
-        paper_scores.items(),
-        key=lambda x: x[1],
-        reverse=True
-    )[:6 * breadth]
-
-    # Convert back to original format expected by select_diverse_papers
-    # Each entry should be a list with one dict per query result
-    aggregated_query_data = [{
-        'id': paper_id,
-        'embedding': paper_data[paper_id]['embedding'],
-        'distance': score
-    } for paper_id, score in top_paper_ids]
-
-    # Select a longlist of papers using aggregated scores
+    # Select a longlist of papers
     selected_papers: list[dict] = select_diverse_papers_with_weighted_similarity(
-        paper_data=aggregated_query_data,
-        k=3 * breadth,
+        paper_data=query_data,
+        k=3*breadth,
         diversity_weight=diversity
     )
 
@@ -124,20 +95,19 @@ def run_evaluation(pages: list[str], source_abstract: str, source_related_work: 
     print(relevance_ratings.values())
 
     # Generate embeddings of each page of every paper in the longlist
-    page_embeddings_papers: list[list[dict]] = []
+    page_embeddings: list[list[dict]] = []
     for paper in selected_papers:
         arxiv_id = paper["id"]
         result = process_arxiv_paper_with_embeddings(arxiv_id, topic_model)
         if result:
-            page_embeddings_papers.append(result)
+            page_embeddings.append(result)
 
-    print(f'Generated page embeddings for {len(page_embeddings_papers)} papers.')
+    print(f'Generated page embeddings for {len(page_embeddings)} papers.')
 
-    # Generate shortlist of papers using first page as reference
-    # (you might want to modify this to consider all input pages)
+    # Generate shortlist of papers (at most k pages per paper, at most b papers in total)
     relevant_pages: list[dict] = select_diverse_pages_for_top_b_papers(
-        paper_embeddings=page_embeddings_papers,
-        input_string=pages[0],  # Using first page as reference
+        paper_embeddings=page_embeddings,
+        input_string=source_abstract,
         topic_model=topic_model,
         k=depth,
         b=breadth,
@@ -149,7 +119,7 @@ def run_evaluation(pages: list[str], source_abstract: str, source_related_work: 
 
     shortlist_ratings: dict[str, int] = {}
     for obj in relevant_pages:
-        #arxiv_id = aggregated_query_data[obj['paper_id']]["id"]
+        # this seems to have to be selected_papers instead of query data
         arxiv_id = selected_papers[obj['paper_id']]["id"]
         shortlist_ratings[arxiv_id] = relevance_ratings[arxiv_id]
 
@@ -158,14 +128,15 @@ def run_evaluation(pages: list[str], source_abstract: str, source_related_work: 
     print(f'Average shortlist relevance rating: {avg_shortlist_rating}')
     print(shortlist_ratings.values())
 
-    # Generate summaries for individual papers
+    # Generate summaries for individual papers (taking all relevant pages into account)
     for obj in relevant_pages:
-        arxiv_id = aggregated_query_data[obj['paper_id']]["id"]
+        # Because paper_id != arXiv_id -> retrieve arXiv id/
+        arxiv_id = query_data[obj['paper_id']]["id"]
         arxiv_abstract = get_arxiv_abstract(arxiv_id)
         text_segments = obj["text"]
         response: str = prompting_client.get_completions(
             generate_summary_prompt_with_page_content(
-                abstract_source_paper=pages[0],  # Using first page as reference
+                abstract_source_paper=source_abstract,
                 abstract_to_be_cited=arxiv_abstract,
                 page_text_to_be_cited=text_segments,
                 sentence_count=5
@@ -180,9 +151,9 @@ def run_evaluation(pages: list[str], source_abstract: str, source_related_work: 
     # Generate the final related works section text
     related_works_section: str = prompting_client.get_completions(
         generate_related_work_prompt(
-            source_abstract=pages[0],  # Using first page as reference
+            source_abstract=source_abstract,
             data=relevant_pages,
-            paragraph_count=math.ceil(breadth / 2),
+            paragraph_count=math.ceil(breadth/2),
             add_summary=False
         ),
         os.getenv("AZURE_PROMPTING_MODEL_VERSION")
@@ -246,54 +217,55 @@ def run_evaluation(pages: list[str], source_abstract: str, source_related_work: 
 
     print(f'Generated related work section with {len(filtered_citations)} citations.')
 
-    # return {
+    # print({
     #     'related_works': related_works_section,
     #     'citations': filtered_citations
-    # }
+    # })
 
     return pd.DataFrame(
         [
             {
-                'longlist_length': len(selected_papers),
-                'longlist_ratings': '|'.join([str(i) for i in relevance_ratings.values()]),
-                'shortlist_length': len(relevant_pages),
-                'shortlist_ratings': '|'.join([str(i) for i in shortlist_ratings.values()]),
-                'rating_source_ours': selected_winner_paper_source_ours,
-                'rating_ours_gpt': selected_winner_paper_ours_gpt,
-                'related_works': related_works_section,
-                'citations': '\n'.join(filtered_citations)
+            'longlist_length': len(selected_papers),
+            'longlist_ratings': '|'.join([str(i) for i in relevance_ratings.values()]),
+            'shortlist_length': len(relevant_pages),
+            'shortlist_ratings': '|'.join([str(i) for i in shortlist_ratings.values()]),
+            'rating_source_ours': selected_winner_paper_source_ours,
+            'rating_ours_gpt': selected_winner_paper_ours_gpt,
+            'related_works': related_works_section,
+            'citations': '\n'.join(filtered_citations)
             }
         ]
     )
-
 
 if __name__ == '__main__':
     # Load environment variables
     load_dotenv()
 
-    input_file = 'data/papers.csv'
-    output_file = 'data/output_full_pdf.csv'
+    input_file = '../data/papers.csv'
+    output_file = '../data/output.csv'
 
     input_df = pd.read_csv(input_file)
     output_df = None
+
+    breadth = 10
+    depth = 2
+    diversity = 0.0
+    if len(sys.argv) == 5:
+        breadth = int(sys.argv[1])
+        depth = int(sys.argv[2])
+        diversity = float(sys.argv[3])
+        output_file = sys.argv[4]
+
     for i, row in input_df.iterrows():
         print(f'Starting process for paper: {row['title']}')
-        arxiv_id = row['arxiv_id']
-        file_path = row['file_path']
-
-        raw_pages = []
-        if pd.notna(arxiv_id):
-            raw_pages = process_arxiv_paper(arxiv_id)
-        elif pd.notna(file_path):
-            raw_pages = extract_text_by_page(file_path)
-
-        pages = remove_citations_and_supplements(raw_pages)
 
         row_df: pd.DataFrame = run_evaluation(
-            pages=pages,
             source_abstract=row['abstract'],
             source_related_work=row['related_works'],
-            gpt_related_work=row['related_works_gpt4o_mini']
+            gpt_related_work=row['related_works_gpt4o_mini'],
+            breadth=breadth,
+            depth=depth,
+            diversity=diversity
         )
         if output_df is None:
             output_df = row_df

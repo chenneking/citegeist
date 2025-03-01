@@ -17,13 +17,13 @@ This folder contains implementations of various hash functions.
 ## Quick use of hash reload
 
 ```python
-from hash import hash_reload
+
+from citegeist.hash import hash_reload
 import kagglehub
 
 # Download updated arxiv data
 dataset_file = kagglehub.dataset_download("Cornell-University/arxiv") + "/arxiv-metadata-oai-snapshot.json"
 print("Path to dataset files:", dataset_file)
-
 
 database_file = "/Users/yushixing/Cornell/database.db"
 collection_name = "abstracts"
@@ -32,9 +32,9 @@ hash_table_file = "/Users/yushixing/Cornell/id_hash_table.json"
 # Load hash table
 id_hash_table = json.load(open(hash_table_file, "r"))
 
-
 # Reload and lookup
-updated_hash_table = hash_reload.reload_and_lookup(dataset_file, database_file, id_hash_table, collection_name=collection_name)
+updated_hash_table = hash_reload.reload_and_lookup(dataset_file, database_file, id_hash_table,
+                                                   collection_name=collection_name)
 json.dump(updated_hash_table, open(hash_table_file, "w"))
 
 ```

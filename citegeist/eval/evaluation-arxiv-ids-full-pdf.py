@@ -3,9 +3,8 @@ import os
 import pandas as pd
 from dotenv import load_dotenv
 
-from utils.azure_client import AzureClient
-from utils.citations import get_arxiv_abstract
-from utils.helpers import generate_relevance_evaluation_prompt, load_api_key, generate_related_work_score_prompt
+from citegeist.utils.azure_client import AzureClient
+from citegeist.utils.helpers import load_api_key, generate_related_work_score_prompt
 
 load_dotenv()
 
@@ -15,13 +14,13 @@ prompting_client = AzureClient(
     api_key=load_api_key(os.getenv("KEY_LOCATION")),
 )
 
-OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = 'data/output_related_work_scores.csv'
+OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = '../data/output_related_work_scores.csv'
 
-papers_df = pd.read_csv('data/papers.csv')
-output_df = pd.read_csv('data/output.csv')
-output_full_pdf_df = pd.read_csv('data/output_full_pdf.csv')
+papers_df = pd.read_csv('../data/papers.csv')
+output_df = pd.read_csv('../data/output.csv')
+output_full_pdf_df = pd.read_csv('../data/output_full_pdf.csv')
 
-related_works_score_df = pd.read_csv('data/output_related_work_scores.csv')
+related_works_score_df = pd.read_csv('../data/output_related_work_scores.csv')
 
 output_related_work_scores_data = []
 

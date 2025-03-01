@@ -3,25 +3,21 @@ from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from pymilvus import MilvusClient
 
-from utils.helpers import (
+from citegeist.utils.helpers import (
     load_api_key,
-    generate_summary_prompt_with_page_content,
-    generate_related_work_prompt,
     generate_relevance_evaluation_prompt
 )
-from utils.azure_client import AzureClient
-from utils.citations import (
+from citegeist.utils.azure_client import AzureClient
+from citegeist.utils.citations import (
     get_arxiv_abstract,
-    get_arxiv_citation,
     process_arxiv_paper_with_embeddings,
 )
-from utils.long_to_short import (
+from citegeist.utils import (
     select_diverse_papers_with_weighted_similarity,
     select_diverse_pages_for_top_b_papers
 )
 from dotenv import load_dotenv
 import os
-import math
 
 # Load environment variables
 load_dotenv()

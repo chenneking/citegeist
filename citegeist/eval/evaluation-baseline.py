@@ -2,14 +2,12 @@
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from pymilvus import MilvusClient
-import json
-from utils.helpers import (
+from citegeist.utils.helpers import (
     load_api_key,
     generate_summary_prompt,
-    generate_related_work_prompt, generate_relevance_evaluation_prompt, generate_win_rate_evaluation_prompt,
-)
-from utils.azure_client import AzureClient
-from utils.citations import get_arxiv_abstract, get_arxiv_citation, filter_citations
+    generate_related_work_prompt, generate_relevance_evaluation_prompt, )
+from citegeist.utils.azure_client import AzureClient
+from citegeist.utils.citations import get_arxiv_abstract, get_arxiv_citation, filter_citations
 from dotenv import load_dotenv
 import os
 
@@ -177,8 +175,8 @@ if __name__ == '__main__':
     # Load environment variables
     load_dotenv()
 
-    input_file = 'data/papers.csv'
-    output_file = 'data/output_baseline.csv'
+    input_file = '../data/papers.csv'
+    output_file = '../data/output_baseline.csv'
 
     input_df = pd.read_csv(input_file)
     output_df = None

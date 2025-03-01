@@ -1,13 +1,13 @@
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from pymilvus import MilvusClient
-from utils.helpers import (
+from citegeist.utils.helpers import (
     load_api_key,
     generate_summary_prompt,
     generate_related_work_prompt,
 )
-from utils.azure_client import AzureClient
-from utils.citations import get_arxiv_abstract, get_arxiv_citation
+from citegeist.utils.azure_client import AzureClient
+from citegeist.utils.citations import get_arxiv_abstract, get_arxiv_citation
 import time
 import random
 

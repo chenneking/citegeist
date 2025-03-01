@@ -1,5 +1,3 @@
-import json
-from utils.citations import process_arxiv_paper_with_embeddings
 from bertopic import BERTopic
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np

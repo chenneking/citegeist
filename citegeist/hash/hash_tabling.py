@@ -143,7 +143,7 @@ if __name__ == "__main__":
     hash_table_from_database = False
 
 
-    hash_table_file = "./id_hash_table.json"
+    hash_table_file = "id_hash_table.json"
 
 
     if hash_table_from_database:

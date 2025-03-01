@@ -66,7 +66,7 @@ print(df)
 
 from pymilvus import MilvusClient, utility
 
-EMBEDDING_PATH = "./database_mini.db"
+EMBEDDING_PATH = "../../database_mini.db"
 # Connect to Milvus server
 mini_client = MilvusClient(EMBEDDING_PATH)
 # print the first row of the database

@@ -1,11 +1,18 @@
+import os
 import uuid
-from typing import Optional, Dict, Any
-from fastapi import FastAPI, Form, UploadFile, File, BackgroundTasks, HTTPException
-from fastapi.staticfiles import StaticFiles
+from typing import Any, Dict, Optional
+
+from dotenv import load_dotenv
+from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+
 from citegeist.generator import Generator
-from citegeist.utils.citations import extract_text_by_page_from_pdf, remove_citations_and_supplements
+from citegeist.utils.citations import (
+    extract_text_by_page_from_pdf,
+    remove_citations_and_supplements,
+)
 
 
 class Item(BaseModel):
@@ -23,10 +30,10 @@ class JobStatus(BaseModel):
     error: Optional[str] = None
 
 
-app = FastAPI(
-    title="Citegeist",
-    summary="Delivers a related works section and all the included citations."
-)
+# Load environment variables
+load_dotenv()
+
+app = FastAPI(title="Citegeist", summary="Delivers a related works section and all the included citations.")
 
 # Mount static files directory for assets (CSS, JS)
 app.mount("/static", StaticFiles(directory="./static"), name="static")
@@ -36,8 +43,13 @@ jobs: Dict[str, JobStatus] = {}
 
 #
 generator = Generator(
-    llm_provider='gemini'
+    llm_provider="gemini",
+    database_path="/Users/carl/PycharmProjects/citegeist/database.db",
+    api_key=os.getenv("GEMINI_API_KEY"),
+    model_name=os.getenv("GEMINI_MODEL_NAME"),
+    embedding_model_name=os.getenv("GEMINI_EMBEDDING_MODEL_NAME"),
 )
+
 
 @app.get("/")
 def frontpage():
@@ -46,12 +58,12 @@ def frontpage():
 
 @app.post("/create-job")
 async def create_job(
-        breadth: int = Form(...),
-        depth: int = Form(...),
-        diversity: float = Form(...),
-        abstract: Optional[str] = Form(None),
-        pdf: Optional[UploadFile] = File(None),
-        background_tasks: BackgroundTasks = None
+    breadth: int = Form(...),
+    depth: int = Form(...),
+    diversity: float = Form(...),
+    abstract: Optional[str] = Form(None),
+    pdf: Optional[UploadFile] = File(None),
+    background_tasks: BackgroundTasks = None,
 ):
     # Validate input
     if not abstract and not pdf:
@@ -62,10 +74,8 @@ async def create_job(
 
     # Create a new job
     job_id: uuid = str(uuid.uuid4())
-    jobs[job_id] = JobStatus(
-        status="created"
-    )
-    
+    jobs[job_id] = JobStatus(status="created")
+
     # Read PDF content if provided
     pdf_pages: list[str] = None
     if pdf:
@@ -75,18 +85,10 @@ async def create_job(
             pdf_pages = remove_citations_and_supplements(raw_pages)
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"Error reading PDF: {str(e)}")
-    
+
     # Start processing in background
-    background_tasks.add_task(
-        process_job,
-        job_id,
-        breadth,
-        depth,
-        diversity,
-        abstract,
-        pdf_pages
-    )
-    
+    background_tasks.add_task(process_job, job_id, breadth, depth, diversity, abstract, pdf_pages)
+
     # Return job ID for status polling
     return {"job_id": job_id}
 
@@ -95,31 +97,32 @@ async def create_job(
 def status(job_id: str):
     if job_id not in jobs:
         raise HTTPException(status_code=404, detail="Job not found")
-    
+
     job = jobs[job_id]
-    
+
     # Return the status, progress percentage, and status text
     return {
         "status": job.status,
         "progress": job.progress,
         "status_text": job.status_text,
         "result": job.result,
-        "error": job.error
+        "error": job.error,
     }
 
 
 async def process_job(
-        job_id: str,
-        breadth: int,
-        depth: int,
-        diversity: float,
-        abstract: Optional[str] = None,
-        pdf_pages: Optional[list[str]] = None
+    job_id: str,
+    breadth: int,
+    depth: int,
+    diversity: float,
+    abstract: Optional[str] = None,
+    pdf_pages: Optional[list[str]] = None,
 ):
     def status_callback(step, status_text):
         progress: int = int((step / 8) * 100)
         jobs[job_id].progress = progress
         jobs[job_id].status_text = status_text
+
     try:
         # Initialize job status
         jobs[job_id].status = "processing"

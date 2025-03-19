@@ -27,7 +27,7 @@ class GeminiClient(LLMClient):
 
     """Client for Gemini API."""
 
-    def get_completions(self, prompt: str, max_tokens: int = 4096, temperature: float = 0.0, **kwargs) -> str:
+    def get_completion(self, prompt: str, max_tokens: int = 4096, temperature: float = 0.0, **kwargs) -> str:
         """
         Wraps prompt in a contents object, which is passed to get_chat_completions.
 
@@ -37,12 +37,12 @@ class GeminiClient(LLMClient):
             temperature (float): The temperature to use.
 
         Returns:
-            The completions.
+            The completion.
         """
         contents = [{"parts": [{"text": prompt}]}]
-        return self.get_chat_completions(contents, max_tokens, temperature, **kwargs)
+        return self.get_chat_completion(contents, max_tokens, temperature, **kwargs)
 
-    def get_chat_completions(
+    def get_chat_completion(
         self, contents: list[dict[str, list[dict]]], max_tokens: int = 4096, temperature: float = 0.0, **kwargs
     ) -> str:
         """
@@ -54,13 +54,16 @@ class GeminiClient(LLMClient):
             temperature (float): The temperature to use.
 
         Returns:
-            The chat completions.
+            The chat completion.
         """
 
         def call_model() -> str:
             headers = {"Content-Type": "application/json"}
 
-            payload = {"contents": contents, "temperature": temperature, "max_output_tokens": max_tokens, **kwargs}
+            payload = {
+                "contents": contents,
+                "generationConfig": {"temperature": temperature, "maxOutputTokens": max_tokens, **kwargs},
+            }
 
             request_url = (
                 f"https://generativelanguage.googleapis.com/v1beta/models/{self.model_name}"
@@ -71,7 +74,7 @@ class GeminiClient(LLMClient):
             response.raise_for_status()
             reply = response.json()
 
-            return reply["choices"][0]["message"]["content"]
+            return reply["candidates"][0]["content"]["parts"][0]["text"]
 
         return exponential_backoff_retry(call_model)
 

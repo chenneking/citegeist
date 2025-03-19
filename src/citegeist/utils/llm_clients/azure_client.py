@@ -58,7 +58,6 @@ class AzureClient(LLMClient):
         messages: list[dict[str, str]],
         max_tokens: int = 4096,
         temperature: float = 0.0,
-        deployment_id: str = None,
         **kwargs,
     ) -> str:
         """
@@ -68,16 +67,11 @@ class AzureClient(LLMClient):
             messages: List of message dictionaries with 'role' and 'content' keys
             max_tokens: Maximum number of tokens to generate
             temperature: Sampling temperature (0.0 = deterministic)
-            deployment_id: Override the default deployment ID
             **kwargs: Additional model parameters
 
         Returns:
             The completion text
         """
-        deployment = deployment_id or self.deployment_id
-
-        if not deployment:
-            raise ValueError("No deployment ID provided for chat completions")
 
         def call_model() -> str:
             headers = {
@@ -88,7 +82,8 @@ class AzureClient(LLMClient):
             payload = {"messages": messages, "temperature": temperature, "max_tokens": max_tokens, **kwargs}
 
             request_url = (
-                f"{self.endpoint}/openai/deployments/" f"{deployment}/chat/completions?api-version={self.api_version}"
+                f"{self.endpoint}/openai/deployments/"
+                f"{self.deployment_id}/chat/completions?api-version={self.api_version}"
             )
 
             response = requests.post(url=request_url, headers=headers, json=payload)
@@ -99,22 +94,17 @@ class AzureClient(LLMClient):
 
         return exponential_backoff_retry(call_model)
 
-    def get_embeddings(self, input_list: list[str], deployment_id: str = None, **kwargs) -> list[list[float]]:
+    def get_embeddings(self, input_list: list[str], **kwargs) -> list[list[float]]:
         """
         Gets embeddings from Azure OpenAI for the provided texts.
 
         Args:
             input_list: List of text inputs to embed
-            deployment_id: Override the default embedding deployment ID
             **kwargs: Additional model parameters
 
         Returns:
             List of embedding vectors
         """
-        deployment = deployment_id or self.embedding_deployment_id
-
-        if not deployment:
-            raise ValueError("No deployment ID provided for embeddings")
 
         def call_model() -> list[list[float]]:
             headers = {
@@ -126,7 +116,7 @@ class AzureClient(LLMClient):
 
             request_url = (
                 f"https://{self.endpoint}.openai.azure.com/openai/deployments/"
-                f"{deployment}/embeddings?api-version={self.api_version}"
+                f"{self.embedding_deployment_id}/embeddings?api-version={self.api_version}"
             )
 
             response = requests.post(url=request_url, headers=headers, json=payload)

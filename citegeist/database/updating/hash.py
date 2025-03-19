@@ -12,7 +12,7 @@ import torch
 
 from bertopic import BERTopic
 
-EMBEDDING_PATH = "../../database_mini.db"
+EMBEDDING_PATH = "../../../database_mini.db"
 HASH_TABLE_CREATED = True
 
 def get_metadata(filename):

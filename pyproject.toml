@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "citegeist"
 version = "0.0.0"
-description = "Delivers a related works section and all the included citations."
+description = "Generates a relate work analysis including all used citations."
 authors = [
     "Carl-Leander Henneking <ch2273@cornell.edu>",
     "Claas Beger <cbb89@cornell.edu>",
@@ -38,6 +38,23 @@ black = "^25.1.0"
 flake8 = "^7.1.2"
 isort = "^6.0.1"
 pre-commit = "^4.2.0"
+
+[tool.black]
+line-length = 88
+skip-string-normalization = false
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]

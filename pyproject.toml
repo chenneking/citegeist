@@ -1,43 +1,37 @@
-[tool.poetry]
+[project]
 name = "citegeist"
 version = "0.0.0"
 description = "Generates a relate work analysis including all used citations."
 authors = [
-    "Carl-Leander Henneking <ch2273@cornell.edu>",
-    "Claas Beger <cbb89@cornell.edu>",
+    {name = "Carl-Leander Henneking", email = "ch2273@cornell.edu"},
+    {name = "Claas Beger", email = "cbb89@cornell.edu"}
 ]
-license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/chenneking/citegeist"
-repository = "https://github.com/chenneking/citegeist"
-packages = [
-    { include = "citegeist" }
-]
+urls = { Repository = "https://github.com/chenneking/citegeist" }
 
-[tool.poetry.dependencies]
-python = ">=3.12"
+requires-python = ">=3.12"
 
 # TODO: update these dependencies!
 # Core dependencies used by citegeist:
-bertopic = "^0.16.4"
-sentence-transformers = "^3.3.1"
-pymilvus = "^2.5.0"
-python-dotenv = "^1.0.1"
+dependencies = [
+    "bertopic>=0.16.4,<0.17.0",
+    "sentence-transformers>=3.3.1,<4.0.0",
+    "pymilvus>=2.5.0,<3.0.0",
+    "python-dotenv>=1.0.1"
+]
 
-# Web-App dependencies are optional:
-fastapi = { version = "^0.115.5", optional = true }
-uvicorn = { version = "^0.32.1", optional = true }
 
-[tool.poetry.extras]
-# Extra group for users that want to use the webapp logic
-webapp = ["fastapi", "uvicorn"]
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.0"
-black = "^25.1.0"
-flake8 = "^7.1.2"
-isort = "^6.0.1"
-pre-commit = "^4.2.0"
+[project.optional-dependencies]
+webapp = [
+    "fastapi>=0.115.5,<0.116.0",
+    "uvicorn>=0.32.1,<0.33.0"
+]
+dev = [
+    "black>=25.1.0,<26.0.0",
+    "flake8>=7.1.2,<8.0.0",
+    "isort>=6.0.1,<7.0.0",
+    "pre-commit>=4.2.0,<5.0.0"
+]
 
 [tool.black]
 line-length = 121
@@ -53,9 +47,8 @@ exclude = '''
   | buck-out
   | build
   | dist
-)/
-'''
+)/'''
 
 [build-system]
-requires = ["poetry-core>=1.2.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

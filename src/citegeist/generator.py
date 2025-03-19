@@ -172,6 +172,7 @@ class Generator:
             status_callback,
         )
 
+    # TODO: remove this in final version. just used for testing of webapp.
     async def dummy(self, status_callback: Callable) -> dict[str, str | list[str]]:
         time = 3.0
         import asyncio

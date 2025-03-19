@@ -26,20 +26,6 @@ class LLMClient(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def get_embeddings(self, input_list: List[str], **kwargs) -> List[List[float]]:
-        """
-        Gets embeddings for the provided input texts.
-
-        Args:
-            input_list: List of text inputs to embed
-            **kwargs: Additional model-specific parameters
-
-        Returns:
-            List of embedding vectors
-        """
-        pass
-
-    @abc.abstractmethod
     def get_chat_completion(
         self, messages: List[Dict[str, str]], max_tokens: int = 4096, temperature: float = 0.0, **kwargs
     ) -> str:

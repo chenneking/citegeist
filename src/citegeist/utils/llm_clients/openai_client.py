@@ -31,17 +31,3 @@ class OpenAIClient(LLMClient):
         """ """
         # TODO: Implement
         pass
-
-    def get_embeddings(self, input_list: List[str], model: str = None, **kwargs) -> List[List[float]]:
-        """
-        Gets embeddings from OpenAI for the provided texts.
-
-        Args:
-            input_list: List of text inputs to embed
-            model: Override the default embedding model
-            **kwargs: Additional model parameters
-
-        Returns:
-            List of embedding vectors
-        """
-        # TODO: Implement

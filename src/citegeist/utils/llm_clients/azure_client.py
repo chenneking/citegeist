@@ -93,38 +93,3 @@ class AzureClient(LLMClient):
             return reply["choices"][0]["message"]["content"]
 
         return exponential_backoff_retry(call_model)
-
-    def get_embeddings(self, input_list: list[str], **kwargs) -> list[list[float]]:
-        """
-        Gets embeddings from Azure OpenAI for the provided texts.
-
-        Args:
-            input_list: List of text inputs to embed
-            **kwargs: Additional model parameters
-
-        Returns:
-            List of embedding vectors
-        """
-
-        def call_model() -> list[list[float]]:
-            headers = {
-                "Content-Type": "application/json",
-                "api-key": self.api_key,
-            }
-
-            payload = {"input": input_list, **kwargs}
-
-            request_url = (
-                f"https://{self.endpoint}.openai.azure.com/openai/deployments/"
-                f"{self.embedding_deployment_id}/embeddings?api-version={self.api_version}"
-            )
-
-            response = requests.post(url=request_url, headers=headers, json=payload)
-            response.raise_for_status()
-            json_response = response.json()
-
-            # Extract the embedding vectors
-            embeddings = [item["embedding"] for item in json_response["data"]]
-            return embeddings
-
-        return exponential_backoff_retry(call_model)

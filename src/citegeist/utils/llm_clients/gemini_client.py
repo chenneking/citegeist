@@ -77,36 +77,3 @@ class GeminiClient(LLMClient):
             return reply["candidates"][0]["content"]["parts"][0]["text"]
 
         return exponential_backoff_retry(call_model)
-
-    def get_embeddings(self, input_list: list[str], **kwargs) -> list[list[float]]:
-        """
-        Gets embeddings from Gemini for the provided texts.
-
-        Args:
-            input_list: List of text inputs to embed
-            **kwargs: Additional model parameters
-
-        Returns:
-            List of embedding vectors
-        """
-        content = {"parts": [{"text": item} for item in input_list]}
-
-        def call_model() -> str:
-            headers = {"Content-Type": "application/json"}
-
-            payload = {"model": self.embedding_model_name, "content": content, **kwargs}
-
-            request_url = (
-                f"https://generativelanguage.googleapis.com/v1beta/models/{self.embedding_model_name}"
-                f":embedContent?key={self.api_key}"
-            )
-
-            response = requests.post(url=request_url, headers=headers, json=payload)
-            response.raise_for_status()
-            reply = response.json()
-
-            # TODO: figure out how this format changes when multiple text parts are provided as input
-            return reply["embedding"]["values"]
-
-        return exponential_backoff_retry(call_model)
-        # TODO: Implement

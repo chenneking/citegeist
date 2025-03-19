@@ -40,7 +40,6 @@ isort = "^6.0.1"
 pre-commit = "^4.2.0"
 
 [tool.black]
-line-length = 121
 skip-string-normalization = false
 exclude = '''
 /(
@@ -55,9 +54,6 @@ exclude = '''
   | dist
 )/
 '''
-
-[tool.flake8]
-max-line-length = 121
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]

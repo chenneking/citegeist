@@ -15,11 +15,11 @@ prompting_client = AzureClient(
     api_key=load_api_key(os.getenv("KEY_LOCATION")),
 )
 
-OUTPUT_ARXIX_ID_ABSTRACT_RELEVANCE_SCORE_PATH = '../src/citegeist/out/output_arxiv-ids.csv'
-OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = '../src/citegeist/out/output_related_work_scores.csv'
+OUTPUT_ARXIX_ID_ABSTRACT_RELEVANCE_SCORE_PATH = 'out/output_arxiv-ids.csv'
+OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = 'out/output_related_work_scores.csv'
 
-papers_df = pd.read_csv('../src/citegeist/out/papers.csv')
-arxiv_id_df = pd.read_csv('../src/citegeist/out/papers-arxiv-ids.csv')
+papers_df = pd.read_csv('out/papers.csv')
+arxiv_id_df = pd.read_csv('out/papers-arxiv-ids.csv')
 
 # # Compare the source abstract and the abstracts of all citations (that have an arxiv id)
 # output_scores_data = []
@@ -61,8 +61,8 @@ arxiv_id_df = pd.read_csv('../src/citegeist/out/papers-arxiv-ids.csv')
 #
 # pd.DataFrame(output_scores_data).to_csv(OUTPUT_ARXIX_ID_ABSTRACT_RELEVANCE_SCORE_PATH, index=False)
 
-output_df = pd.read_csv('../src/citegeist/out/output.csv')
-output_full_pdf_df = pd.read_csv('../src/citegeist/out/output_full_pdf.csv')
+output_df = pd.read_csv('out/output.csv')
+output_full_pdf_df = pd.read_csv('out/output_full_pdf.csv')
 
 # Score the relevance of the related works between:
 # source & source, source & gpt4o_mini, source & ours, source & ours (with full page)
@@ -78,7 +78,7 @@ from Gemini_Evaluator import prompt_mistral_with_backoff
 project_id = "stellar-depth-441503-q5"
 model_name = "mistral-large-2411"
 region = "us-central1"
-OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = '../src/citegeist/out/output_related_work_scores_mistral.csv'
+OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = 'out/output_related_work_scores_mistral.csv'
 
 
 output_related_work_scores_data = []

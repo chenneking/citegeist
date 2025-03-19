@@ -21,7 +21,7 @@ from citegeist.utils.citations import (
     process_arxiv_paper_with_embeddings,
     filter_citations, process_arxiv_paper, extract_text_by_page, remove_citations_and_supplements
 )
-from citegeist.utils.long_to_short import (
+from citegeist.utils.filtering import (
     select_diverse_papers_with_weighted_similarity,
     select_diverse_pages_for_top_b_papers
 )
@@ -274,8 +274,8 @@ if __name__ == '__main__':
     # Load environment variables
     load_dotenv()
 
-    input_file = '../src/citegeist/out/papers.csv'
-    output_file = '../src/citegeist/out/output_full_pdf.csv'
+    input_file = 'out/papers.csv'
+    output_file = 'out/output_full_pdf.csv'
 
     input_df = pd.read_csv(input_file)
     output_df = None

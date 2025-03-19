@@ -177,8 +177,8 @@ if __name__ == '__main__':
     # Load environment variables
     load_dotenv()
 
-    input_file = '../src/citegeist/out/papers.csv'
-    output_file = '../src/citegeist/out/output_baseline.csv'
+    input_file = 'out/papers.csv'
+    output_file = 'out/output_baseline.csv'
 
     input_df = pd.read_csv(input_file)
     output_df = None

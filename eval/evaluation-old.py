@@ -10,7 +10,7 @@ from citegeist.utils.citations import (
     get_arxiv_abstract,
     process_arxiv_paper_with_embeddings,
 )
-from citegeist.utils.long_to_short import (
+from citegeist.utils.filtering import (
     select_diverse_papers_with_weighted_similarity,
     select_diverse_pages_for_top_b_papers
 )

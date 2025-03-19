@@ -142,7 +142,6 @@ async def process_job(
                 diversity=diversity
             )
 
-
         # Label job as completed (this is important for the frontend ajax logic)
         jobs[job_id].status = "completed"
         jobs[job_id].result = {

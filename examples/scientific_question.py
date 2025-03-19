@@ -1,6 +1,7 @@
 """
 Example demonstrating how to use the citegeist pipeline to generate an answer to a scientific question.
 """
+
 from citegeist.generator import Generator
 
 if __name__ == "__main__":
@@ -16,7 +17,9 @@ if __name__ == "__main__":
     diversity: float = 0.0
 
     # Get result
-    result: dict = generator.generate_answer_to_scientific_question(question=question, breadth=breadth, depth=depth, diversity=diversity)
+    result: dict = generator.generate_answer_to_scientific_question(
+        question=question, breadth=breadth, depth=depth, diversity=diversity
+    )
 
-    print(result["related_works"])
+    print(result["question_answer"])
     print(result["citations"])

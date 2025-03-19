@@ -1,27 +1,25 @@
 import hashlib
-import pandas as pd
-from pymilvus import MilvusClient, DataType, FieldSchema, CollectionSchema, Collection
 import json
-
-import os
-import pandas as pd
-from tqdm import tqdm
 import time
+
 import torch
-
-
 from bertopic import BERTopic
+from pymilvus import MilvusClient
+from tqdm import tqdm
+
 
 def get_metadata(filename):
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         for line in f:
             yield line
+
 
 def compute_embedding(abstract, embedding_model):
     start = time.time()
     res = embedding_model.encode(abstract)
-    print("Embedding time: ", time.time()-start)
+    print("Embedding time: ", time.time() - start)
     return res
+
 
 def get_embedding(abstract, embedding_model=None):
 
@@ -35,20 +33,18 @@ def get_embedding(abstract, embedding_model=None):
 def compute_hash(entry: dict) -> str:
     """Compute a SHA256 hash for a given entry."""
     entry_str = json.dumps(entry, sort_keys=True)
-    return hashlib.sha256(entry_str.encode('utf-8')).hexdigest()
+    return hashlib.sha256(entry_str.encode("utf-8")).hexdigest()
+
 
 # Assuming the database has been loaded into a collection
-    
 
 
 def create_hash_table_from_database(database_file, collection_name="abstracts"):
     print("Creating hash table from database {}...".format(database_file))
     client = MilvusClient(database_file)
-    hash_table = {} # id -> hash
+    hash_table = {}  # id -> hash
     query_start = time.time()
-    entries = client.query(collection_name=collection_name, 
-                           output_fields=["id", "hash", "embedding"],
-                           filter="id != ''")
+    entries = client.query(collection_name=collection_name, output_fields=["id", "hash", "embedding"], filter="id != ''")
     print(f"Query time: {time.time()-query_start:.2f} query length: {len(entries)}")
     for entry in tqdm(entries, desc="Processing entries", unit="entry"):
         hash_table[entry["id"]] = entry["hash"]
@@ -57,7 +53,7 @@ def create_hash_table_from_database(database_file, collection_name="abstracts"):
 
 def create_hash_table_from_dataset(dataset_file):
     print("Creating hash table from dataset {}...".format(dataset_file))
-    hash_table = {} # hash -> id
+    hash_table = {}  # hash -> id
     total_items = sum(1 for _ in get_metadata(dataset_file))
     progress = tqdm(total=total_items, desc="Processing papers", unit="paper")
     for paper in tqdm(get_metadata(dataset_file)):
@@ -67,15 +63,15 @@ def create_hash_table_from_dataset(dataset_file):
         progress.update(1)
     progress.close()
     return hash_table
-    
 
 
 ###
-# Then reload the database from kaggle, and for every metadata object compute the hash and do a lookup based on this. 
-# If the entry already exists pass. If the entry does not exist, do another lookup based on the id and determine whether the abstract has changed. 
-# If not pass. If yes, replace the existing row (this includes recomputing the embedding). 
-# If the Id is also not found insert the entry as a new row (also includes computing the embedding). 
-# You can look for examples of this in the embeddingBase.py and the small database. 
+# Then reload the database from kaggle, and for every metadata object compute the hash and do a lookup based on this.
+# If the entry already exists pass. If the entry does not exist, do another lookup based on the id and determine whether
+# the abstract has changed.
+# If not pass. If yes, replace the existing row (this includes recomputing the embedding).
+# If the Id is also not found insert the entry as a new row (also includes computing the embedding).
+# You can look for examples of this in the embeddingBase.py and the small database.
 # Updating hash if the paper has changed but the id is there.
 ###
 
@@ -92,7 +88,8 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
 
     # Get the latest version of the dataset
     # import kagglehub
-    # kaggle_path = kagglehub.dataset_download("Cornell-University/arxiv", path="..") + "/arxiv-metadata-oai-snapshot.json"
+    # kaggle_path = kagglehub.dataset_download("Cornell-University/arxiv", path="..")
+    # + "/arxiv-metadata-oai-snapshot.json"
     # print("Path to dataset files:", kaggle_path)
     kaggle_path = dataset_file
     client = MilvusClient(database_file)
@@ -100,8 +97,8 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
     # write tqdm to show the progress of the loop by showing the total length and expected finish time
     for paper in tqdm(get_metadata(kaggle_path)):
 
-        new_hash_key = hashlib.sha256(paper.encode('utf-8')).hexdigest()
-        # Search for the hash in the database 
+        new_hash_key = hashlib.sha256(paper.encode("utf-8")).hexdigest()
+        # Search for the hash in the database
         paper = json.loads(paper)
         paper_id = paper["id"]
         old_hash_key = hash_table.get(paper_id, 0)
@@ -123,7 +120,9 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
             client.insert(collection_name=collection_name, data=[updated_entry])
             hash_table[paper_id] = new_hash_key
 
-            import pdb; pdb.set_trace()
+            import pdb
+
+            pdb.set_trace()
 
         # Case 2: id not found, insert new row
         else:
@@ -143,7 +142,7 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
 if __name__ == "__main__":
 
     # Use the dataset loaded from Kaggle to build the hash table
-    dataset_file = "/home/sy774/fall2024/arxiv-metadata-oai-snapshot.json" 
+    dataset_file = "/home/sy774/fall2024/arxiv-metadata-oai-snapshot.json"
     hash_table_from_dataset = False
 
     database_file = "/home/sy774/fall2024/database.db"
@@ -152,7 +151,6 @@ if __name__ == "__main__":
 
     hash_table_file = "/home/sy774/id_hash_table.json"
 
-
     id_hash_table = None
     if database_file:
         id_hash_table = create_hash_table_from_database(database_file, collection_name=collection_name)
@@ -160,11 +158,9 @@ if __name__ == "__main__":
     elif hash_table_from_dataset:
         id_hash_table = create_hash_table_from_dataset(dataset_file)
         json.dump(id_hash_table, open(hash_table_file, "w"))
-    
-    
+
     if not id_hash_table:
         id_hash_table = json.load(open(hash_table_file, "r"))
 
     # Reload and lookup
     reload_and_lookup(dataset_file, database_file, id_hash_table, collection_name=collection_name)
-

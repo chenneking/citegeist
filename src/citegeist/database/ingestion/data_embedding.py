@@ -5,20 +5,34 @@
 # ENVIRONMENT SO THERE MAY BE MISSING LIBRARIES USED BY YOUR
 # NOTEBOOK.
 
+import hashlib
+import json
 import os
 import sys
-from tempfile import NamedTemporaryFile
-from urllib.request import urlopen
-from urllib.parse import unquote, urlparse
-from urllib.error import HTTPError
-from zipfile import ZipFile
 import tarfile
-import shutil
-from datetime import datetime
-from decimal import Decimal
+from tempfile import NamedTemporaryFile
+from urllib.error import HTTPError
+from urllib.parse import unquote, urlparse
+from urllib.request import urlopen
+from zipfile import ZipFile
+
+import numpy as np
+import torch
+from bertopic import BERTopic
 
 CHUNK_SIZE = 40960
-DATA_SOURCE_MAPPING = "arxiv:https%3A%2F%2Fstorage.googleapis.com%2Fkaggle-data-sets%2F612177%2F9995392%2Fbundle%2Farchive.zip%3FX-Goog-Algorithm%3DGOOG4-RSA-SHA256%26X-Goog-Credential%3Dgcp-kaggle-com%2540kaggle-161607.iam.gserviceaccount.com%252F20241124%252Fauto%252Fstorage%252Fgoog4_request%26X-Goog-Date%3D20241124T060258Z%26X-Goog-Expires%3D259200%26X-Goog-SignedHeaders%3Dhost%26X-Goog-Signature%3D7a6425b9aa958a5ab304bcc62443bb05383d5a8c68f9b9af48f1ece25881901efec4ea26e663c2118708bd0c53103b035b6bfcdfe42796ef21649766888a429d49f043498f08b245ef955f07da887351f5cf2ae4f17826ca6f414c08e4600fad30f02a974d24ed6af9552c46ee6dbe6b731ae08c9a0dbbad062219e26dcbea283a893e269eb13dc1b3f8a0ade9a9431752fb26557dbd355ea915109706362796a2da03b1c9041a6557a5b7f677c6f0a102b70c31f94c773f29a530cebc6a05739dcfe2d9841a9bccc46836651e1601517faf9a49ba99cb26968ddfa94311ac0536dcc466ec51d8ea9e4e83578be8e44662b510a69fa845c03b9e7498b4ae5e22"
+DATA_SOURCE_MAPPING = (
+    "arxiv:https%3A%2F%2Fstorage.googleapis.com%2Fkaggle-data-sets%2F612177%2F9995392%2Fbundle"
+    "%2Farchive.zip%3FX-Goog-Algorithm%3DGOOG4-RSA-SHA256%26X-Goog-Credential%3Dgcp-kaggle-com%2540"
+    "kaggle-161607.iam.gserviceaccount.com%252F20241124%252Fauto%252Fstorage%252Fgoog4_request%26X-"
+    "Goog-Date%3D20241124T060258Z%26X-Goog-Expires%3D259200%26X-Goog-SignedHeaders%3Dhost%26X-Goog-"
+    "Signature%3D7a6425b9aa958a5ab304bcc62443bb05383d5a8c68f9b9af48f1ece25881901efec4ea26e663c21187"
+    "08bd0c53103b035b6bfcdfe42796ef21649766888a429d49f043498f08b245ef955f07da887351f5cf2ae4f17826ca"
+    "6f414c08e4600fad30f02a974d24ed6af9552c46ee6dbe6b731ae08c9a0dbbad062219e26dcbea283a893e269eb13d"
+    "c1b3f8a0ade9a9431752fb26557dbd355ea915109706362796a2da03b1c9041a6557a5b7f677c6f0a102b70c31f94c"
+    "773f29a530cebc6a05739dcfe2d9841a9bccc46836651e1601517faf9a49ba99cb26968ddfa94311ac0536dcc466ec"
+    "51d8ea9e4e83578be8e44662b510a69fa845c03b9e7498b4ae5e22"
+)
 
 KAGGLE_INPUT_PATH = "arxivDrag/kaggle/input"
 KAGGLE_WORKING_PATH = "arxivDrag/kaggle/working"
@@ -43,9 +57,7 @@ if not os.path.isdir("/home/cbb89/arxivDrag/kaggle"):
                     dl += len(data)
                     tfile.write(data)
                     done = int(50 * dl / int(total_length))
-                    sys.stdout.write(
-                        f"\r[{'=' * done}{' ' * (50-done)}] {dl} bytes downloaded"
-                    )
+                    sys.stdout.write(f"\r[{'=' * done}{' ' * (50-done)}] {dl} bytes downloaded")
                     sys.stdout.flush()
                     data = fileres.read(CHUNK_SIZE)
                 if filename.endswith(".zip"):
@@ -55,30 +67,24 @@ if not os.path.isdir("/home/cbb89/arxivDrag/kaggle"):
                     with tarfile.open(tfile.name) as tarfile:
                         tarfile.extractall(destination_path)
                 print(f"\nDownloaded and uncompressed: {directory}")
-        except HTTPError as e:
-            print(
-                f"Failed to load (likely expired) {download_url} to path {destination_path}"
-            )
+        except HTTPError:
+            print(f"Failed to load (likely expired) {download_url} to path {destination_path}")
             continue
-        except OSError as e:
+        except OSError:
             print(f"Failed to load {download_url} to path {destination_path}")
             continue
 
 print("Data source import complete.")
 
-import numpy as np  # linear algebra
-import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
 
 # Input data files are available in the read-only "../input/" directory
 # For example, running this (by clicking run or pressing Shift+EnterX) will list all files under the input directory
 
-import os
 
 for dirname, _, filenames in os.walk("arxivDrag/kaggle/input/arxiv/"):
     for filename in filenames:
         print(os.path.join(dirname, filename))
 
-import json
 
 # Open the JSON file and load each line as a separate JSON object
 with open(
@@ -90,12 +96,6 @@ with open(
 
 print(data[:10])  # Show the first 10 entries
 
-from bertopic import BERTopic
-import json
-import hashlib
-import numpy as np
-import torch
-import os
 
 # Load the BERTopic model
 topic_model = BERTopic.load("MaartenGr/BERTopic_ArXiv")
@@ -136,15 +136,9 @@ def convert_to_serializable(obj):
 
 
 def compute_hash(entry):
-    serializable_entry = convert_to_serializable(
-        entry
-    )  # Ensure JSON serialization compatibility
-    json_string = json.dumps(
-        serializable_entry, sort_keys=True
-    )  # Serialize entry for hashing
-    return hashlib.sha256(
-        json_string.encode("utf-8")
-    ).hexdigest()  # Compute SHA-256 hash
+    serializable_entry = convert_to_serializable(entry)  # Ensure JSON serialization compatibility
+    json_string = json.dumps(serializable_entry, sort_keys=True)  # Serialize entry for hashing
+    return hashlib.sha256(json_string.encode("utf-8")).hexdigest()  # Compute SHA-256 hash
 
 
 def process_batch(data_batch):
@@ -180,17 +174,13 @@ for i in range(last_processed_index, len(data), checkpoint_interval):
     batch = data[i : i + checkpoint_interval]
 
     # Process the batch and get embeddings and topics
-    print(
-        f"Processing batch {i // checkpoint_interval + 1} of {len(data) // checkpoint_interval + 1}..."
-    )
+    print(f"Processing batch {i // checkpoint_interval + 1} of {len(data) // checkpoint_interval + 1}...")
     processed_batch = process_batch(batch)
 
     # Append the processed batch to the output file in JSONL format
     with open(output_file, "a", encoding="utf-8") as out_file:
         for entry in processed_batch:
-            out_file.write(
-                json.dumps(entry, ensure_ascii=False) + "\n"
-            )  # Each entry on a new line
+            out_file.write(json.dumps(entry, ensure_ascii=False) + "\n")  # Each entry on a new line
 
     # Save the checkpoint
     last_processed_index = i + checkpoint_interval

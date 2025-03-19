@@ -1,8 +1,9 @@
 import logging
+import random
 import time
 from typing import Callable
+
 import requests
-import random
 
 
 class AzureClient:
@@ -17,9 +18,7 @@ class AzureClient:
         self.deployment_id = deployment_id
         self.api_key = api_key
 
-    def get_completions(
-        self, prompt: str, api_version: str, max_tokens: int = 4096
-    ) -> str:
+    def get_completions(self, prompt: str, api_version: str, max_tokens: int = 4096) -> str:
         """
         Prompts an OpenAI LLM and returns it's output.
         :param prompt: user prompt
@@ -46,7 +45,8 @@ class AzureClient:
             }
 
             request_url: str = (
-                f"https://{self.endpoint}.openai.azure.com/openai/deployments/{self.deployment_id}/chat/completions?api-version={api_version}"
+                f"https://{self.endpoint}.openai.azure.com/openai/deployments/{self.deployment_id}/chat/completions"
+                f"?api-version={api_version}"
             )
 
             response = requests.post(url=request_url, headers=headers, json=payload)
@@ -78,7 +78,8 @@ class AzureClient:
             }
 
             request_url: str = (
-                f"https://{self.endpoint}.openai.azure.com/openai/deployments/{self.deployment_id}/embeddings?api-version={api_version}"
+                f"https://{self.endpoint}.openai.azure.com/openai/deployments/{self.deployment_id}/embeddings"
+                f"?api-version={api_version}"
             )
 
             response = requests.post(url=request_url, headers=headers, json=payload)
@@ -90,9 +91,7 @@ class AzureClient:
         return exponential_backoff_retry(call_model)
 
 
-def exponential_backoff_retry(
-    func: Callable, retries: int = 10, backoff_factor: int = 2, max_wait: int = 120
-):
+def exponential_backoff_retry(func: Callable, retries: int = 10, backoff_factor: int = 2, max_wait: int = 120):
     """
     Repeatedly calls a function with exponential backoff if it fails.
     :param func: callable function
@@ -107,9 +106,7 @@ def exponential_backoff_retry(
             return func()
         except Exception as e:
             if "429" in str(e) or "529" in str(e):
-                logging.warning(
-                    f"Rate limit exceeded. Attempt {attempt + 1} of {retries}. Retrying in {wait} seconds."
-                )
+                logging.warning(f"Rate limit exceeded. Attempt {attempt + 1} of {retries}. Retrying in {wait} seconds.")
                 time.sleep(wait + random.uniform(0, 1))  # Adding jitter
                 wait = min(wait * backoff_factor, max_wait)
             else:

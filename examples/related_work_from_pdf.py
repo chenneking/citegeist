@@ -1,8 +1,13 @@
 """
-Example demonstrating how to use the citegeist pipeline to generate a related works section (based on a pdf paper as input).
+Example demonstrating how to use the citegeist pipeline to generate a related works section
+ (based on a pdf paper as input).
 """
+
 from citegeist.generator import Generator
-from citegeist.utils.citations import extract_text_by_page_from_pdf, remove_citations_and_supplements
+from citegeist.utils.citations import (
+    extract_text_by_page_from_pdf,
+    remove_citations_and_supplements,
+)
 
 if __name__ == "__main__":
     # Setup Generator
@@ -21,7 +26,9 @@ if __name__ == "__main__":
     diversity: float = 0.0
 
     # Get result
-    result: dict = generator.generate_related_work_from_paper(pages=pages, breadth=breadth, depth=depth, diversity=diversity)
+    result: dict = generator.generate_related_work_from_paper(
+        pages=pages, breadth=breadth, depth=depth, diversity=diversity
+    )
 
     print(result["related_works"])
     print(result["citations"])

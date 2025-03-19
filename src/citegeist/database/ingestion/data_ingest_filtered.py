@@ -1,14 +1,12 @@
-from pymilvus import MilvusClient, DataType
 import jsonlines
+from pymilvus import DataType, MilvusClient
 
 # Initiate Milvus Client
 client = MilvusClient("../database_mini.db")
 
 # Define Milvus DB Schema
 schema = client.create_schema(auto_id=False)
-schema.add_field(
-    field_name="id", datatype=DataType.VARCHAR, max_length=50, is_primary=True
-)
+schema.add_field(field_name="id", datatype=DataType.VARCHAR, max_length=50, is_primary=True)
 # schema.add_field(field_name = 'abstract', datatype = DataType.VARCHAR, max_length = 65535)
 schema.add_field(field_name="embedding", datatype=DataType.FLOAT_VECTOR, dim=768)
 schema.add_field(field_name="hash", datatype=DataType.VARCHAR, max_length=64)
@@ -24,9 +22,7 @@ print("Starting insertion process")
 accepted_keys = [79, 77, 76, 63, 62, 60, 40, 30, 19, 16]
 key_counts = dict.fromkeys(accepted_keys, 0)
 total_count = 0
-with jsonlines.open(
-    "/Users/carl/Downloads/arxivDrag/processed_data_final_noAbstract.jsonl"
-) as reader:
+with jsonlines.open("/Users/carl/Downloads/arxivDrag/processed_data_final_noAbstract.jsonl") as reader:
     for obj in reader:
         if obj["topic"] not in accepted_keys:
             continue

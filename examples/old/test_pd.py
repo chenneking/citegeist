@@ -1,4 +1,5 @@
 import pandas as pd
+from pymilvus import MilvusClient
 
 data = """
 id: 0704.0001
@@ -28,43 +29,43 @@ that enhanced sensitivity to the signal can be obtained with judicious
 selection of events.
 """
 
+
 def get_field(data, field):
-    for line in data.split('\n'):
+    for line in data.split("\n"):
         if line.startswith(field):
-            return line[len(field)+2:]
+            return line[len(field) + 2 :]
     return None
 
+
 data = data.strip()
-id = get_field(data, 'id')
-submitter = get_field(data, 'submitter')
-authors = get_field(data, 'authors')
-title = get_field(data, 'title')
-comments = get_field(data, 'comments')
-journal_ref = get_field(data, 'journal-ref')
-doi = get_field(data, 'doi')
-report_no = get_field(data, 'report-no')
-categories = get_field(data, 'categories')
-license = get_field(data, 'license')
+id = get_field(data, "id")
+submitter = get_field(data, "submitter")
+authors = get_field(data, "authors")
+title = get_field(data, "title")
+comments = get_field(data, "comments")
+journal_ref = get_field(data, "journal-ref")
+doi = get_field(data, "doi")
+report_no = get_field(data, "report-no")
+categories = get_field(data, "categories")
+license = get_field(data, "license")
 
 df = pd.DataFrame(
     {
-        'id': [id],
-        'submitter': [submitter],
-        'authors': [authors],
-        'title': [title],
-        'comments': [comments],
-        'journal-ref': [journal_ref],
-        'doi': [doi],
-        'report-no': [report_no],
-        'categories': [categories],
-        'license': [license],
+        "id": [id],
+        "submitter": [submitter],
+        "authors": [authors],
+        "title": [title],
+        "comments": [comments],
+        "journal-ref": [journal_ref],
+        "doi": [doi],
+        "report-no": [report_no],
+        "categories": [categories],
+        "license": [license],
     }
 )
 
 print(df)
 
-
-from pymilvus import MilvusClient, utility
 
 EMBEDDING_PATH = "../../database_mini.db"
 # Connect to Milvus server

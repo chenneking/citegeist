@@ -1,10 +1,10 @@
+import os
+import time
 from io import BytesIO
 
 import arxiv
-import requests
-import os
-import time
 import fitz
+import requests
 from bertopic import BERTopic
 
 
@@ -90,6 +90,7 @@ def extract_text_by_page(pdf_path: str) -> list[str]:
 
     return pages_text
 
+
 def extract_text_by_page_from_pdf(pdf_content: bytes) -> list[str]:
     """
     Extract text from each page of the downloaded PDF using PyMuPDF (fitz).
@@ -102,6 +103,7 @@ def extract_text_by_page_from_pdf(pdf_content: bytes) -> list[str]:
         pages_text.append(page.get_text())  # Extract text from the page
 
     return pages_text
+
 
 def process_arxiv_paper(arxiv_id: str) -> list[str]:
     """
@@ -124,33 +126,24 @@ def process_arxiv_paper(arxiv_id: str) -> list[str]:
     return pages_text
 
 
-def detect_section_start(
-    pages_text: list[str], section_keywords: list[str], min_page_length: int = 100
-) -> int:
+def detect_section_start(pages_text: list[str], section_keywords: list[str], min_page_length: int = 100) -> int:
     """
     Detects the page index where references or supplementary sections start.
     Uses formatting and keyword analysis.
     """
     for i, page_text in enumerate(pages_text):
         # Check for keywords near the start of the page (section headers)
-        if any(
-            page_text.strip().lower().startswith(keyword)
-            for keyword in section_keywords
-        ):
+        if any(page_text.strip().lower().startswith(keyword) for keyword in section_keywords):
             return i
 
         # Heuristic: detect sudden shift to citation-heavy text
         lines = page_text.splitlines()
-        citation_count = sum(
-            1 for line in lines if "[" in line or "]" in line or "et al" in line
-        )
+        citation_count = sum(1 for line in lines if "[" in line or "]" in line or "et al" in line)
         if citation_count > 0.3 * len(lines):  # If >30% of lines are citations
             return i
 
         # Heuristic: detect formatting typical of references
-        if (
-            len(page_text) < min_page_length
-        ):  # Short pages often signal non-main content
+        if len(page_text) < min_page_length:  # Short pages often signal non-main content
             return i
 
     return len(pages_text)  # If no cutoff section is found, return the entire document
@@ -173,9 +166,7 @@ def remove_citations_and_supplements(pages_text: list[str]) -> list[str]:
     return pages_text[:cutoff_index]
 
 
-def process_arxiv_paper_with_embeddings(
-    arxiv_id: str, topic_model: BERTopic
-) -> list[dict]:
+def process_arxiv_paper_with_embeddings(arxiv_id: str, topic_model: BERTopic) -> list[dict]:
     """
     Processes an arXiv paper, splits it into pages, removes references/supplements,
     and returns text and embeddings for each page.
@@ -183,10 +174,10 @@ def process_arxiv_paper_with_embeddings(
     # Step 1: Download and read the paper
     pdf_path = f"{arxiv_id}.pdf"
     downloaded = download_pdf(arxiv_id, pdf_path)
-    
-    if(not downloaded):
+
+    if not downloaded:
         return None
-    
+
     try:
         # Open the PDF and extract text per page
         with fitz.open(pdf_path) as pdf:
@@ -200,15 +191,10 @@ def process_arxiv_paper_with_embeddings(
 
     # Step 3: Generate embeddings for the filtered pages
     embedding_model = topic_model.embedding_model
-    embeddings = embedding_model.embedding_model.encode(
-        filtered_pages, show_progress_bar=True
-    )
+    embeddings = embedding_model.embedding_model.encode(filtered_pages, show_progress_bar=True)
 
     # Combine pages and embeddings into a structured format
-    result = [
-        {"text": text, "embedding": embedding}
-        for text, embedding in zip(filtered_pages, embeddings)
-    ]
+    result = [{"text": text, "embedding": embedding} for text, embedding in zip(filtered_pages, embeddings)]
     return result
 
 
@@ -234,7 +220,8 @@ def find_most_relevant_pages(
     relevant_pages: list[dict], abstracts: list[str], paper_count_limit: int
 ) -> dict[str, dict]:
     """
-    Identifies all pages for the top {paper_count_limit} papers. (i.e. if there's multiple pages of one paper that are deemed relevant, all pages will be included)
+    Identifies all pages for the top {paper_count_limit} papers. (i.e. if there's multiple pages of one paper that are
+     deemed relevant, all pages will be included)
     :param relevant_pages:
     :param abstracts: List of paper abstracts
     :param paper_count_limit: Max number of source papers of all pages that are returned
@@ -264,12 +251,12 @@ def find_most_relevant_pages(
 def filter_citations(related_works_section: str, citation_strings: list[str]) -> list[str]:
     matched_citations = set()
     for citation in citation_strings:
-        split_citation = citation.split(' ')
+        split_citation = citation.split(" ")
         if len(split_citation) > 2:
             first_author = split_citation[1]
-            if first_author[-1] == ',':
+            if first_author[-1] == ",":
                 first_author = first_author[:-1]
-            if f' {first_author}' in related_works_section or f'{first_author} ' in related_works_section:
+            if f" {first_author}" in related_works_section or f"{first_author} " in related_works_section:
                 matched_citations.add(citation)
 
     return list(matched_citations)

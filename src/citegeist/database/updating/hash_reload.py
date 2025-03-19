@@ -1,32 +1,30 @@
 import hashlib
-import pandas as pd
-from pymilvus import MilvusClient, DataType, FieldSchema, CollectionSchema, Collection
 import json
-
-import os
-import pandas as pd
-from tqdm import tqdm
-import time
-import torch
-
-
-from bertopic import BERTopic
 import logging
-import numpy  as np
+import time
+
+import numpy as np
+import torch
+from bertopic import BERTopic
+from pymilvus import MilvusClient
+from tqdm import tqdm
 
 # Suppress BERTopic output
-logging.getLogger('bertopic').setLevel(logging.WARNING)
+logging.getLogger("bertopic").setLevel(logging.WARNING)
+
 
 def get_metadata(filename):
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         for line in f:
             yield line
+
 
 def compute_embedding(abstract, embedding_model):
     start = time.time()
     res = embedding_model.encode(abstract)
-    # print("Embedding time: ", time.time()-start)
+    print("Embedding time: ", time.time() - start)
     return res
+
 
 def get_embedding(abstract, embedding_model=None):
 
@@ -34,7 +32,6 @@ def get_embedding(abstract, embedding_model=None):
         return torch.zeros(768)
     else:
         return compute_embedding(abstract, embedding_model)
-
 
 
 def convert_to_serializable(obj):
@@ -46,32 +43,24 @@ def convert_to_serializable(obj):
         return {key: convert_to_serializable(value) for key, value in obj.items()}
     else:
         return obj
-    
+
+
 # Add hash to existing database entries
 def compute_hash(entry):
-    serializable_entry = convert_to_serializable(
-        entry
-    )  # Ensure JSON serialization compatibility
-    json_string = json.dumps(
-        serializable_entry, sort_keys=True
-    )  # Serialize entry for hashing
-    return hashlib.sha256(
-        json_string.encode("utf-8")
-    ).hexdigest()  # Compute SHA-256 hash
+    serializable_entry = convert_to_serializable(entry)  # Ensure JSON serialization compatibility
+    json_string = json.dumps(serializable_entry, sort_keys=True)  # Serialize entry for hashing
+    return hashlib.sha256(json_string.encode("utf-8")).hexdigest()  # Compute SHA-256 hash
 
 
 # Assuming the database has been loaded into a collection
-    
 
 
 def create_hash_table_from_database(database_file, collection_name="abstracts"):
     print("Creating hash table from database {}...".format(database_file))
     client = MilvusClient(database_file)
-    hash_table = {} # id -> hash
+    hash_table = {}  # id -> hash
     query_start = time.time()
-    entries = client.query(collection_name=collection_name, 
-                           output_fields=["id", "hash", "embedding"],
-                           filter="id != ''")
+    entries = client.query(collection_name=collection_name, output_fields=["id", "hash", "embedding"], filter="id != ''")
     print(f"Query time: {time.time()-query_start:.2f} query length: {len(entries)}")
     for entry in tqdm(entries, desc="Processing entries", unit="entry"):
         hash_table[entry["id"]] = entry["hash"]
@@ -80,7 +69,7 @@ def create_hash_table_from_database(database_file, collection_name="abstracts"):
 
 def create_hash_table_from_dataset(dataset_file):
     print("Creating hash table from dataset {}...".format(dataset_file))
-    hash_table = {} # hash -> id
+    hash_table = {}  # hash -> id
     total_items = sum(1 for _ in get_metadata(dataset_file))
     progress = tqdm(total=total_items, desc="Processing papers", unit="paper")
     for paper in tqdm(get_metadata(dataset_file)):
@@ -90,7 +79,6 @@ def create_hash_table_from_dataset(dataset_file):
         progress.update(1)
     progress.close()
     return hash_table
-    
 
 
 # Reload database from Kaggle
@@ -105,7 +93,8 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
 
     # Get the latest version of the dataset
     # import kagglehub
-    # kaggle_path = kagglehub.dataset_download("Cornell-University/arxiv", path="..") + "/arxiv-metadata-oai-snapshot.json"
+    # kaggle_path = kagglehub.dataset_download("Cornell-University/arxiv", path="..")
+    # + "/arxiv-metadata-oai-snapshot.json"
     # print("Path to dataset files:", kaggle_path)
     kaggle_path = dataset_file
     client = MilvusClient(database_file)
@@ -115,18 +104,17 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
     update_ids = 0
     inserted_ids = 0
     for paper in tqdm(get_metadata(kaggle_path)):
-        # Search for the hash in the database 
+        # Search for the hash in the database
         start = time.time()
-        try:   
+        try:
             paper = json.loads(paper)
-        except:
+        except Exception:
             print("Error loading paper")
             continue
         new_hash_key = compute_hash(paper)
         paper_id = paper["id"]
         old_hash_key = hash_table.get(paper_id, 0)
         print(f"Hash computation time: {time.time()-start}")
-
 
         # Case 0: Hashes are the same, abstract is the same
         if old_hash_key == new_hash_key:
@@ -144,9 +132,9 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
             # updated_entry["abstract"] = paper["abstract"]
             updated_entry["topic"] = topic_model.transform([paper["abstract"]])[0].item()
             # client.update(collection_name=collection_name, data=[updated_entry], filter=f'id == "{paper_id}"')
-            
+
             update_ids += 1
-            #client.delete(collection_name=collection_name, filter=f'id == "{paper_id}"')
+            # client.delete(collection_name=collection_name, filter=f'id == "{paper_id}"')
             client.insert(collection_name=collection_name, data=[updated_entry])
             print(f"Entry insertion time: {time.time()-start}")
             hash_table[paper_id] = new_hash_key
@@ -171,20 +159,23 @@ def reload_and_lookup(dataset_file, database_file, hash_table, collection_name="
     print(f"Database update completed.{update_ids} entries updated, {inserted_ids} entries inserted")
     return hash_table
 
+
 def test():
     client = MilvusClient("/Users/yushixing/Cornell/database.db")
-    entry = client.query(collection_name="abstracts", output_fields=["id", "hash", "embedding"], filter="id == '2412.00036'")
+    entry = client.query(
+        collection_name="abstracts", output_fields=["id", "hash", "embedding"], filter="id == '2412.00036'"
+    )
     print(entry)
 
 
 if __name__ == "__main__":
 
     # Use the dataset loaded from Kaggle to build the hash table
-    dataset_file = "/Users/yushixing/Cornell/arxiv-metadata-oai-snapshot.json" 
-
+    dataset_file = "/Users/yushixing/Cornell/arxiv-metadata-oai-snapshot.json"
 
     # import kagglehub
-    # dataset_file = kagglehub.dataset_download("Cornell-University/arxiv", path="/Users/yushixing/Cornell/") + "/arxiv-metadata-oai-snapshot.json"
+    # dataset_file = kagglehub.dataset_download("Cornell-University/arxiv", path="/Users/yushixing/Cornell/") +
+    # "/arxiv-metadata-oai-snapshot.json"
     # print("Path to dataset files:", dataset_file)
     hash_table_from_dataset = False
 
@@ -202,7 +193,6 @@ if __name__ == "__main__":
         elif hash_table_from_database:
             id_hash_table = create_hash_table_from_database(database_file)
             json.dump(id_hash_table, open(hash_table_file, "w"))
-    
 
     # Reload and lookup
     updated_hash_table = reload_and_lookup(dataset_file, database_file, id_hash_table, collection_name=collection_name)

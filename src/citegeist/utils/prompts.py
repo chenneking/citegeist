@@ -1,6 +1,5 @@
-def generate_summary_prompt(
-        abstract_source_paper: str, abstract_to_be_cited: str
-) -> str:
+# flake8: noqa
+def generate_summary_prompt(abstract_source_paper: str, abstract_to_be_cited: str) -> str:
     """
     Generates the summary prompt for a given pair of abstracts.
     :param abstract_source_paper: Abstract of source paper
@@ -20,7 +19,7 @@ def generate_summary_prompt(
 
 
 def generate_summary_prompt_question_with_page_content(
-        question: str, abstract_to_be_considered: str, page_text_to_be_cited: list[str]
+    question: str, abstract_to_be_considered: str, page_text_to_be_cited: list[str]
 ) -> str:
     """
     Generates the summary prompt for a given pair of abstracts.
@@ -57,10 +56,7 @@ def generate_summary_prompt_question_with_page_content(
 
 
 def generate_summary_prompt_with_page_content(
-        abstract_source_paper: str,
-        abstract_to_be_cited: str,
-        page_text_to_be_cited: list[str],
-        sentence_count: int = 8
+    abstract_source_paper: str, abstract_to_be_cited: str, page_text_to_be_cited: list[str], sentence_count: int = 8
 ) -> str:
     """
     Generates the summary prompt for a given pair of abstracts and a list of relevant pages.
@@ -126,8 +122,9 @@ def generate_question_answer_prompt(question: str, data: list[dict]):
     return output
 
 
-def generate_related_work_prompt(source_abstract: str, data: list[dict], paragraph_count: int = 5,
-                                 add_summary: bool = True) -> str:
+def generate_related_work_prompt(
+    source_abstract: str, data: list[dict], paragraph_count: int = 5, add_summary: bool = True
+) -> str:
     """
     Generates the related work prompt for an abstract and a set of summaries & citation strings.
     :param source_abstract: Abstract of source paper
@@ -236,18 +233,20 @@ def generate_relevance_evaluation_prompt(source_abstract: str, target_abstract: 
     return prompt
 
 
-def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_work: str, target_related_work: str,
-                                        reverse_order: bool = False) -> tuple[str, list[str]]:
+def generate_win_rate_evaluation_prompt(
+    source_abstract: str, source_related_work: str, target_related_work: str, reverse_order: bool = False
+) -> tuple[str, list[str]]:
     order = []
     if reverse_order:
-        order = ['target', 'source']
+        order = ["target", "source"]
         tmp = source_related_work
         source_related_work = target_related_work
         target_related_work = tmp
     else:
-        order = ['source', 'target']
+        order = ["source", "target"]
 
-    return f"""
+    return (
+        f"""
     Source Abstract:
     {source_abstract}
 
@@ -269,7 +268,9 @@ def generate_win_rate_evaluation_prompt(source_abstract: str, source_related_wor
         •	Tie
 
     Do not include anything else in your output.
-    """, order
+    """,
+        order,
+    )
 
 
 def generate_related_work_score_prompt(source_abstract: str, related_work: str) -> str:

@@ -1,6 +1,6 @@
+import numpy as np
 from bertopic import BERTopic
 from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
 
 
 def extract_most_relevant_pages(
@@ -30,9 +30,7 @@ def extract_most_relevant_pages(
     results = []
 
     for paper_idx, paper in enumerate(paper_embeddings):
-        paper_id = (
-            paper_idx  # Replace with actual paper ID if available in `paper_embeddings`
-        )
+        paper_id = paper_idx  # Replace with actual paper ID if available in `paper_embeddings`
         for page_number, page_data in enumerate(paper):
             if skip_first and page_number == 0:
                 continue
@@ -87,9 +85,7 @@ def extract_most_relevant_pages_for_each_paper(
 
     # Loop through each paper
     for paper_idx, paper in enumerate(paper_embeddings):
-        paper_id = (
-            paper_idx  # Replace with actual paper ID if available in `paper_embeddings`
-        )
+        paper_id = paper_idx  # Replace with actual paper ID if available in `paper_embeddings`
         paper_results = []
 
         # Loop through each page in the paper
@@ -113,9 +109,7 @@ def extract_most_relevant_pages_for_each_paper(
             )
 
         # Sort the pages for the current paper by similarity score in descending order
-        paper_results_sorted = sorted(
-            paper_results, key=lambda x: x["similarity"], reverse=True
-        )
+        paper_results_sorted = sorted(paper_results, key=lambda x: x["similarity"], reverse=True)
 
         # Add the top-k pages for the current paper to the final results
         all_results.extend(paper_results_sorted[:top_k])
@@ -123,9 +117,7 @@ def extract_most_relevant_pages_for_each_paper(
     return all_results
 
 
-def select_diverse_papers_with_precomputed_distances(
-    paper_data: list, k: int
-) -> list[str]:
+def select_diverse_papers_with_precomputed_distances(paper_data: list, k: int) -> list[str]:
     """
     Selects `k` papers that maximize diversity while minimizing distance to the input paper.
 
@@ -156,16 +148,11 @@ def select_diverse_papers_with_precomputed_distances(
                 continue
 
             # Compute the diversity score: minimum distance to selected papers
-            diversity_score = min(
-                cosine_similarity([embeddings[i]], [embeddings[j]])[0][0]
-                for j in selected_indices
-            )
+            diversity_score = min(cosine_similarity([embeddings[i]], [embeddings[j]])[0][0] for j in selected_indices)
 
             # Combined score: similarity to input paper and diversity
             similarity_to_input = distances[i]
-            combined_score = (
-                similarity_to_input * 0.5 + (1 - diversity_score) * 0.5
-            )  # Adjust weights
+            combined_score = similarity_to_input * 0.5 + (1 - diversity_score) * 0.5  # Adjust weights
 
             if combined_score > max_combined_score:
                 max_combined_score = combined_score
@@ -176,7 +163,10 @@ def select_diverse_papers_with_precomputed_distances(
     # Return the IDs of the selected papers
     return [paper_data[i] for i in selected_indices]
 
-def select_diverse_papers_with_weighted_similarity(paper_data: list[dict], k: int, diversity_weight:float=0.25) -> list[dict]:
+
+def select_diverse_papers_with_weighted_similarity(
+    paper_data: list[dict], k: int, diversity_weight: float = 0.25
+) -> list[dict]:
     """
     Selects `k` papers that balance diversity and similarity to the input paper based on the `diversity_weight`.
 
@@ -209,16 +199,11 @@ def select_diverse_papers_with_weighted_similarity(paper_data: list[dict], k: in
                 continue
 
             # Compute the diversity score: minimum distance to selected papers
-            diversity_score = min(
-                cosine_similarity([embeddings[i]], [embeddings[j]])[0][0]
-                for j in selected_indices
-            )
+            diversity_score = min(cosine_similarity([embeddings[i]], [embeddings[j]])[0][0] for j in selected_indices)
 
             # Combined score: similarity to input paper and diversity
             similarity_to_input = distances[i]
-            combined_score = (
-                1 - diversity_weight
-            ) * similarity_to_input + diversity_weight * (1 - diversity_score)
+            combined_score = (1 - diversity_weight) * similarity_to_input + diversity_weight * (1 - diversity_score)
 
             if combined_score > max_combined_score:
                 max_combined_score = combined_score
@@ -228,6 +213,7 @@ def select_diverse_papers_with_weighted_similarity(paper_data: list[dict], k: in
 
     # Return the IDs of the selected papers
     return [paper_data[i] for i in selected_indices]
+
 
 def select_diverse_pages_for_top_b_papers(
     paper_embeddings: list[list[dict]],
@@ -255,8 +241,8 @@ def select_diverse_pages_for_top_b_papers(
     Returns:
         list: A list of dictionaries, each containing "paper_id" and "text" (list of selected page texts).
     """
-    from sklearn.metrics.pairwise import cosine_similarity
     import numpy as np
+    from sklearn.metrics.pairwise import cosine_similarity
 
     # Encode the input string to get its embedding
     embedding_model = topic_model.embedding_model.embedding_model
@@ -292,9 +278,7 @@ def select_diverse_pages_for_top_b_papers(
             )
 
         # Sort pages by similarity score in descending order
-        page_candidates_sorted = sorted(
-            page_candidates, key=lambda x: x["similarity"], reverse=True
-        )
+        page_candidates_sorted = sorted(page_candidates, key=lambda x: x["similarity"], reverse=True)
 
         # Select pages iteratively based on similarity and diversity
         selected_pages = [page_candidates_sorted[0]]  # Start with the most similar page
@@ -311,14 +295,15 @@ def select_diverse_pages_for_top_b_papers(
                     cosine_similarity(
                         [candidate["embedding"]],
                         [selected["embedding"]],
-                    )[0][0]
+                    )[
+                        0
+                    ][0]
                     for selected in selected_pages
                 )
 
                 # Combined score: similarity to input string and diversity
-                combined_score = (
-                    (1 - diversity_weight) * candidate["similarity"]
-                    + diversity_weight * (1 - diversity_score)
+                combined_score = (1 - diversity_weight) * candidate["similarity"] + diversity_weight * (
+                    1 - diversity_score
                 )
 
                 if combined_score > max_combined_score:
@@ -332,11 +317,13 @@ def select_diverse_pages_for_top_b_papers(
         avg_similarity = np.mean([page["similarity"] for page in selected_pages])
 
         # Store the results for the current paper
-        paper_results.append({
-            "paper_id": paper_id,
-            "selected_pages": selected_pages,
-            "avg_similarity": avg_similarity,
-        })
+        paper_results.append(
+            {
+                "paper_id": paper_id,
+                "selected_pages": selected_pages,
+                "avg_similarity": avg_similarity,
+            }
+        )
 
     # Sort papers by their average similarity in descending order
     top_b_papers = sorted(paper_results, key=lambda x: x["avg_similarity"], reverse=True)[:b]
@@ -344,11 +331,11 @@ def select_diverse_pages_for_top_b_papers(
     # Construct the final results, one object per paper
     final_results = []
     for paper in top_b_papers:
-        final_results.append({
-            "paper_id": paper["paper_id"],
-            "text": [page["text"] for page in paper["selected_pages"]],
-        })
+        final_results.append(
+            {
+                "paper_id": paper["paper_id"],
+                "text": [page["text"] for page in paper["selected_pages"]],
+            }
+        )
 
     return final_results
-
-

@@ -1,8 +1,11 @@
-from citegeist import generator
+"""
+Example demonstrating how to use the citegeist pipeline to generate a related works section.
+"""
+from citegeist.generator import Generator
 
 if __name__ == "__main__":
     # Setup Generator
-    gen = generator.Generator(
+    generator = Generator(
         llm_provider="gemini",  # choice of: Azure (OpenAI Studio), Anthropic, Gemini, Mistral, and OpenAI
     )
 
@@ -22,7 +25,7 @@ if __name__ == "__main__":
     diversity: float = 0.0
 
     # Get result
-    result: dict = gen.generate_related_work(abstract=abstract, breadth=breadth, depth=depth, diversity=diversity)
+    result: dict = generator.generate_related_work(abstract=abstract, breadth=breadth, depth=depth, diversity=diversity)
 
     print(result["related_works"])
     print(result["citations"])

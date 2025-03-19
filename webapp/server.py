@@ -60,8 +60,11 @@ async def create_job(
     if not (5 <= breadth <= 20) or not (1 <= depth <= 5) or not (0 <= diversity <= 1):
         raise HTTPException(status_code=400, detail="Invalid breadth, depth, or diversity value")
 
-    # Create a new job ID
+    # Create a new job
     job_id: uuid = str(uuid.uuid4())
+    jobs[job_id] = JobStatus(
+        status="created"
+    )
     
     # Read PDF content if provided
     pdf_pages: list[str] = None
@@ -125,30 +128,30 @@ async def process_job(
 
         # Trigger correct logic based on provided input.
         result: Optional[Dict[str, Any]] = None
-        if abstract:
-            result: dict = generator.generate_related_work(
-                abstract=abstract,
-                breadth=breadth,
-                depth=depth,
-                diversity=diversity,
-                status_callback=status_callback
-            )
-
-        elif pdf_pages:
-            result: dict = generator.generate_related_work_from_paper(
-                pages=pdf_pages,
-                breadth=breadth,
-                depth=depth,
-                diversity=diversity
-            )
+        # if abstract:
+        #     result: dict = generator.generate_related_work(
+        #         abstract=abstract,
+        #         breadth=breadth,
+        #         depth=depth,
+        #         diversity=diversity,
+        #         status_callback=status_callback
+        #     )
+        #
+        # elif pdf_pages:
+        #     result: dict = generator.generate_related_work_from_paper(
+        #         pages=pdf_pages,
+        #         breadth=breadth,
+        #         depth=depth,
+        #         diversity=diversity
+        #     )
+        result = await generator.dummy(status_callback)
 
         # Label job as completed (this is important for the frontend ajax logic)
         jobs[job_id].status = "completed"
-        jobs[job_id].result = {
-            'related_works': result['related_works'],
-            'citations': result['citations']
-        }
+        jobs[job_id].result = result
+
     except Exception as e:
+        print(e)
         # Handle exceptions
         jobs[job_id].status = "failed"
         jobs[job_id].error = str(e)

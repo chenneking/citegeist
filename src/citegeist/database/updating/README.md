@@ -18,7 +18,7 @@ This folder contains implementations of various hash functions.
 
 ```python
 
-from citegeist.database.updating import hash_reload
+from citegeist import hash_reload
 import kagglehub
 
 # Download updated arxiv data

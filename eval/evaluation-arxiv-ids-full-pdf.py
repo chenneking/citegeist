@@ -15,13 +15,13 @@ prompting_client = AzureClient(
     api_key=load_api_key(os.getenv("KEY_LOCATION")),
 )
 
-OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = '../out/output_related_work_scores.csv'
+OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = '../src/citegeist/out/output_related_work_scores.csv'
 
-papers_df = pd.read_csv('../out/papers.csv')
-output_df = pd.read_csv('../out/output.csv')
-output_full_pdf_df = pd.read_csv('../out/output_full_pdf.csv')
+papers_df = pd.read_csv('../src/citegeist/out/papers.csv')
+output_df = pd.read_csv('../src/citegeist/out/output.csv')
+output_full_pdf_df = pd.read_csv('../src/citegeist/out/output_full_pdf.csv')
 
-related_works_score_df = pd.read_csv('../out/output_related_work_scores.csv')
+related_works_score_df = pd.read_csv('../src/citegeist/out/output_related_work_scores.csv')
 
 output_related_work_scores_data = []
 

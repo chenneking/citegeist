@@ -1,5 +1,5 @@
 venv
-citegeist/database.db
+src/citegeist/database.db
 api_key.json
 .database.db.lock
 testing.py

@@ -129,7 +129,8 @@ class Generator:
             self.embedding_model,
             self.db_client,
             self.llm_client,
-            self.api_version
+            self.api_version,
+            status_callback
         )
     
     def generate_related_work_from_paper(
@@ -137,7 +138,8 @@ class Generator:
         pages: list[str], 
         breadth: int, 
         depth: int, 
-        diversity: float
+        diversity: float,
+        status_callback: Callable = None,
     ) -> dict[str, str | list[str]]:
         """
         Generate a related work section based on a full paper.
@@ -147,6 +149,7 @@ class Generator:
             breadth: Number of papers to consider
             depth: Number of pages to extract from each paper
             diversity: Diversity factor for paper selection (0-1)
+            status_callback: Callback function that will update jobs according to the function progress
             
         Returns:
             Dictionary with 'related_works' text and 'citations' list
@@ -160,7 +163,8 @@ class Generator:
             self.embedding_model,
             self.db_client,
             self.llm_client,
-            self.api_version
+            self.api_version,
+            status_callback
         )
     
     def generate_answer_to_scientific_question(
@@ -168,7 +172,8 @@ class Generator:
         question: str, 
         breadth: int, 
         depth: int, 
-        diversity: float
+        diversity: float,
+        status_callback: Callable = None,
     ) -> dict[str, str | list[str]]:
         """
         Generate an answer to a scientific question.
@@ -178,6 +183,7 @@ class Generator:
             breadth: Number of papers to consider
             depth: Number of pages to extract from each paper
             diversity: Diversity factor for paper selection (0-1)
+            status_callback: Callback function that will update jobs according to the function progress
             
         Returns:
             Dictionary with 'question_answer' text and 'citations' list
@@ -191,7 +197,8 @@ class Generator:
             self.embedding_model,
             self.db_client,
             self.llm_client,
-            self.api_version
+            self.api_version,
+            status_callback
         )
 
 def generate_related_work(
@@ -375,7 +382,8 @@ def generate_answer_to_scientific_question(
     embedding_model=None, 
     client=None, 
     llm_client=None,
-    api_version=None
+    api_version=None,
+    status_callback=None
 ) -> dict[str, str | list[str]]:
     """
     Generate an answer to a scientific question with citations.
@@ -394,6 +402,9 @@ def generate_answer_to_scientific_question(
     Returns:
         Dictionary with 'question_answer' text and 'citations' list
     """
+    if status_callback:
+        status_callback(1, 'Initializing.')
+    print('Initializing.')
     # Initialize models and clients if not provided
     if topic_model is None:
         topic_model = BERTopic.load("MaartenGr/BERTopic_ArXiv")
@@ -420,6 +431,9 @@ def generate_answer_to_scientific_question(
     # topic_id = topic[0][0]
 
     # Query Milvus Vector DB
+    if status_callback:
+        status_callback(2, 'Querying Vector DB for matches.')
+    print('Querying Vector DB for matches.')
     query_data: list[list[dict]] = client.search(
         collection_name="abstracts",
         data=[embedded_abstract],
@@ -430,6 +444,8 @@ def generate_answer_to_scientific_question(
         output_fields=["embedding"],
     )
 
+    if status_callback:
+        status_callback(3, f'Retrieved {len(query_data)} papers from the DB.')
     print(f'Retrieved {len(query_data)} papers from the DB.')
 
     # Clean DB response data
@@ -445,6 +461,8 @@ def generate_answer_to_scientific_question(
         diversity_weight=diversity
     )
 
+    if status_callback:
+        status_callback(4, f'Selected {len(selected_papers)} papers for the longlist.')
     print(f'Selected {len(selected_papers)} papers for the longlist.')
 
     # Generate embeddings of each page of every paper in the longlist
@@ -455,6 +473,8 @@ def generate_answer_to_scientific_question(
         if result:
             page_embeddings.append(result)
 
+    if status_callback:
+        status_callback(5, f'Generated page embeddings for {len(page_embeddings)} papers.')
     print(f'Generated page embeddings for {len(page_embeddings)} papers.')
 
     # Generate shortlist of papers (at most k pages per paper, at most b papers in total)
@@ -468,6 +488,8 @@ def generate_answer_to_scientific_question(
         skip_first=False
     )
 
+    if status_callback:
+        status_callback(6, f'Selected {len(relevant_pages)} papers for the shortlist.')
     print(f'Selected {len(relevant_pages)} papers for the shortlist.')
 
     # Generate summaries for individual papers (taking all relevant pages into account)
@@ -488,6 +510,8 @@ def generate_answer_to_scientific_question(
         obj["summary"] = response
         obj["citation"] = get_arxiv_citation(arxiv_id)
 
+    if status_callback:
+        status_callback(7, 'Generated summaries of papers (and their pages).')
     print('Generated summaries of papers (and their pages).')
 
     # Generate the final question answer
@@ -504,6 +528,8 @@ def generate_answer_to_scientific_question(
         citation_strings=[obj['citation'] for obj in relevant_pages]
     )
 
+    if status_callback:
+        status_callback(8, f'Generated answer to question with {len(filtered_citations)} citations.')
     print(f'Generated answer to question with {len(filtered_citations)} citations.')
 
     return {

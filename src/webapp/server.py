@@ -1,3 +1,4 @@
+import asyncio
 import os
 import uuid
 from typing import Any, Dict, Optional
@@ -41,13 +42,13 @@ app.mount("/static", StaticFiles(directory="./static"), name="static")
 # In-memory job storage
 jobs: Dict[str, JobStatus] = {}
 
-#
+# Setup citegeist Generator
 generator = Generator(
     llm_provider="gemini",
     database_path="/Users/carl/PycharmProjects/citegeist/database.db",
     api_key=os.getenv("GEMINI_API_KEY"),
-    model_name=os.getenv("GEMINI_MODEL_NAME"),
-    embedding_model_name=os.getenv("GEMINI_EMBEDDING_MODEL_NAME"),
+    model_name="gemini-2.0-flash",
+    embedding_model_name="gemini-embedding-exp-03-07",
 )
 
 
@@ -131,23 +132,27 @@ async def process_job(
 
         # Trigger correct logic based on provided input.
         result: Optional[Dict[str, Any]] = None
-        # if abstract:
-        #     result: dict = generator.generate_related_work(
-        #         abstract=abstract,
-        #         breadth=breadth,
-        #         depth=depth,
-        #         diversity=diversity,
-        #         status_callback=status_callback
-        #     )
-        #
-        # elif pdf_pages:
-        #     result: dict = generator.generate_related_work_from_paper(
-        #         pages=pdf_pages,
-        #         breadth=breadth,
-        #         depth=depth,
-        #         diversity=diversity
-        #     )
-        result = await generator.dummy(status_callback)
+        if abstract:
+            result: dict = await asyncio.to_thread(
+                generator.generate_related_work,
+                abstract=abstract,
+                breadth=breadth,
+                depth=depth,
+                diversity=diversity,
+                status_callback=status_callback,
+            )
+
+        elif pdf_pages:
+            result: dict = await asyncio.to_thread(
+                generator.generate_related_work_from_paper,
+                pages=pdf_pages,
+                breadth=breadth,
+                depth=depth,
+                diversity=diversity,
+                status_callback=status_callback,
+            )
+        # Dummy job processing
+        # result = await generator.dummy(status_callback)
 
         # Label job as completed (this is important for the frontend ajax logic)
         jobs[job_id].status = "completed"

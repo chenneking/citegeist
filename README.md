@@ -15,15 +15,12 @@ A preprint describing the system in detail can be found here: [arXiv link (todo)
 ## Installation
 
 ### Requirements
-- Python 3.8+
-- Dependencies listed in `requirements.txt`
+- Python 3.12
 - Access to arXiv's metadata and API
 
 ### Setup
 ```bash
-git clone https://github.com/chenneking/citegeist.git
-cd citegeist
-pip install -r requirements.txt
+TODO
 ```
 Setup the milvus database. (TODO: explain this step)
 
@@ -38,8 +35,7 @@ TODO
 ### Running the Web Interface
 Citegeist also provides a **web-based interface** to input abstracts or upload full papers.
 ```bash
-cd webapp
-fastapi run server.py
+TODO
 ```
 Then, access the UI at `http://localhost:8000`.
 

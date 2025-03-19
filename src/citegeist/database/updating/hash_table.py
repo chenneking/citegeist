@@ -7,7 +7,7 @@ import torch
 from tqdm import tqdm
 from bertopic import BERTopic
 
-EMBEDDING_PATH = "../../../database_mini.db"
+EMBEDDING_PATH = "../../../../database_mini.db"
 HASH_TABLE_CREATED = True
 
 # Initialize the id table

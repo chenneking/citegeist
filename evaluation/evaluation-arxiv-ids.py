@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from dotenv import load_dotenv
 from tqdm import tqdm
+
 from citegeist.utils.azure_client import AzureClient
 from citegeist.utils.helpers import load_api_key
 from citegeist.utils.prompts import generate_related_work_score_prompt
@@ -15,11 +16,11 @@ prompting_client = AzureClient(
     api_key=load_api_key(os.getenv("KEY_LOCATION")),
 )
 
-OUTPUT_ARXIX_ID_ABSTRACT_RELEVANCE_SCORE_PATH = 'out/output_arxiv-ids.csv'
-OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = 'out/output_related_work_scores.csv'
+OUTPUT_ARXIX_ID_ABSTRACT_RELEVANCE_SCORE_PATH = "out/output_arxiv-ids.csv"
+OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = "out/output_related_work_scores.csv"
 
-papers_df = pd.read_csv('out/papers.csv')
-arxiv_id_df = pd.read_csv('out/papers-arxiv-ids.csv')
+papers_df = pd.read_csv("out/papers.csv")
+arxiv_id_df = pd.read_csv("out/papers-arxiv-ids.csv")
 
 # # Compare the source abstract and the abstracts of all citations (that have an arxiv id)
 # output_scores_data = []
@@ -61,8 +62,8 @@ arxiv_id_df = pd.read_csv('out/papers-arxiv-ids.csv')
 #
 # pd.DataFrame(output_scores_data).to_csv(OUTPUT_ARXIX_ID_ABSTRACT_RELEVANCE_SCORE_PATH, index=False)
 
-output_df = pd.read_csv('out/output.csv')
-output_full_pdf_df = pd.read_csv('out/output_full_pdf.csv')
+output_df = pd.read_csv("out/output.csv")
+output_full_pdf_df = pd.read_csv("out/output_full_pdf.csv")
 
 # Score the relevance of the related works between:
 # source & source, source & gpt4o_mini, source & ours, source & ours (with full page)
@@ -75,20 +76,21 @@ output_full_pdf_df = pd.read_csv('out/output_full_pdf.csv')
 
 # Switch logic to Mistral Large here
 from Gemini_Evaluator import prompt_mistral_with_backoff
+
 project_id = "stellar-depth-441503-q5"
 model_name = "mistral-large-2411"
 region = "us-central1"
-OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = 'out/output_related_work_scores_mistral.csv'
+OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH = "out/output_related_work_scores_mistral.csv"
 
 
 output_related_work_scores_data = []
 
 for i, row in tqdm(papers_df.iterrows()):
-    abstract = papers_df['abstract'][i]
-    source_related_work = papers_df['related_works'][i]
-    gpt4o_mini_related_work = papers_df['related_works_gpt4o_mini'][i]
-    our_related_work = output_df['related_works'][i]
-    our_full_pdf_related_work = output_full_pdf_df['related_works'][i]
+    abstract = papers_df["abstract"][i]
+    source_related_work = papers_df["related_works"][i]
+    gpt4o_mini_related_work = papers_df["related_works_gpt4o_mini"][i]
+    our_related_work = output_df["related_works"][i]
+    our_full_pdf_related_work = output_full_pdf_df["related_works"][i]
 
     prompt_source: str = generate_related_work_score_prompt(abstract, source_related_work)
     prompt_gpt4o_mini: str = generate_related_work_score_prompt(abstract, gpt4o_mini_related_work)
@@ -127,17 +129,14 @@ for i, row in tqdm(papers_df.iterrows()):
     result_our_full_pdf: str = prompt_mistral_with_backoff(project_id, region, model_name, prompt_our_full_pdf)
     rating_our_full_pdf: int = int(result_our_full_pdf)
 
-
-    output_related_work_scores_data.append({
-        'title': row['title'],
-        'score_source': rating_source,
-        'score_gpt4o_mini': rating_gpt4o_mini,
-        'score_ours': rating_our,
-        'score_our_full_pdf': rating_our_full_pdf
-    })
+    output_related_work_scores_data.append(
+        {
+            "title": row["title"],
+            "score_source": rating_source,
+            "score_gpt4o_mini": rating_gpt4o_mini,
+            "score_ours": rating_our,
+            "score_our_full_pdf": rating_our_full_pdf,
+        }
+    )
 
 pd.DataFrame(output_related_work_scores_data).to_csv(OUTPUT_RELATED_WORK_RELEVANCE_SCORE_PATH, index=False)
-
-
-
-

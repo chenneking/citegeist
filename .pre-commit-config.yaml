@@ -1,6 +1,10 @@
 default_language_version:
   python: python3.12
 
+exclude: |
+  (?x)^(
+    evaluation/.*
+  )$
 
 repos:
   - repo: https://github.com/psf/black

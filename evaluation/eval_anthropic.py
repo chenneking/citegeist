@@ -1,24 +1,26 @@
-import anthropic
 import json
+
+import anthropic
+
 
 class RelatedWorkEvaluation:
     def __init__(self, client=None):
         """
         Initialize the evaluation framework
-        
+
         Args:
             client (anthropic.Anthropic, optional): Anthropic client for API calls
         """
         self.client = client or anthropic.Anthropic()
-    
+
     def evaluate_relevance(self, identified_works, input_abstract):
         """
         Evaluate relevance of identified related works
-        
+
         Args:
             identified_works (list): List of related works to evaluate
             input_abstract (str): Original abstract for context
-        
+
         Returns:
             dict: Evaluation results with relevance scores
         """
@@ -47,25 +49,21 @@ class RelatedWorkEvaluation:
         """
         try:
             response = self.client.messages.create(
-                model="claude-3-opus-20240229",
-                max_tokens=1000,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ]
+                model="claude-3-opus-20240229", max_tokens=1000, messages=[{"role": "user", "content": prompt}]
             )
             return json.loads(response.content[0].text)
         except Exception as e:
             return {"error": str(e)}
-    
+
     def compare_related_works(self, input_section, synthetic_section, input_abstract):
         """
         Compare input and synthetic related works sections
-        
+
         Args:
             input_section (str): Original related works section
             synthetic_section (str): Synthetic generated related works section
             input_abstract (str): Original abstract for context
-        
+
         Returns:
             dict: Comparison results
         """
@@ -100,43 +98,31 @@ class RelatedWorkEvaluation:
         """
         try:
             response = self.client.messages.create(
-                model="claude-3-opus-20240229",
-                max_tokens=1000,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ]
+                model="claude-3-opus-20240229", max_tokens=1000, messages=[{"role": "user", "content": prompt}]
             )
             return json.loads(response.content[0].text)
         except Exception as e:
             return {"error": str(e)}
 
+
 def main():
     # Example usage
     evaluator = RelatedWorkEvaluation()
-    
+
     # Sample data (replace with actual data)
     input_abstract = "A novel approach to machine learning..."
-    identified_works = [
-        "Paper on deep learning techniques",
-        "Research about neural network architectures"
-    ]
+    identified_works = ["Paper on deep learning techniques", "Research about neural network architectures"]
     input_section = "Traditional related works discussion..."
     synthetic_section = "Synthetic generated related works section..."
-    
+
     # Relevance Evaluation
-    relevance_results = evaluator.evaluate_relevance(
-        identified_works, 
-        input_abstract
-    )
+    relevance_results = evaluator.evaluate_relevance(identified_works, input_abstract)
     print("Relevance Evaluation:", json.dumps(relevance_results, indent=2))
-    
+
     # Related Works Comparison
-    comparison_results = evaluator.compare_related_works(
-        input_section, 
-        synthetic_section, 
-        input_abstract
-    )
+    comparison_results = evaluator.compare_related_works(input_section, synthetic_section, input_abstract)
     print("Related Works Comparison:", json.dumps(comparison_results, indent=2))
+
 
 if __name__ == "__main__":
     main()

@@ -1,13 +1,15 @@
-import google
-from google.cloud import aiplatform_v1beta1 as aiplatform
-from google.oauth2 import service_account
-import vertexai
-from vertexai.preview.generative_models import GenerativeModel, Image, GenerationConfig
 import logging
-import time
 import random
+import time
+
+import google
 import httpx
+import vertexai
 from google.auth.transport.requests import Request
+# from google.cloud import aiplatform_v1beta1 as aiplatform
+from google.oauth2 import service_account
+from vertexai.preview.generative_models import (GenerationConfig,
+                                                GenerativeModel)
 
 # Google Cloud setup
 scopes = ["https://www.googleapis.com/auth/cloud-platform"]
@@ -20,20 +22,25 @@ credentials = service_account.Credentials.from_service_account_file(key_path, sc
 # Initialize Google Cloud AI Platform
 google.cloud.aiplatform.init(project="stellar-depth-441503-q5", location="us-central1", credentials=credentials)
 
-def prompt_gemini(project_id: str, model_name: str, prompt: str, temperature: float = 0., max_tokens: int = 4096):
+
+def prompt_gemini(project_id: str, model_name: str, prompt: str, temperature: float = 0.0, max_tokens: int = 4096):
     """Prompt the Gemini model via Google Vertex AI."""
     vertexai.init(project=project_id, location="us-central1")
     model = GenerativeModel(model_name)
-        
+
     response = model.generate_content(prompt, generation_config=GenerationConfig(temperature=temperature))
-    
+
     return response.text
+
 
 def prompt_gemini_with_backoff(project_id: str, model_name: str, prompt: str):
     """Wrap Gemini prompt with exponential backoff in case of rate limit."""
+
     def call_gemini():
         return prompt_gemini(project_id, model_name, prompt)
+
     return exponential_backoff_retry(call_gemini)
+
 
 def exponential_backoff_retry(func, retries=10, backoff_factor=2, max_wait=120):
     """Retry with exponential backoff in case of rate limit error (429)."""
@@ -50,7 +57,8 @@ def exponential_backoff_retry(func, retries=10, backoff_factor=2, max_wait=120):
                 raise e
     logging.error("Exceeded maximum retries due to rate limit.")
     raise Exception("Exceeded maximum retries due to rate limit.")
-    
+
+
 def prompt_mistral_with_backoff(
     project_id: str,
     region: str,
@@ -65,14 +73,20 @@ def prompt_mistral_with_backoff(
     timeout: int = 60,
 ):
     """Prompt Mistral model with exponential backoff in case of rate limit error."""
+
     def call_mistral():
         return prompt_mistral_pre_authenticated(
-            project_id, region, model_name, prompt, credentials,
-            temperature=temperature, streaming=streaming, timeout=timeout
+            project_id,
+            region,
+            model_name,
+            prompt,
+            credentials,
+            temperature=temperature,
+            streaming=streaming,
+            timeout=timeout,
         )
-    
-    return exponential_backoff_retry(call_mistral, retries, backoff_factor, max_wait)
 
+    return exponential_backoff_retry(call_mistral, retries, backoff_factor, max_wait)
 
 
 def prompt_mistral_pre_authenticated(
@@ -87,7 +101,7 @@ def prompt_mistral_pre_authenticated(
 ):
     """
     Prompt the Mistral Large model via Google Vertex AI API using pre-authenticated credentials.
-    
+
     Args:
         project_id (str): Google Cloud project ID.
         region (str): Google Cloud region.
@@ -97,7 +111,7 @@ def prompt_mistral_pre_authenticated(
         temperature (float): Controls the randomness of the model's responses. Default is 0.7.
         streaming (bool): Whether to enable streaming responses. Default is False.
         timeout (int): HTTP request timeout in seconds. Default is 60.
-    
+
     Returns:
         str: The response from the model.
     """
@@ -105,21 +119,16 @@ def prompt_mistral_pre_authenticated(
     request = Request()
     credentials.refresh(request)
     access_token = credentials.token
-    
+
     # Build API URL
-    url = build_endpoint_url(
-        region=region, 
-        project_id=project_id, 
-        model_name=model_name, 
-        streaming=streaming
-    )
-    
+    url = build_endpoint_url(region=region, project_id=project_id, model_name=model_name, streaming=streaming)
+
     # Define request headers
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Accept": "application/json",
     }
-    
+
     # Define payload with temperature included
     payload = {
         "model": model_name,
@@ -127,34 +136,29 @@ def prompt_mistral_pre_authenticated(
         "stream": streaming,
         "temperature": temperature,  # Adding the temperature parameter here
     }
-    
+
     # Make the HTTP POST request
     try:
         with httpx.Client(timeout=timeout) as client:
             response = client.post(url, json=payload, headers=headers)
             response.raise_for_status()  # Raise an exception for HTTP errors
-            return response.json()['choices'][0]['message']['content'] if not streaming else response.iter_lines()
+            return response.json()["choices"][0]["message"]["content"] if not streaming else response.iter_lines()
     except httpx.HTTPStatusError as e:
         raise RuntimeError(f"HTTP error occurred: {e.response.status_code} - {e.response.text}")
     except Exception as e:
         raise RuntimeError(f"An error occurred: {str(e)}")
 
 
-def build_endpoint_url(
-    region: str, 
-    project_id: str, 
-    model_name: str, 
-    streaming: bool = False
-):
+def build_endpoint_url(region: str, project_id: str, model_name: str, streaming: bool = False):
     """
     Construct the endpoint URL for the Mistral Large model.
-    
+
     Args:
         region (str): The region of the AI service.
         project_id (str): Google Cloud project ID.
         model_name (str): The name of the model (e.g., "mistral-large-2411").
         streaming (bool): Whether the request is streamed.
-    
+
     Returns:
         str: Fully constructed URL for the API endpoint.
     """
@@ -164,5 +168,3 @@ def build_endpoint_url(
     specifier = "streamRawPredict" if streaming else "rawPredict"
     model_fragment = f"publishers/mistralai/models/{model_name}"
     return f"{base_url}{'/'.join([project_fragment, location_fragment, model_fragment])}:{specifier}"
-        
-    

@@ -49,6 +49,9 @@ exclude = '''
   | dist
 )/'''
 
+[tool.isort]
+profile = "black"
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"

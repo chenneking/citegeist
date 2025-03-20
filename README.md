@@ -18,34 +18,67 @@ A preprint describing the system in detail can be found here: [arXiv link (todo)
 - Python 3.12
 - Access to arXiv's metadata and API
 
-### Setup
-```bash
-TODO
-```
-Setup the milvus database. (TODO: explain this step)
+### Setup (Regular Users)
+1. Install the citgeist package
+    ```bash
+    pip install citegeist
+    ```
+2. Setup the milvus database. (TODO: explain this step)
+3. Run the pipeline (see Usage section below)
+
+
+### Setup (Developers)
+1. Clone the repo
+   ```bash
+   git clone https://github.com/chenneking/citegeist.git
+   cd citegeist
+   ```
+2. Optional (but recommended): Create and activate a virtual environment
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+3. Install development dependencies
+   ```bash
+   pip install -e .[dev] # if you're using uv: pip install -e ."[dev]" 
+   ```
 
 ## Usage
 
-### Generating Related Work Section
-To generate a related work section for a given abstract:
-```python
-TODO
-```
-
-### Running the Web Interface
-Citegeist also provides a **web-based interface** to input abstracts or upload full papers.
-```bash
-TODO
-```
-Then, access the UI at `http://localhost:8000`.
-
-### Web-UI
-![Web-UI Overview](https://github.com/chenneking/citegeist/blob/main/img/citegeist.jpg?raw=true)
-
-
-## Customization
+### Customization
 Citegeist allows users to adjust three key parameters:
 - **Breadth**`n`: Number of candidate papers retrieved.
 - **Depth**`k`: Number of relevant pages extracted from each paper.
 - **Diversity**`w`: Balancing factor between similarity and variety in retrieved papers.
 The parameters can either be set in the API calls in Python, or when using the Web-Interface.
+
+
+### Generating Related Work Section
+To generate a related work section for a given abstract:
+```python
+ from citegeist.generator import Generator
+ import os
+ generator = Generator(
+     llm_provider="gemini",  # choice of: "azure" (OpenAI Studio), "anthropic", "gemini", "mistral", and "openai"
+     api_key=os.environ.get("GEMINI_API_KEY"),
+     model_name="gemini-2.0-flash",
+     database_path="../database.db", # Replace with the path to your local milvus database.db file
+ )
+ # Define input abstract and breadth (5-20), depth (1-5), and diversity (0.0-1.0) parameters.
+ abstract = "..."
+ breadth = 10
+ depth = 2
+ diversity = 0.0
+ generator.generate_related_work(abstract, breadth, depth, diversity)
+```
+Please refer to examples/ for more usage examples.
+
+### Running the Web Interface
+Beyond the python interface, citegeist also provides a **web-based interface** to input abstracts or upload full papers. To start the web-interface:
+```bash
+uvicorn webapp.server:app --reload
+```
+Then, access the UI at `http://localhost:8000`.
+
+### Web-UI
+![Web-UI Overview](https://github.com/chenneking/citegeist/blob/main/img/citegeist.jpg?raw=true)

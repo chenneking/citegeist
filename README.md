@@ -26,8 +26,25 @@ A preprint describing the system in detail can be found here: [arXiv link (todo)
 2. Setup the milvus database. (TODO: explain this step)
 3. Run the pipeline (see Usage section below)
 
+### Setup (Web-Interface)
+You only need to follow these steps if you want to use the web-interface! Using the setup steps above are sufficient if you wish to use the python interface.
+1. Clone the repo
+   ```bash
+   git clone https://github.com/chenneking/citegeist.git
+   cd citegeist
+   ```
+2. Optional (but recommended): Create and activate a virtual environment
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+3. Install development dependencies
+   ```bash
+   pip install -e .[webapp] # if you're using uv: pip install -e ."[webapp]" 
+   ```
 
 ### Setup (Developers)
+If you wish to work on/modify the core citegeist code, please use the following setup steps.
 1. Clone the repo
    ```bash
    git clone https://github.com/chenneking/citegeist.git

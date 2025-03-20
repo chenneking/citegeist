@@ -6,7 +6,13 @@ import os
 
 from dotenv import load_dotenv
 
-from citegeist.utils.llm_clients import AzureClient, GeminiClient, LLMClient
+from citegeist.utils.llm_clients import (
+    AzureClient,
+    GeminiClient,
+    LLMClient,
+    OpenAIClient,
+)
+from citegeist.utils.llm_clients.anthropic_client import AnthropicClient
 
 # Load environment variables from .env file
 load_dotenv()
@@ -59,11 +65,31 @@ def azure() -> None:
     )
 
 
+def anthropic() -> None:
+    """
+    Example use of the AnthropicClient.
+    """
+    client: LLMClient = AnthropicClient(
+        api_key=os.getenv("ANTHROPIC_API_KEY"), model_name="claude-3-5-haiku-20241022", api_version="2023-06-01"
+    )
+    print("Using Anthropic:")
+    print(client.get_completion("Hello World!"))
+    print(
+        client.get_chat_completion(
+            [
+                {"role": "user", "content": "Hello World!"},
+                {"role": "assistant", "content": "Hi! Great to meet you!"},
+                {"role": "user", "content": "What does the dog say?"},
+            ]
+        )
+    )
+
+
 def openai() -> None:
     """
-    Example use of the AzureClient (via OpenAI Studio).
+    Example use of the OpenAIClient.
     """
-    client: LLMClient = AzureClient(
+    client: LLMClient = OpenAIClient(
         api_key=os.getenv("OPENAI_API_KEY"),
         endpoint="https://cai-project.openai.azure.com",
         deployment_id="gpt-4o",  # this is equivalent to model_name for other clients (but Azure calls it that)
@@ -85,4 +111,4 @@ def openai() -> None:
 
 
 if __name__ == "__main__":
-    azure()
+    anthropic()

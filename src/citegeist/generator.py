@@ -40,7 +40,7 @@ class Generator:
     def __init__(
         self,
         llm_provider: str,  # defaults to: azure
-        database_path: str,
+        database_path: str,  # path to local milvus DB file
         sentence_embedding_model_name: str = "sentence-transformers/all-mpnet-base-v2",
         topic_model_name: str = "MaartenGr/BERTopic_ArXiv",
         **llm_kwargs,
@@ -227,8 +227,7 @@ def generate_related_work(
         Dictionary with 'related_works' text and 'citations' list
     """
     if status_callback:
-        status_callback(1, "Initializing.")
-    print("Initializing.")
+        status_callback(1, "Initializing")
 
     # Initialize models and clients if not provided
     if topic_model is None:
@@ -258,8 +257,7 @@ def generate_related_work(
 
     # Query Milvus Vector DB
     if status_callback:
-        status_callback(2, "Querying Vector DB for matches.")
-    print("Querying Vector DB for matches.")
+        status_callback(2, "Querying Vector DB for matches (this may take a while)")
 
     query_data: list[list[dict]] = client.search(
         collection_name="abstracts",
@@ -272,8 +270,7 @@ def generate_related_work(
     )
 
     if status_callback:
-        status_callback(3, f"Retrieved {len(query_data)} papers from the DB.")
-    print(f"Retrieved {len(query_data)} papers from the DB.")
+        status_callback(3, f"Retrieved {len(query_data)} papers from the DB")
 
     # Clean DB response data
     query_data: list[dict] = query_data[0]
@@ -287,8 +284,7 @@ def generate_related_work(
     )
 
     if status_callback:
-        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist.")
-    print(f"Selected {len(selected_papers)} papers for the longlist.")
+        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist")
 
     # Generate embeddings of each page of every paper in the longlist
     page_embeddings: list[list[dict]] = []
@@ -299,8 +295,7 @@ def generate_related_work(
             page_embeddings.append(result)
 
     if status_callback:
-        status_callback(5, f"Generated page embeddings for {len(page_embeddings)} papers.")
-    print(f"Generated page embeddings for {len(page_embeddings)} papers.")
+        status_callback(5, f"Generated page embeddings for {len(page_embeddings)} papers")
 
     # Generate shortlist of papers (at most k pages per paper, at most b papers in total)
     relevant_pages: list[dict] = select_diverse_pages_for_top_b_papers(
@@ -314,8 +309,7 @@ def generate_related_work(
     )
 
     if status_callback:
-        status_callback(6, f"Selected {len(relevant_pages)} papers for the shortlist.")
-    print(f"Selected {len(relevant_pages)} papers for the shortlist.")
+        status_callback(6, f"Selected {len(relevant_pages)} papers for the shortlist")
 
     # Generate summaries for individual papers (taking all relevant pages into account)
     for obj in relevant_pages:
@@ -338,8 +332,7 @@ def generate_related_work(
         obj["citation"] = get_arxiv_citation(arxiv_id)
 
     if status_callback:
-        status_callback(7, "Generated summaries of papers (and their pages).")
-    print("Generated summaries of papers (and their pages).")
+        status_callback(7, "Generated summaries of papers (and their pages)")
 
     # Generate the final related works section text
     prompt = generate_related_work_prompt(
@@ -354,8 +347,7 @@ def generate_related_work(
     )
 
     if status_callback:
-        status_callback(8, f"Generated related work section with {len(filtered_citations)} citations.")
-    print(f"Generated related work section with {len(filtered_citations)} citations.")
+        status_callback(8, f"Generated related work section with {len(filtered_citations)} citations")
 
     return {"related_works": related_works_section, "citations": filtered_citations}
 
@@ -420,8 +412,8 @@ def generate_answer_to_scientific_question(
 
     # Query Milvus Vector DB
     if status_callback:
-        status_callback(2, "Querying Vector DB for matches.")
-    print("Querying Vector DB for matches.")
+        status_callback(2, "Querying Vector DB for matches (this may take a while)")
+
     query_data: list[list[dict]] = client.search(
         collection_name="abstracts",
         data=[embedded_abstract],
@@ -433,8 +425,7 @@ def generate_answer_to_scientific_question(
     )
 
     if status_callback:
-        status_callback(3, f"Retrieved {len(query_data)} papers from the DB.")
-    print(f"Retrieved {len(query_data)} papers from the DB.")
+        status_callback(3, f"Retrieved {len(query_data)} papers from the DB")
 
     # Clean DB response data
     query_data: list[dict] = query_data[0]
@@ -448,8 +439,7 @@ def generate_answer_to_scientific_question(
     )
 
     if status_callback:
-        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist.")
-    print(f"Selected {len(selected_papers)} papers for the longlist.")
+        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist")
 
     # Generate embeddings of each page of every paper in the longlist
     page_embeddings: list[list[dict]] = []
@@ -460,8 +450,7 @@ def generate_answer_to_scientific_question(
             page_embeddings.append(result)
 
     if status_callback:
-        status_callback(5, f"Generated page embeddings for {len(page_embeddings)} papers.")
-    print(f"Generated page embeddings for {len(page_embeddings)} papers.")
+        status_callback(5, f"Generated page embeddings for {len(page_embeddings)} papers")
 
     # Generate shortlist of papers (at most k pages per paper, at most b papers in total)
     relevant_pages: list[dict] = select_diverse_pages_for_top_b_papers(
@@ -475,8 +464,7 @@ def generate_answer_to_scientific_question(
     )
 
     if status_callback:
-        status_callback(6, f"Selected {len(relevant_pages)} papers for the shortlist.")
-    print(f"Selected {len(relevant_pages)} papers for the shortlist.")
+        status_callback(6, f"Selected {len(relevant_pages)} papers for the shortlist")
 
     # Generate summaries for individual papers (taking all relevant pages into account)
     for obj in relevant_pages:
@@ -495,8 +483,7 @@ def generate_answer_to_scientific_question(
         obj["citation"] = get_arxiv_citation(arxiv_id)
 
     if status_callback:
-        status_callback(7, "Generated summaries of papers (and their pages).")
-    print("Generated summaries of papers (and their pages).")
+        status_callback(7, "Generated summaries of papers (and their pages)")
 
     # Generate the final question answer
     prompt = generate_question_answer_prompt(question=question, data=relevant_pages)
@@ -509,8 +496,7 @@ def generate_answer_to_scientific_question(
     )
 
     if status_callback:
-        status_callback(8, f"Generated answer to question with {len(filtered_citations)} citations.")
-    print(f"Generated answer to question with {len(filtered_citations)} citations.")
+        status_callback(8, f"Generated answer to question with {len(filtered_citations)} citations")
 
     return {"question_answer": question_answer, "citations": filtered_citations}
 
@@ -575,8 +561,7 @@ def generate_related_work_from_paper(
 
     # Query Milvus Vector DB for each page
     if status_callback:
-        status_callback(2, "Querying Vector DB for matches.")
-    print("Querying Vector DB for matches.")
+        status_callback(2, "Querying Vector DB for matches (this may take a while)")
 
     all_query_data: list[list[dict]] = []
     for embedding in page_embeddings:
@@ -592,8 +577,7 @@ def generate_related_work_from_paper(
         all_query_data.extend(query_result)
 
     if status_callback:
-        status_callback(3, f"Retrieved papers from DB for {len(all_query_data)} pages.")
-    print(f"Retrieved papers from DB for {len(all_query_data)} pages.")
+        status_callback(3, f"Retrieved papers from DB for {len(all_query_data)} pages")
 
     # Aggregate similarity scores for papers that appear multiple times
     paper_scores: dict[str, float] = {}
@@ -627,8 +611,7 @@ def generate_related_work_from_paper(
     )
 
     if status_callback:
-        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist.")
-    print(f"Selected {len(selected_papers)} papers for the longlist.")
+        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist")
 
     # Generate embeddings of each page of every paper in the longlist
     page_embeddings_papers: list[list[dict]] = []
@@ -639,8 +622,7 @@ def generate_related_work_from_paper(
             page_embeddings_papers.append(result)
 
     if status_callback:
-        status_callback(5, f"Generated page embeddings for {len(page_embeddings)} papers.")
-    print(f"Generated page embeddings for {len(page_embeddings)} papers.")
+        status_callback(5, f"Generated page embeddings for {len(page_embeddings)} papers")
 
     # Generate shortlist of papers using first page as reference
     # (you might want to modify this to consider all input pages)
@@ -655,8 +637,7 @@ def generate_related_work_from_paper(
     )
 
     if status_callback:
-        status_callback(6, f"Selected {len(relevant_pages)} papers for the shortlist.")
-    print(f"Selected {len(relevant_pages)} papers for the shortlist.")
+        status_callback(6, f"Selected {len(relevant_pages)} papers for the shortlist")
 
     # Generate summaries for individual papers
     for obj in relevant_pages:
@@ -677,8 +658,7 @@ def generate_related_work_from_paper(
         obj["citation"] = get_arxiv_citation(arxiv_id)
 
     if status_callback:
-        status_callback(7, "Generated summaries of papers (and their pages).")
-    print("Generated summaries of papers (and their pages).")
+        status_callback(7, "Generated summaries of papers (and their pages)")
 
     # Generate the final related works section text
     prompt = generate_related_work_prompt(
@@ -696,16 +676,6 @@ def generate_related_work_from_paper(
     )
 
     if status_callback:
-        status_callback(8, f"Generated related work section with {len(filtered_citations)} citations.")
-    print(f"Generated related work section with {len(filtered_citations)} citations.")
+        status_callback(8, f"Generated related work section with {len(filtered_citations)} citations")
 
     return {"related_works": related_works_section, "citations": filtered_citations}
-
-
-# if __name__ == '__main__':
-#     print(generate_answer_to_scientific_question(
-#         question="What are the most recent research developments in the field of AI Safety?",
-#         breadth=10,
-#         depth=2,
-#         diversity=0
-#     ))

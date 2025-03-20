@@ -89,15 +89,8 @@ def openai() -> None:
     """
     Example use of the OpenAIClient.
     """
-    client: LLMClient = OpenAIClient(
-        api_key=os.getenv("OPENAI_API_KEY"),
-        endpoint="https://cai-project.openai.azure.com",
-        deployment_id="gpt-4o",  # this is equivalent to model_name for other clients (but Azure calls it that)
-        api_version="2024-10-21",
-        embedding_deployment_id="text-embedding-ada-002",  # this is equivalent to embedding_model_name
-        embedding_api_version="2023-05-15",
-    )
-    print("Using Azure:")
+    client: LLMClient = OpenAIClient(api_key=os.getenv("OPENAI_API_KEY"), model_name="gpt-4o")
+    print("Using OpenAI:")
     print(client.get_completion("Hello World!"))
     print(
         client.get_chat_completion(
@@ -111,4 +104,4 @@ def openai() -> None:
 
 
 if __name__ == "__main__":
-    anthropic()
+    gemini()

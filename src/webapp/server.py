@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import os
 import uuid
 from typing import Any, Dict, Optional
@@ -14,6 +15,8 @@ from citegeist.utils.citations import (
     extract_text_by_page_from_pdf,
     remove_citations_and_supplements,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class Item(BaseModel):
@@ -34,6 +37,17 @@ class JobStatus(BaseModel):
 # Load environment variables
 load_dotenv()
 
+# Setup citegeist Generator
+generator = Generator(
+    llm_provider="gemini",
+    database_path="/Users/carl/PycharmProjects/citegeist/database.db",
+    api_key=os.getenv("GEMINI_API_KEY"),
+    model_name="gemini-2.0-flash",
+)
+
+
+# FastAPI logic
+
 app = FastAPI(title="Citegeist", summary="Delivers a related works section and all the included citations.")
 
 # Mount static files directory for assets (CSS, JS)
@@ -41,15 +55,6 @@ app.mount("/static", StaticFiles(directory="./static"), name="static")
 
 # In-memory job storage
 jobs: Dict[str, JobStatus] = {}
-
-# Setup citegeist Generator
-generator = Generator(
-    llm_provider="gemini",
-    database_path="/Users/carl/PycharmProjects/citegeist/database.db",
-    api_key=os.getenv("GEMINI_API_KEY"),
-    model_name="gemini-2.0-flash",
-    embedding_model_name="gemini-embedding-exp-03-07",
-)
 
 
 @app.get("/")
@@ -123,6 +128,7 @@ async def process_job(
         progress: int = int((step / 8) * 100)
         jobs[job_id].progress = progress
         jobs[job_id].status_text = status_text
+        logger.info(f"Job {job_id}: Step {step}, Status: {status_text}")
 
     try:
         # Initialize job status
@@ -130,7 +136,7 @@ async def process_job(
         jobs[job_id].progress = 0
         jobs[job_id].status_text = "Starting job."
 
-        # Trigger correct logic based on provided input.
+        # Trigger correct logic based on provided input
         result: Optional[Dict[str, Any]] = None
         if abstract:
             result: dict = await asyncio.to_thread(
@@ -151,6 +157,7 @@ async def process_job(
                 diversity=diversity,
                 status_callback=status_callback,
             )
+
         # Dummy job processing
         # result = await generator.dummy(status_callback)
 
@@ -159,7 +166,7 @@ async def process_job(
         jobs[job_id].result = result
 
     except Exception as e:
-        print(e)
+        logger.error(f"Job {job_id} failed: {str(e)}", exc_info=True)
         # Handle exceptions
         jobs[job_id].status = "failed"
         jobs[job_id].error = str(e)

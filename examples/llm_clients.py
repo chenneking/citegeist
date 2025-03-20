@@ -22,11 +22,7 @@ def gemini() -> None:
     """
     Example use of the GeminiClient.
     """
-    client: LLMClient = GeminiClient(
-        api_key=os.getenv("GEMINI_API_KEY"),
-        model_name="gemini-2.0-flash",
-        embedding_model_name="gemini-embedding-exp-03-07",
-    )
+    client: LLMClient = GeminiClient(api_key=os.getenv("GEMINI_API_KEY"), model_name="gemini-2.0-flash")
     print("Using Gemini:")
     print(client.get_completion("Hello World!"))
     print(
@@ -49,8 +45,6 @@ def azure() -> None:
         endpoint="https://cai-project.openai.azure.com",
         deployment_id="gpt-4o",  # this is equivalent to model_name for other clients (but Azure calls it that)
         api_version="2024-10-21",
-        embedding_deployment_id="text-embedding-ada-002",  # this is equivalent to embedding_model_name
-        embedding_api_version="2023-05-15",
     )
     print("Using Azure:")
     print(client.get_completion("Hello World!"))
@@ -104,4 +98,7 @@ def openai() -> None:
 
 
 if __name__ == "__main__":
+    # Depending on the model you use, you will have to set the corresponding environment variable with the api key.
+    # If you don't want to set it manually, you have the choice of placing an .env file in the project root folder.
+    # Although we wouldn't recommend this, git ignores these files via .gitignore.
     gemini()

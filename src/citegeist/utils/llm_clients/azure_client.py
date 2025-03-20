@@ -16,8 +16,6 @@ class AzureClient(LLMClient):
         endpoint: str,
         deployment_id: str = None,
         api_version: str = None,
-        embedding_deployment_id: str = None,
-        embedding_api_version: str = None,
     ):
         """
         Initialize the Azure OpenAI client.
@@ -27,15 +25,11 @@ class AzureClient(LLMClient):
             endpoint: Azure API endpoint (without https:// or .openai.azure.com)
             deployment_id: Deployment ID for completions/chat (equivalent to model_name)
             api_version: API version to use
-            embedding_deployment_id: Deployment ID for embeddings (equivalent to embedding_model_name)
-            embedding_api_version: Embedding API version to use
         """
         self.endpoint = endpoint
         self.api_key = api_key
         self.deployment_id = deployment_id
         self.api_version = api_version
-        self.embedding_deployment_id = embedding_deployment_id
-        self.embedding_api_version = embedding_api_version
 
     def get_completion(self, prompt: str, max_tokens: int = 4096, temperature: float = 0.0, **kwargs) -> str:
         """

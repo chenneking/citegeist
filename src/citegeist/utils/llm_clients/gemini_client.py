@@ -10,12 +10,7 @@ from .base_client import LLMClient, exponential_backoff_retry
 class GeminiClient(LLMClient):
     """Client for Gemini API."""
 
-    def __init__(
-        self,
-        api_key: str,
-        model_name: str,
-        embedding_model_name: str,  # Options: gemini-embedding-exp-03-07, text-embedding-004, embedding-001
-    ):
+    def __init__(self, api_key: str, model_name: str):
         """
         Initializes the Gemini client.
 
@@ -25,7 +20,6 @@ class GeminiClient(LLMClient):
         """
         self.api_key = api_key
         self.model_name = model_name
-        self.embedding_model_name = embedding_model_name
 
     def get_completion(self, prompt: str, max_tokens: int = 4096, temperature: float = 0.0, **kwargs) -> str:
         """

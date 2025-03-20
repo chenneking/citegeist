@@ -8,6 +8,8 @@ from .base_client import LLMClient, exponential_backoff_retry
 
 
 class GeminiClient(LLMClient):
+    """Client for Gemini API."""
+
     def __init__(
         self,
         api_key: str,
@@ -24,8 +26,6 @@ class GeminiClient(LLMClient):
         self.api_key = api_key
         self.model_name = model_name
         self.embedding_model_name = embedding_model_name
-
-    """Client for Gemini API."""
 
     def get_completion(self, prompt: str, max_tokens: int = 4096, temperature: float = 0.0, **kwargs) -> str:
         """

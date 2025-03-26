@@ -74,7 +74,7 @@ The parameters can either be set in the API calls in Python, or when using the W
 To generate a related work section for a given abstract:
 
 ```python
- from citegeist.generator import Generator
+from citegeist.generator import Generator
 import os
 
 generator = Generator(

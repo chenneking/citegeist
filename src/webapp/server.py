@@ -5,8 +5,16 @@ import uuid
 from typing import Any, Dict, Optional
 
 from dotenv import load_dotenv
-from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi import (
+    BackgroundTasks,
+    FastAPI,
+    File,
+    Form,
+    HTTPException,
+    Request,
+    UploadFile,
+)
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -55,6 +63,23 @@ app.mount("/static", StaticFiles(directory="./static"), name="static")
 
 # In-memory job storage
 jobs: Dict[str, JobStatus] = {}
+
+
+@app.middleware("http")
+async def maintenance_mode_middleware(request: Request, call_next):
+    # Check if maintenance mode is active
+    if os.getenv("MAINTENANCE_MODE", "false").lower() == "true":
+        # Allow static files to be served so that CSS/JS and other assets load
+        if request.url.path.startswith("/static"):
+            return await call_next(request)
+
+        # For the front page, return the maintenance.html file
+        if request.url.path == "/":
+            return FileResponse("static/maintenance.html", status_code=503)
+        else:
+            # For all other routes, return an error response
+            return JSONResponse(status_code=503, content={"message": "Maintenance Mode Active"})
+    return await call_next(request)
 
 
 @app.get("/")

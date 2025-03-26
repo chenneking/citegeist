@@ -7,6 +7,34 @@ body {
     padding: 20px;
     background-color: #ffffff;
 }
+
+#maintenance-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(128, 128, 128, 0.7);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay-content {
+    text-align: center;
+    color: #ffffff;
+}
+
+.overlay-content p {
+    font-size: 5rem;
+}
+
+.overlay-content h1 {
+    font-size: 7rem;
+    color: #fff139;
+}
+
 textarea {
     height: 150px;
 }

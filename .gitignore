@@ -2,3 +2,4 @@ venv
 database.db
 .env
 .database.db.lock
+src/webapp/temporary

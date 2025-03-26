@@ -48,14 +48,12 @@ load_dotenv()
 # Setup citegeist Generator
 generator = Generator(
     llm_provider="gemini",
-    database_path="/Users/carl/PycharmProjects/citegeist/database.db",
+    database_uri="/Users/carl/PycharmProjects/citegeist/database.db",
     api_key=os.getenv("GEMINI_API_KEY"),
     model_name="gemini-2.0-flash",
 )
 
-
 # FastAPI logic
-
 app = FastAPI(title="Citegeist", summary="Delivers a related works section and all the included citations.")
 
 # Mount static files directory for assets (CSS, JS)

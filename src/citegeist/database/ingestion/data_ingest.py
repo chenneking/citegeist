@@ -13,7 +13,7 @@ assert len(sys.argv) >= 2
 response = bulk_import(
     url=os.environ["MILVUS_URI"],
     collection_name="abstracts",
-    files=[[file for file in sys.argv[1:]]],
+    files=[[file] for file in sys.argv[1:]],
 )
 
 job_id = response.json()["data"]["job_id"]

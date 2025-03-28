@@ -3,7 +3,7 @@ import sys
 
 import jsonlines
 from pymilvus import DataType, MilvusClient
-from pymilvus.bulk_writer import RemoteBulkWriter
+from pymilvus.bulk_writer import BulkFileType, RemoteBulkWriter
 
 """
 Usage:
@@ -34,13 +34,14 @@ index_params.add_index(field_name="embedding", metric_type="COSINE", index_type=
 client.create_collection(collection_name="abstracts", schema=schema, index_params=index_params)
 
 # Initialize RemoteBulkWriter
-writer = RemoteBulkWriter.S3ConnectParam(
+connect_param = RemoteBulkWriter.S3ConnectParam(
     endpoint=os.environ["MILVUS_MINIO_ENDPOINT"],
     access_key=os.environ["MILVUS_MINIO_ACCESS_KEY"],
     secret_key=os.environ["MILVUS_MINIO_SECRET_KEY"],
     bucket_name=os.environ["MILVUS_MINIO_BUCKET_NAME"],
     secure=False,
 )
+writer = RemoteBulkWriter(schema=schema, connect_param=connect_param, remote_path="/", file_type=BulkFileType.PARQUET)
 
 # Read in the entire jsonl file data and insert it into the DB
 count = 0

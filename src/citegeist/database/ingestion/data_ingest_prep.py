@@ -37,7 +37,8 @@ client.create_collection(collection_name="abstracts", schema=schema, index_param
 writer = RemoteBulkWriter.S3ConnectParam(
     endpoint=os.environ["MILVUS_MINIO_ENDPOINT"],
     access_key=os.environ["MILVUS_MINIO_ACCESS_KEY"],
-    secret_key=os.environ["MILVUS_MINIO_BUCKET_NAME"],
+    secret_key=os.environ["MILVUS_MINIO_SECRET_KEY"],
+    bucket_name=os.environ["MILVUS_MINIO_BUCKET_NAME"],
     secure=False,
 )
 

@@ -72,21 +72,23 @@ The parameters can either be set in the API calls in Python, or when using the W
 
 ### Generating Related Work Section
 To generate a related work section for a given abstract:
+
 ```python
- from citegeist.generator import Generator
- import os
- generator = Generator(
-     llm_provider="gemini",  # choice of: "azure" (OpenAI Studio), "anthropic", "gemini", "mistral", and "openai"
-     api_key=os.environ.get("GEMINI_API_KEY"),
-     model_name="gemini-2.0-flash",
-     database_path="../database.db", # Replace with the path to your local milvus database.db file
- )
- # Define input abstract and breadth (5-20), depth (1-5), and diversity (0.0-1.0) parameters.
- abstract = "..."
- breadth = 10
- depth = 2
- diversity = 0.0
- generator.generate_related_work(abstract, breadth, depth, diversity)
+from citegeist.generator import Generator
+import os
+
+generator = Generator(
+   llm_provider="gemini",  # choice of: "azure" (OpenAI Studio), "anthropic", "gemini", "mistral", and "openai"
+   api_key=os.environ.get("GEMINI_API_KEY"),
+   model_name="gemini-2.0-flash",
+   database_uri="../database.db",  # Replace with the path to your local milvus database.db file
+)
+# Define input abstract and breadth (5-20), depth (1-5), and diversity (0.0-1.0) parameters.
+abstract = "..."
+breadth = 10
+depth = 2
+diversity = 0.0
+generator.generate_related_work(abstract, breadth, depth, diversity)
 ```
 Please refer to examples/ for more usage examples.
 

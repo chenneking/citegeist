@@ -7,12 +7,12 @@ import os
 from dotenv import load_dotenv
 
 from citegeist.utils.llm_clients import (
+    AnthropicClient,
     AzureClient,
     GeminiClient,
     LLMClient,
     OpenAIClient,
 )
-from citegeist.utils.llm_clients.anthropic_client import AnthropicClient
 
 # Load environment variables from .env file
 load_dotenv()

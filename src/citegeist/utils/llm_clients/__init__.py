@@ -4,6 +4,7 @@ LLM API Client Module
 This module provides a collection of clients for interacting with different LLM APIs.
 """
 
+from .anthropic_client import AnthropicClient
 from .azure_client import AzureClient
 from .base_client import LLMClient
 from .gemini_client import GeminiClient
@@ -36,5 +37,7 @@ def create_client(provider: str, **kwargs) -> LLMClient:
         return MistralClient(**kwargs)
     elif provider == "openai":
         return OpenAIClient(**kwargs)
+    elif provider == "openai":
+        return AnthropicClient(**kwargs)
     else:
         raise ValueError(f"Unsupported LLM provider: {provider}")

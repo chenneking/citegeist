@@ -40,7 +40,7 @@ class Generator:
     def __init__(
         self,
         llm_provider: str,  # defaults to: azure
-        database_path: str,  # path to local milvus DB file
+        database_uri: str,  # path to local milvus DB file or remote hosted milvus DB
         sentence_embedding_model_name: str = "sentence-transformers/all-mpnet-base-v2",
         topic_model_name: str = "MaartenGr/BERTopic_ArXiv",
         **llm_kwargs,
@@ -53,18 +53,18 @@ class Generator:
                           Falls back to environment variable LLM_PROVIDER, then to 'azure'
             sentence_embedding_model_name: Name of the sentence transformer embedding model
             topic_model_name: Name of the BERTopic model
-            database_path: Path to the Milvus database
+            database_uri: Path to the Milvus database
             **llm_kwargs: Provider-specific configuration arguments for the LLM client
         """
         # Initialize core models
         self.topic_model = BERTopic.load(topic_model_name)
         self.sentence_embedding_model = SentenceTransformer(sentence_embedding_model_name)
-        self.db_client = MilvusClient(database_path)
+        self.db_client = MilvusClient(database_uri)
 
         # Set up LLM client
         self.llm_provider = llm_provider or DEFAULT_LLM_PROVIDER
 
-        # Create LLM client
+        # Create LLM client (falls back to value of LLM_PROVIDER in env variables, and finally falls back to azure)
         self.llm_client = create_client(self.llm_provider, **llm_kwargs)
 
         # Store API version for Azure compatibility

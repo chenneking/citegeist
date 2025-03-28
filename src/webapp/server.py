@@ -5,12 +5,20 @@ import uuid
 from typing import Any, Dict, Optional
 
 from dotenv import load_dotenv
-from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi import (
+    BackgroundTasks,
+    FastAPI,
+    File,
+    Form,
+    HTTPException,
+    Request,
+    UploadFile,
+)
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from citegeist.generator import Generator
+from citegeist import Generator
 from citegeist.utils.citations import (
     extract_text_by_page_from_pdf,
     remove_citations_and_supplements,
@@ -40,14 +48,12 @@ load_dotenv()
 # Setup citegeist Generator
 generator = Generator(
     llm_provider="gemini",
-    database_path="/Users/carl/PycharmProjects/citegeist/database.db",
+    database_uri="/Users/carl/PycharmProjects/citegeist/database.db",
     api_key=os.getenv("GEMINI_API_KEY"),
     model_name="gemini-2.0-flash",
 )
 
-
 # FastAPI logic
-
 app = FastAPI(title="Citegeist", summary="Delivers a related works section and all the included citations.")
 
 # Mount static files directory for assets (CSS, JS)
@@ -55,6 +61,23 @@ app.mount("/static", StaticFiles(directory="./static"), name="static")
 
 # In-memory job storage
 jobs: Dict[str, JobStatus] = {}
+
+
+@app.middleware("http")
+async def maintenance_mode_middleware(request: Request, call_next):
+    # Check if maintenance mode is active
+    if os.getenv("MAINTENANCE_MODE", "false").lower() == "true":
+        # Allow static files to be served so that CSS/JS and other assets load
+        if request.url.path.startswith("/static"):
+            return await call_next(request)
+
+        # For the front page, return the maintenance.html file
+        if request.url.path == "/":
+            return FileResponse("static/maintenance.html", status_code=503)
+        else:
+            # For all other routes, return an error response
+            return JSONResponse(status_code=503, content={"message": "Maintenance Mode Active"})
+    return await call_next(request)
 
 
 @app.get("/")

@@ -82,6 +82,7 @@ class Generator:
         breadth: int,
         depth: int,
         diversity: float,
+        bibtex: bool = False,
         status_callback: Callable = None,
     ) -> dict[str, str | list[str]]:
         """
@@ -102,6 +103,7 @@ class Generator:
             breadth,
             depth,
             diversity,
+            bibtex,
             self.topic_model,
             self.sentence_embedding_model,
             self.db_client,
@@ -116,6 +118,7 @@ class Generator:
         breadth: int,
         depth: int,
         diversity: float,
+        bibtex: bool = False,
         status_callback: Callable = None,
     ) -> dict[str, str | list[str]]:
         """
@@ -136,6 +139,7 @@ class Generator:
             breadth,
             depth,
             diversity,
+            bibtex,
             self.topic_model,
             self.sentence_embedding_model,
             self.db_client,
@@ -150,6 +154,7 @@ class Generator:
         breadth: int,
         depth: int,
         diversity: float,
+        bibtex: bool = False,
         status_callback: Callable = None,
     ) -> dict[str, str | list[str]]:
         """
@@ -170,6 +175,7 @@ class Generator:
             breadth,
             depth,
             diversity,
+            bibtex,
             self.topic_model,
             self.sentence_embedding_model,
             self.db_client,
@@ -207,6 +213,7 @@ def generate_related_work(
     breadth: int,
     depth: int,
     diversity: float,
+    bibtex: bool,
     topic_model=None,
     embedding_model=None,
     client=None,
@@ -356,6 +363,9 @@ def generate_related_work(
         related_works_section=related_works_section, citation_strings=[obj["citation"] for obj in relevant_pages]
     )
 
+    # TODO: integrate logic here to also support bibtex citation output
+    # I think it's best to do this here, because filter_citations does regex and we'll otherwise destroy that.
+
     if status_callback:
         status_callback(8, f"Generated related work section with {len(filtered_citations)} citations")
 
@@ -367,6 +377,7 @@ def generate_answer_to_scientific_question(
     breadth: int,
     depth: int,
     diversity: float,
+    bibtex: bool,
     topic_model=None,
     embedding_model=None,
     client=None,
@@ -509,6 +520,9 @@ def generate_answer_to_scientific_question(
         related_works_section=question_answer, citation_strings=[obj["citation"] for obj in relevant_pages]
     )
 
+    # TODO: integrate logic here to also support bibtex citation output
+    # I think it's best to do this here, because filter_citations does regex and we'll otherwise destroy that.
+
     if status_callback:
         status_callback(8, f"Generated answer to question with {len(filtered_citations)} citations")
 
@@ -520,6 +534,7 @@ def generate_related_work_from_paper(
     breadth: int,
     depth: int,
     diversity: float,
+    bibtex: bool,
     topic_model=None,
     embedding_model=None,
     client=None,
@@ -692,6 +707,9 @@ def generate_related_work_from_paper(
     filtered_citations: list[str] = filter_citations(
         related_works_section=related_works_section, citation_strings=[obj["citation"] for obj in relevant_pages]
     )
+
+    # TODO: integrate logic here to also support bibtex citation output
+    # I think it's best to do this here, because filter_citations does regex and we'll otherwise destroy that.
 
     if status_callback:
         status_callback(8, f"Generated related work section with {len(filtered_citations)} citations")

@@ -32,6 +32,7 @@ class Item(BaseModel):
     breadth: int
     depth: int
     diversity: int
+    bibtex: bool
 
 
 class JobStatus(BaseModel):
@@ -91,6 +92,7 @@ async def create_job(
     breadth: int = Form(...),
     depth: int = Form(...),
     diversity: float = Form(...),
+    bibtex: bool = Form(...),
     abstract: Optional[str] = Form(None),
     pdf: Optional[UploadFile] = File(None),
     background_tasks: BackgroundTasks = None,
@@ -117,7 +119,7 @@ async def create_job(
             raise HTTPException(status_code=400, detail=f"Error reading PDF: {str(e)}")
 
     # Start processing in background
-    background_tasks.add_task(process_job, job_id, breadth, depth, diversity, abstract, pdf_pages)
+    background_tasks.add_task(process_job, job_id, breadth, depth, diversity, bibtex, abstract, pdf_pages)
 
     # Return job ID for status polling
     return {"job_id": job_id}
@@ -145,6 +147,7 @@ async def process_job(
     breadth: int,
     depth: int,
     diversity: float,
+    bibtex: bool,
     abstract: Optional[str] = None,
     pdf_pages: Optional[list[str]] = None,
 ):
@@ -169,6 +172,7 @@ async def process_job(
                 breadth=breadth,
                 depth=depth,
                 diversity=diversity,
+                bibtex=bibtex,
                 status_callback=status_callback,
             )
 
@@ -179,6 +183,7 @@ async def process_job(
                 breadth=breadth,
                 depth=depth,
                 diversity=diversity,
+                bibtex=bibtex,
                 status_callback=status_callback,
             )
 

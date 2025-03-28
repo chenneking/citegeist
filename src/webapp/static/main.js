@@ -1,5 +1,5 @@
 // Constants
-const POLLING_RATE_MS = 1000;
+const POLLING_RATE_MS = 2000;
 
 // Update slider values live
 document.getElementById('slider-breadth').addEventListener('input', (e) => {
@@ -10,6 +10,18 @@ document.getElementById('slider-depth').addEventListener('input', (e) => {
 });
 document.getElementById('slider-diversity').addEventListener('input', (e) => {
     document.getElementById('slider-diversity-value').textContent = e.target.value;
+});
+
+// BibTeX toggle functionality
+const bibtexToggle = document.getElementById('bibtex-toggle');
+let bibtexEnabled = false;
+
+// Initialize toggle state
+bibtexToggle.checked = bibtexEnabled;
+
+// Listen for changes to the toggle
+bibtexToggle.addEventListener('change', () => {
+    bibtexEnabled = bibtexToggle.checked;
 });
 
 // Toggle input type
@@ -131,12 +143,14 @@ document.getElementById('generate-button').addEventListener('click', async () =>
     const breadth = document.getElementById('slider-breadth').value;
     const depth = document.getElementById('slider-depth').value;
     const diversity = document.getElementById('slider-diversity').value;
+    const bibtex = bibtexEnabled; // Use the toggle state
 
     // Prepare form data
     const formData = new FormData();
     formData.append('breadth', parseInt(breadth));
     formData.append('depth', parseInt(depth));
     formData.append('diversity', parseFloat(diversity));
+    formData.append('bibtex', bibtex);
 
     // Determine input type and add appropriate data
     if (inputToggle.checked) {

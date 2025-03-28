@@ -67,7 +67,7 @@ jobs: Dict[str, JobStatus] = {}
 @app.middleware("http")
 async def maintenance_mode_middleware(request: Request, call_next):
     # Check if maintenance mode is active
-    if os.getenv("MAINTENANCE_MODE", False):
+    if os.getenv("MAINTENANCE_MODE", "false").lower() == "true":
         # Allow static files to be served so that CSS/JS and other assets load
         if request.url.path.startswith("/static"):
             return await call_next(request)

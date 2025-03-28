@@ -40,7 +40,7 @@ writer = LocalBulkWriter(schema=schema, local_path=sys.argv[2], file_type=BulkFi
 count = 0
 # Optionally, we can also filter to only include certain keys.
 # accepted_keys = [79, 77, 76, 63, 62, 60, 40, 30, 19, 16]
-with jsonlines.open(sys.argv[2]) as reader:
+with jsonlines.open(sys.argv[1]) as reader:
     for obj in reader:
         # if obj["topic"] not in accepted_keys:
         #     continue

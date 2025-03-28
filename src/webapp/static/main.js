@@ -1,5 +1,5 @@
 // Constants
-const POLLING_RATE_MS = 3000;
+const POLLING_RATE_MS = 1000;
 
 // Update slider values live
 document.getElementById('slider-breadth').addEventListener('input', (e) => {

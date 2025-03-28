@@ -19,12 +19,12 @@ A preprint describing the system in detail can be found here: [arXiv link (todo)
 - Access to arXiv's metadata and API
 
 ### Setup (Regular Users)
-1. Install the citgeist package
+1. Install the citgeist package.
     ```bash
     pip install citegeist
     ```
-2. Setup the Milvus database. As of March 2025, we provide a hosted version of this database that you can use for free (see usage instructions below). If we discontinue this, or you prefer to run this locally, you can download the database as file here: [Huggingface](https://huggingface.co/datasets/chenneking/citegeist-milvus-db) and refer to it when using the generator.
-3. Run the pipeline
+2. Setup the Milvus database. As of March 2025, we provide a hosted version of this database that you can use for free (see usage instructions below). If we discontinue this, please refer to the additional information provided in the respective sections below.
+3. Run the pipeline.
 
 ### Setup (Web-Interface)
 You only need to follow these steps if you want to use the web-interface! Using the setup steps above are sufficient if you wish to use the python interface.
@@ -71,39 +71,85 @@ The parameters can either be set in the API calls in Python, or when using the W
 
 
 ### Generating Related Work Section
+As of March 2025, we provide a hosted Milvus database that you can use by setting the following environment variables:
+```dotenv
+MILVUS_URI=http://49.12.219.90:19530
+MILVUS_TOKEN=citegeist:citegeist
+```
 To generate a related work section for a given abstract:
-
 ```python
 from citegeist import Generator
 import os
 
 generator = Generator(
-   llm_provider="gemini",  # choice of: "azure" (OpenAI Studio), "anthropic", "gemini", "mistral", and "openai"
-   api_key=os.environ.get("GEMINI_API_KEY"),
-   model_name="gemini-2.0-flash",
+   llm_provider="gemini",  # Choice of: "azure" (OpenAI Studio), "anthropic", "gemini", "mistral", and "openai"
+   api_key=os.environ.get("GEMINI_API_KEY"), # Here, you will need to set the respective API key
+   model_name="gemini-2.0-flash", # Choose the model that the provider supports
    database_uri=os.environ.get("MILVUS_URI"),  # Set the path (local) / url (remote) for the Milvus DB connection
-   database_token=os.environ.get("MILVUS_TOKEN"),  # Optionally also set the access token (you DON'T need to set this when using the locally hosted Milvus Database)
+   database_token=os.environ.get("MILVUS_TOKEN"),  # Optionally, also set the access token (you DON'T need to set this when using the locally hosted Milvus Database)
 )
 # Define input abstract and breadth (5-20), depth (1-5), and diversity (0.0-1.0) parameters.
 abstract = "..."
 breadth = 10
 depth = 2
 diversity = 0.0
-generator.generate_related_work(abstract, breadth, depth, diversity)
+related_works, citations = generator.generate_related_work(abstract, breadth, depth, diversity)
 ```
-As of March 2025, we provide a hosted Milvus database that you can use by setting the following environment variables:
+**Local Deployment:**
+
+If you, however, wish to run the Milvus database locally, you can do so by downloading [database.db](https://huggingface.co/datasets/chenneking/citegeist-milvus-db/blob/main/database.db), and provide an (absolute) path to the file as the value for `MILVUS_URI`. You **don't** have to set `MILVUS_TOKEN` for this.
 ```dotenv
-MILVUS_URI="http://49.12.219.90:19530"
-MILVUS_TOKEN="citegeist:citegeist"
+MILVUS_URI=<path_to_database.db_goes_here>
+```
+Then, to generate a related work section for a given abstract:
+```python
+from citegeist import Generator
+import os
+
+generator = Generator(
+   llm_provider="gemini",  # Choice of: "azure" (OpenAI Studio), "anthropic", "gemini", "mistral", and "openai"
+   api_key=os.environ.get("GEMINI_API_KEY"), # Here, you will need to set the respective API key
+   model_name="gemini-2.0-flash", # Choose the model that the provider supports
+   database_uri=os.environ.get("MILVUS_URI"),  # Set the path (local) database.db file
+)
+# Define input abstract and breadth (5-20), depth (1-5), and diversity (0.0-1.0) parameters.
+abstract = "..."
+breadth = 10
+depth = 2
+diversity = 0.0
+related_works, citations = generator.generate_related_work(abstract, breadth, depth, diversity)
 ```
 Please refer to examples/ for more usage examples.
 
 ### Running the Web Interface
-Beyond the python interface, citegeist also provides a **web-based interface** to input abstracts or upload full papers. To start the web-interface:
+Beyond the python interface, citegeist also provides a **web-based interface** to input abstracts or upload full papers. 
+
+**Option 0: citegeist.org**
+
+As of March 2025, we provide a hosted version available [here](https://citegeist.org/).
+
+However, if you prefer to run this locally and have installed the additional `[webapp]` requirements as described above, you have the following options:
+
+**Option 1: uvicorn**
+
+To start the web-interface using uvicorn:
 ```bash
 uvicorn webapp.server:app --reload
 ```
 Then, access the UI at `http://localhost:8000`.
+
+**Option 2: Docker**
+
+If you prefer to use docker, build the image:
+```bash
+docker build -t citegeist-webapp -f src/webapp/Dockerfile .
+```
+Run a container with the image:
+```bash
+docker run -p 80:80 citegeist-webapp
+```
+Then, access the UI at `http://localhost`.
+
 
 ### Web-UI
 ![Web-UI Overview](https://github.com/chenneking/citegeist/blob/main/img/citegeist.jpg?raw=true)

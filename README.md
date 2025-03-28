@@ -23,7 +23,7 @@ A preprint describing the system in detail can be found here: [arXiv link (todo)
     ```bash
     pip install citegeist
     ```
-2. Setup the milvus database. (TODO: explain this step)
+2. Setup the Milvus database. As of March 2025, we provide a hosted version of this database that you can use for free (see usage instructions below). If we discontinue this, or you prefer to run this locally, you can download the database as file here: [Huggingface]()  
 3. Run the pipeline (see Usage section below)
 
 ### Setup (Web-Interface)
@@ -81,7 +81,8 @@ generator = Generator(
    llm_provider="gemini",  # choice of: "azure" (OpenAI Studio), "anthropic", "gemini", "mistral", and "openai"
    api_key=os.environ.get("GEMINI_API_KEY"),
    model_name="gemini-2.0-flash",
-   database_uri="../database.db",  # Replace with the path to your local milvus database.db file
+   database_uri=os.environ.get("MILVUS_URI"),  # Set the path (local) / url (remote) for the Milvus DB connection
+   database_token=os.environ.get("MILVUS_TOKEN"),  # Optionally also set the access token (you DON'T need to set this when using the locally hosted Milvus Database)
 )
 # Define input abstract and breadth (5-20), depth (1-5), and diversity (0.0-1.0) parameters.
 abstract = "..."
@@ -89,6 +90,11 @@ breadth = 10
 depth = 2
 diversity = 0.0
 generator.generate_related_work(abstract, breadth, depth, diversity)
+```
+As of March 2025, we provide a hosted Milvus database that you can use by setting the following environment variables:
+```dotenv
+MILVUS_URI=""
+MILVUS_TOKEN="citegeist:citegeist"
 ```
 Please refer to examples/ for more usage examples.
 

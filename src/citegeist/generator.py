@@ -72,6 +72,10 @@ class Generator:
         # Store API version for Azure compatibility
         self.api_version = os.getenv("AZURE_API_VERSION", "2023-05-15")
 
+    def __del__(self):
+        # Close out MilvusClient
+        self.db_client.close()
+
     def generate_related_work(
         self,
         abstract: str,

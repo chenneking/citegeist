@@ -4,7 +4,7 @@ Example demonstrating how to use the citegeist pipeline to generate a related wo
 
 import os
 
-from citegeist.generator import Generator
+from citegeist import Generator
 
 if __name__ == "__main__":
     # Setup Generator

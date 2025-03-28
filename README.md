@@ -23,8 +23,8 @@ A preprint describing the system in detail can be found here: [arXiv link (todo)
     ```bash
     pip install citegeist
     ```
-2. Setup the Milvus database. As of March 2025, we provide a hosted version of this database that you can use for free (see usage instructions below). If we discontinue this, or you prefer to run this locally, you can download the database as file here: [Huggingface]()  
-3. Run the pipeline (see Usage section below)
+2. Setup the Milvus database. As of March 2025, we provide a hosted version of this database that you can use for free (see usage instructions below). If we discontinue this, or you prefer to run this locally, you can download the database as file here: [Huggingface](https://huggingface.co/datasets/chenneking/citegeist-milvus-db) and refer to it when using the generator.
+3. Run the pipeline
 
 ### Setup (Web-Interface)
 You only need to follow these steps if you want to use the web-interface! Using the setup steps above are sufficient if you wish to use the python interface.
@@ -74,7 +74,7 @@ The parameters can either be set in the API calls in Python, or when using the W
 To generate a related work section for a given abstract:
 
 ```python
-from citegeist.generator import Generator
+from citegeist import Generator
 import os
 
 generator = Generator(

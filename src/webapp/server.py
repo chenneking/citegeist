@@ -48,7 +48,8 @@ load_dotenv()
 # Setup citegeist Generator
 generator = Generator(
     llm_provider="gemini",
-    database_uri="/Users/carl/PycharmProjects/citegeist/database.db",
+    database_uri=os.environ.get("MILVUS_URI"),
+    database_token=os.environ.get("MILVUS_TOKEN"),
     api_key=os.getenv("GEMINI_API_KEY"),
     model_name="gemini-2.0-flash",
 )

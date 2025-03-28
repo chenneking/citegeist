@@ -12,7 +12,8 @@ if __name__ == "__main__":
         llm_provider="gemini",  # choice of: Azure (OpenAI Studio), Anthropic, Gemini, Mistral, and OpenAI
         api_key=os.environ.get("GEMINI_API_KEY"),
         model_name="gemini-2.0-flash",
-        database_uri="../database.db",  # Replace with the path to your local milvus database.db file
+        database_uri=os.environ.get("MILVUS_URI"),  # Set the path (local) / url (remote) for the Milvus DB connection
+        database_token=os.environ.get("MILVUS_TOKEN"),  # Optionally, also set the access token
     )
 
     # Define inputs

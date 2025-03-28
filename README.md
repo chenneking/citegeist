@@ -93,7 +93,7 @@ generator.generate_related_work(abstract, breadth, depth, diversity)
 ```
 As of March 2025, we provide a hosted Milvus database that you can use by setting the following environment variables:
 ```dotenv
-MILVUS_URI=""
+MILVUS_URI="http://49.12.219.90:19530"
 MILVUS_TOKEN="citegeist:citegeist"
 ```
 Please refer to examples/ for more usage examples.

@@ -18,7 +18,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from citegeist.generator import Generator
+from citegeist import Generator
 from citegeist.utils.citations import (
     extract_text_by_page_from_pdf,
     remove_citations_and_supplements,

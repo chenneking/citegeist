@@ -64,7 +64,7 @@ class Generator:
         # Set up LLM client
         self.llm_provider = llm_provider or DEFAULT_LLM_PROVIDER
 
-        # Create LLM client
+        # Create LLM client (falls back to value of LLM_PROVIDER in env variables, and finally falls back to azure)
         self.llm_client = create_client(self.llm_provider, **llm_kwargs)
 
         # Store API version for Azure compatibility

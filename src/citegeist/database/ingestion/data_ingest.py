@@ -11,7 +11,7 @@ python data_ingest.py <file1> [file2] ...
 assert len(sys.argv) >= 2
 
 response = bulk_import(
-    url=os.environ["MILVUS_URI"],  # TODO: define milvus URL here
+    url=os.environ["MILVUS_URI"],
     collection_name="abstracts",
     files=[[file for file in sys.argv[1:]]],
 )

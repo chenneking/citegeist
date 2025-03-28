@@ -124,13 +124,13 @@ Please refer to examples/ for more usage examples.
 ### Running the Web Interface
 Beyond the python interface, citegeist also provides a **web-based interface** to input abstracts or upload full papers. 
 
-**Option 0: citegeist.org**
+**Option 1: citegeist.org**
 
 As of March 2025, we provide a hosted version available [here](https://citegeist.org/).
 
 However, if you prefer to run this locally and have installed the additional `[webapp]` requirements as described above, you have the following options:
 
-**Option 1: uvicorn**
+**Option 2: uvicorn**
 
 To start the web-interface using uvicorn:
 ```bash
@@ -138,7 +138,7 @@ uvicorn webapp.server:app --reload
 ```
 Then, access the UI at `http://localhost:8000`.
 
-**Option 2: Docker**
+**Option 3: Docker**
 
 If you prefer to use docker, build the image:
 ```bash

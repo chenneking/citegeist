@@ -290,7 +290,11 @@ def generate_related_work(
     )
 
     if status_callback:
-        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist")
+        status_callback(
+            4,
+            f"Selected {len(selected_papers)} papers for the longlist, retrieving full text(s)"
+            f" (this might take a while)",
+        )
 
     # Generate embeddings of each page of every paper in the longlist
     page_embeddings: list[list[dict]] = []
@@ -445,7 +449,11 @@ def generate_answer_to_scientific_question(
     )
 
     if status_callback:
-        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist")
+        status_callback(
+            4,
+            f"Selected {len(selected_papers)} papers for the longlist, retrieving full text(s)"
+            f" (this might take a while)",
+        )
 
     # Generate embeddings of each page of every paper in the longlist
     page_embeddings: list[list[dict]] = []
@@ -617,7 +625,11 @@ def generate_related_work_from_paper(
     )
 
     if status_callback:
-        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist")
+        status_callback(
+            4,
+            f"Selected {len(selected_papers)} papers for the longlist, retrieving full text(s)"
+            f" (this might take a while)",
+        )
 
     # Generate embeddings of each page of every paper in the longlist
     page_embeddings_papers: list[list[dict]] = []

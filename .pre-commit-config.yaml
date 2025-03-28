@@ -3,7 +3,8 @@ default_language_version:
 
 exclude: |
   (?x)^(
-    evaluation/.*
+    evaluation/.*|
+    __init__.py
   )$
 
 repos:

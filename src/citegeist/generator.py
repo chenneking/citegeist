@@ -276,7 +276,7 @@ def generate_related_work(
     )
 
     if status_callback:
-        status_callback(3, f"Retrieved {len(query_data)} papers from the DB")
+        status_callback(3, f"Retrieved {len(query_data[0])} papers from the DB")
 
     # Clean DB response data
     query_data: list[dict] = query_data[0]
@@ -431,7 +431,7 @@ def generate_answer_to_scientific_question(
     )
 
     if status_callback:
-        status_callback(3, f"Retrieved {len(query_data)} papers from the DB")
+        status_callback(3, f"Retrieved {len(query_data[0])} papers from the DB")
 
     # Clean DB response data
     query_data: list[dict] = query_data[0]

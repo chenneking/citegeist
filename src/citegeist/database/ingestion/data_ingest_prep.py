@@ -8,6 +8,8 @@ from pymilvus.bulk_writer import BulkFileType, LocalBulkWriter
 """
 Usage:
 python data_ingest_prep.py <path to source data (.jsonl)> <output file directory>
+
+Please also define the two env variables MILVUS_URI (http://...) and MILVUS_TOKEN (user:pass)
 """
 # Input validation
 assert len(sys.argv) == 3
@@ -15,9 +17,7 @@ assert os.path.isfile(sys.argv[1]) and os.path.isdir(sys.argv[2])
 assert sys.argv[1].endswith(".jsonl")
 
 # Initiate Milvus Client
-client = MilvusClient(
-    uri=os.environ["MILVUS_URI"], token=os.environ["MILVUS_TOKEN"]
-)  # TODO: Define client credentials here
+client = MilvusClient(uri=os.environ["MILVUS_URI"], token=os.environ["MILVUS_TOKEN"])
 
 # Define Milvus DB Schema
 schema = client.create_schema(auto_id=False)

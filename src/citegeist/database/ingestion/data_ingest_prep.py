@@ -52,3 +52,4 @@ with jsonlines.open(sys.argv[1]) as reader:
 
 print(f"Finished processing {count} entries")
 writer.commit()
+client.close()

@@ -2,7 +2,7 @@
 
 Citegeist is an automated system that generates related work sections and citation-backed outputs using **Retrieval-Augmented Generation (RAG)** on the **arXiv corpus**. It leverages **embedding-based similarity search**, **multi-stage filtering**, and **summarization** to retrieve and synthesize the most relevant sources. Citegeist is designed to help researchers integrate factual and up-to-date references into their work.
 
-A preprint describing the system in detail can be found here: [arXiv link (todo)]()
+A preprint describing the system in detail can be found here: [arXiv (TODO)]()
 
 
 ## Features
@@ -119,7 +119,7 @@ depth = 2
 diversity = 0.0
 related_works, citations = generator.generate_related_work(abstract, breadth, depth, diversity)
 ```
-Please refer to examples/ for more usage examples.
+Please refer to [examples](/examples) for more usage examples.
 
 ### Running the Web Interface
 Beyond the python interface, citegeist also provides a **web-based interface** to input abstracts or upload full papers. 

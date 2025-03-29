@@ -3,7 +3,9 @@ Example demonstrating how to use the citegeist pipeline to generate a related wo
  (based on a pdf paper as input).
 """
 
-from citegeist.generator import Generator
+import os
+
+from citegeist import Generator
 from citegeist.utils.citations import (
     extract_text_by_page_from_pdf,
     remove_citations_and_supplements,
@@ -13,6 +15,8 @@ if __name__ == "__main__":
     # Setup Generator
     generator = Generator(
         llm_provider="gemini",  # choice of: Azure (OpenAI Studio), Anthropic, Gemini, Mistral, and OpenAI
+        database_uri=os.environ.get("MILVUS_URI"),  # Set the path (local) / url (remote) for the Milvus DB connection
+        database_token=os.environ.get("MILVUS_TOKEN"),  # Optionally also set the access token
     )
 
     # Define inputs

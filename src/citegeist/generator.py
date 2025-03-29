@@ -1,7 +1,7 @@
 # Imports
 import math
 import os
-from typing import Callable
+from typing import Callable, Optional
 
 from bertopic import BERTopic
 from dotenv import load_dotenv
@@ -30,17 +30,15 @@ from citegeist.utils.prompts import (
 # Load environment variables
 load_dotenv()
 
-# Configure the LLM client provider from environment variables
-DEFAULT_LLM_PROVIDER = os.getenv("LLM_PROVIDER", "azure")
-
 
 class Generator:
     """Main generator class for Citegeist."""
 
     def __init__(
         self,
-        llm_provider: str,  # defaults to: azure
-        database_uri: str,  # path to local milvus DB file or remote hosted milvus DB
+        llm_provider: str,
+        database_uri: str,  # path to local milvus DB file or remote hosted Milvus DB
+        database_token: Optional[str] = None,  # This only has to be set when authentication is required for the DB
         sentence_embedding_model_name: str = "sentence-transformers/all-mpnet-base-v2",
         topic_model_name: str = "MaartenGr/BERTopic_ArXiv",
         **llm_kwargs,
@@ -54,21 +52,29 @@ class Generator:
             sentence_embedding_model_name: Name of the sentence transformer embedding model
             topic_model_name: Name of the BERTopic model
             database_uri: Path to the Milvus database
+            database_token: Optional token for accessing Milvus database
             **llm_kwargs: Provider-specific configuration arguments for the LLM client
         """
         # Initialize core models
         self.topic_model = BERTopic.load(topic_model_name)
         self.sentence_embedding_model = SentenceTransformer(sentence_embedding_model_name)
-        self.db_client = MilvusClient(database_uri)
+        if database_token is None:
+            self.db_client = MilvusClient(uri=database_uri)
+        else:
+            self.db_client = MilvusClient(uri=database_uri, token=database_token)
 
         # Set up LLM client
-        self.llm_provider = llm_provider or DEFAULT_LLM_PROVIDER
+        self.llm_provider = llm_provider
 
         # Create LLM client (falls back to value of LLM_PROVIDER in env variables, and finally falls back to azure)
         self.llm_client = create_client(self.llm_provider, **llm_kwargs)
 
         # Store API version for Azure compatibility
         self.api_version = os.getenv("AZURE_API_VERSION", "2023-05-15")
+
+    def __del__(self):
+        # Close out MilvusClient
+        self.db_client.close()
 
     def generate_related_work(
         self,
@@ -270,7 +276,7 @@ def generate_related_work(
     )
 
     if status_callback:
-        status_callback(3, f"Retrieved {len(query_data)} papers from the DB")
+        status_callback(3, f"Retrieved {len(query_data[0])} papers from the DB")
 
     # Clean DB response data
     query_data: list[dict] = query_data[0]
@@ -284,7 +290,11 @@ def generate_related_work(
     )
 
     if status_callback:
-        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist")
+        status_callback(
+            4,
+            f"Selected {len(selected_papers)} papers for the longlist, retrieving full text(s)"
+            f" (this might take a while)",
+        )
 
     # Generate embeddings of each page of every paper in the longlist
     page_embeddings: list[list[dict]] = []
@@ -425,7 +435,7 @@ def generate_answer_to_scientific_question(
     )
 
     if status_callback:
-        status_callback(3, f"Retrieved {len(query_data)} papers from the DB")
+        status_callback(3, f"Retrieved {len(query_data[0])} papers from the DB")
 
     # Clean DB response data
     query_data: list[dict] = query_data[0]
@@ -439,7 +449,11 @@ def generate_answer_to_scientific_question(
     )
 
     if status_callback:
-        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist")
+        status_callback(
+            4,
+            f"Selected {len(selected_papers)} papers for the longlist, retrieving full text(s)"
+            f" (this might take a while)",
+        )
 
     # Generate embeddings of each page of every paper in the longlist
     page_embeddings: list[list[dict]] = []
@@ -611,7 +625,11 @@ def generate_related_work_from_paper(
     )
 
     if status_callback:
-        status_callback(4, f"Selected {len(selected_papers)} papers for the longlist")
+        status_callback(
+            4,
+            f"Selected {len(selected_papers)} papers for the longlist, retrieving full text(s)"
+            f" (this might take a while)",
+        )
 
     # Generate embeddings of each page of every paper in the longlist
     page_embeddings_papers: list[list[dict]] = []

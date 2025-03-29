@@ -201,3 +201,27 @@ input:checked + .toggle-slider:before {
     background-color: #B31B1B;
     border-radius: inherit;
 }
+
+@media only screen and (min-width: 1250px) {
+    .content-container {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .content-container {
+        width: 70%;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .content-container {
+        width: 80%;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .content-container {
+        width: 90%;
+    }
+}

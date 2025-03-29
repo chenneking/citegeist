@@ -119,7 +119,7 @@ depth = 2
 diversity = 0.0
 related_works, citations = generator.generate_related_work(abstract, breadth, depth, diversity)
 ```
-Please refer to examples/ for more usage examples.
+Please refer to [examples](/examples) for more usage examples.
 
 ### Running the Web Interface
 Beyond the python interface, citegeist also provides a **web-based interface** to input abstracts or upload full papers. 

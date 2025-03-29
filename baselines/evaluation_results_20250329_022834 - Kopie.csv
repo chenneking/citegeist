@@ -1,0 +1,396 @@
+title,arxiv_id,search_query,paper_id,paper_title,relevance_score,relevance_prompt,related_work_score,related_work_prompt,related_work_text
+"Condorcet-Consistent Choice
+Among Three Candidates",2411.19857,Condorcet extensions voting paradoxes maximin Nanson,1609.05370v2,The Maximin Support Method: An Extension of the D'Hondt Method to Approval-Based Multiwinner Elections,3.0,"
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+        
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+        
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+        
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+        
+        Source Paper Abstract:
+        A voting rule is a Condorcet extension if it returns a candidate that beats every
+other candidate in pairwise majority comparisons whenever one exists. Condorcet
+extensions have faced criticism due to their susceptibility to variable-electorate
+paradoxes, especially the reinforcement paradox (Young and Levenglick, 1978) and
+the no-show paradox (Moulin, 1988b). In this paper, we investigate the susceptibility
+of Condorcet extensions to these paradoxes for the case of exactly three candidates.
+For the reinforcement paradox, we establish that it must occur for every Condorcet
+extension when there are at least eight voters and demonstrate that certain refinements
+of maximin—a voting rule originally proposed by Condorcet (1785)—are immune
+to this paradox when there are at most seven voters. For the no-show paradox, we
+prove that the only homogeneous Condorcet extensions immune to it are refinements
+of maximin. We also provide axiomatic characterizations of maximin and two of
+its refinements, Nanson’s rule and leximin, highlighting their suitability for threecandidate elections.
+        
+        Related Work Paper Abstract:
+        We propose the maximin support method, a novel extension of the D'Hondt
+apportionment method to approval-based multiwinner elections. The maximin
+support method is based on maximizing the support of the least supported
+elected candidate. It can be computed efficiently and satisfies (adjusted
+versions of) the main properties of the original D'Hondt method: house
+monotonicity, population monotonicity, and proportional representation. We also
+establish a close relationship between the maximin support method and
+Phragm\'{e}n's voting rules.
+        
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    ",7.0,"
+    Source Abstract:
+    A voting rule is a Condorcet extension if it returns a candidate that beats every
+other candidate in pairwise majority comparisons whenever one exists. Condorcet
+extensions have faced criticism due to their susceptibility to variable-electorate
+paradoxes, especially the reinforcement paradox (Young and Levenglick, 1978) and
+the no-show paradox (Moulin, 1988b). In this paper, we investigate the susceptibility
+of Condorcet extensions to these paradoxes for the case of exactly three candidates.
+For the reinforcement paradox, we establish that it must occur for every Condorcet
+extension when there are at least eight voters and demonstrate that certain refinements
+of maximin—a voting rule originally proposed by Condorcet (1785)—are immune
+to this paradox when there are at most seven voters. For the no-show paradox, we
+prove that the only homogeneous Condorcet extensions immune to it are refinements
+of maximin. We also provide axiomatic characterizations of maximin and two of
+its refinements, Nanson’s rule and leximin, highlighting their suitability for threecandidate elections.
+    
+    Related Works Section:
+    In the realm of social choice theory, the study of Condorcet extensions and their susceptibility to paradoxes has been a focal point of research. Several works have explored various aspects of Condorcet-consistent voting rules, providing insights into their theoretical underpinnings and practical implications. A significant contribution to this field is the exploration of distance rationalizability, as discussed by Elkind, Faliszewski, and Slinko (2010). Their work investigates the rationalization of Condorcet-consistent rules using distances akin to the Hamming distance, offering a novel perspective on how these rules can be conceptualized. This approach is particularly relevant to our study, as it highlights the complexity and computational challenges associated with Condorcet extensions, which are central to understanding their susceptibility to paradoxes.
+
+Another pertinent area of research is the computational complexity of Condorcet-consistent voting rules, as examined by Schlotter and Cechlárová (2025). Their analysis of the Possible President problem provides a comprehensive view of the computational challenges faced by various Condorcet-consistent rules, including Maximin. By classifying cases based on the number of voters and other parameters, they delineate the boundaries of tractability for these problems. This work complements our investigation by underscoring the computational aspects of Condorcet extensions, particularly in the context of three-candidate elections, where paradoxes such as the reinforcement and no-show paradoxes are prevalent.
+
+The manipulation of Condorcet-consistent voting rules is another critical theme explored in the literature. Peters (2017) addresses the preference reversal paradox, demonstrating the vulnerability of these rules to strategic manipulation by voters. This study is instrumental in understanding the broader implications of Condorcet extensions, as it reveals inherent weaknesses that can be exploited under certain conditions. Our research builds on this foundation by examining specific paradoxes that arise in three-candidate scenarios, thereby contributing to a more nuanced understanding of the limitations and potential refinements of Condorcet extensions.
+
+The Maximin rule, a central focus of our paper, has been extended to various voting contexts, as illustrated by Sánchez-Fernández et al. (2016). Their work on the maximin support method extends the D'Hondt apportionment method to approval-based multiwinner elections, showcasing the versatility and applicability of maximin principles. This extension is particularly relevant to our study, as it highlights the adaptability of maximin refinements in addressing paradoxes within Condorcet extensions. By demonstrating the immunity of certain maximin refinements to the reinforcement and no-show paradoxes, our research aligns with the broader discourse on enhancing the robustness of voting rules.
+
+In summary, our work contributes to the ongoing dialogue on Condorcet extensions by providing a focused analysis of their susceptibility to paradoxes in three-candidate elections. By establishing the conditions under which these paradoxes occur and identifying refinements of maximin that are immune to them, we offer a novel perspective on the suitability of these voting rules. Our axiomatic characterizations of maximin and its refinements further enrich the theoretical landscape, paving the way for future research on the refinement and application of Condorcet-consistent rules in diverse electoral contexts.
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+    
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+    
+    - **0**: Completely irrelevant, unclear, or inaccurate. 
+     *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.
+      
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.
+     *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.
+      
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.
+      *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    ","In the realm of social choice theory, the study of Condorcet extensions and their susceptibility to paradoxes has been a focal point of research. Several works have explored various aspects of Condorcet-consistent voting rules, providing insights into their theoretical underpinnings and practical implications. A significant contribution to this field is the exploration of distance rationalizability, as discussed by Elkind, Faliszewski, and Slinko (2010). Their work investigates the rationalization of Condorcet-consistent rules using distances akin to the Hamming distance, offering a novel perspective on how these rules can be conceptualized. This approach is particularly relevant to our study, as it highlights the complexity and computational challenges associated with Condorcet extensions, which are central to understanding their susceptibility to paradoxes.
+
+Another pertinent area of research is the computational complexity of Condorcet-consistent voting rules, as examined by Schlotter and Cechlárová (2025). Their analysis of the Possible President problem provides a comprehensive view of the computational challenges faced by various Condorcet-consistent rules, including Maximin. By classifying cases based on the number of voters and other parameters, they delineate the boundaries of tractability for these problems. This work complements our investigation by underscoring the computational aspects of Condorcet extensions, particularly in the context of three-candidate elections, where paradoxes such as the reinforcement and no-show paradoxes are prevalent.
+
+The manipulation of Condorcet-consistent voting rules is another critical theme explored in the literature. Peters (2017) addresses the preference reversal paradox, demonstrating the vulnerability of these rules to strategic manipulation by voters. This study is instrumental in understanding the broader implications of Condorcet extensions, as it reveals inherent weaknesses that can be exploited under certain conditions. Our research builds on this foundation by examining specific paradoxes that arise in three-candidate scenarios, thereby contributing to a more nuanced understanding of the limitations and potential refinements of Condorcet extensions.
+
+The Maximin rule, a central focus of our paper, has been extended to various voting contexts, as illustrated by Sánchez-Fernández et al. (2016). Their work on the maximin support method extends the D'Hondt apportionment method to approval-based multiwinner elections, showcasing the versatility and applicability of maximin principles. This extension is particularly relevant to our study, as it highlights the adaptability of maximin refinements in addressing paradoxes within Condorcet extensions. By demonstrating the immunity of certain maximin refinements to the reinforcement and no-show paradoxes, our research aligns with the broader discourse on enhancing the robustness of voting rules.
+
+In summary, our work contributes to the ongoing dialogue on Condorcet extensions by providing a focused analysis of their susceptibility to paradoxes in three-candidate elections. By establishing the conditions under which these paradoxes occur and identifying refinements of maximin that are immune to them, we offer a novel perspective on the suitability of these voting rules. Our axiomatic characterizations of maximin and its refinements further enrich the theoretical landscape, paving the way for future research on the refinement and application of Condorcet-consistent rules in diverse electoral contexts."
+"Condorcet-Consistent Choice
+Among Three Candidates",2411.19857,Condorcet extensions voting paradoxes maximin Nanson,1009.0300v1,Rationalizations of Condorcet-Consistent Rules via Distances of Hamming Type,8.0,"
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+        
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+        
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+        
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+        
+        Source Paper Abstract:
+        A voting rule is a Condorcet extension if it returns a candidate that beats every
+other candidate in pairwise majority comparisons whenever one exists. Condorcet
+extensions have faced criticism due to their susceptibility to variable-electorate
+paradoxes, especially the reinforcement paradox (Young and Levenglick, 1978) and
+the no-show paradox (Moulin, 1988b). In this paper, we investigate the susceptibility
+of Condorcet extensions to these paradoxes for the case of exactly three candidates.
+For the reinforcement paradox, we establish that it must occur for every Condorcet
+extension when there are at least eight voters and demonstrate that certain refinements
+of maximin—a voting rule originally proposed by Condorcet (1785)—are immune
+to this paradox when there are at most seven voters. For the no-show paradox, we
+prove that the only homogeneous Condorcet extensions immune to it are refinements
+of maximin. We also provide axiomatic characterizations of maximin and two of
+its refinements, Nanson’s rule and leximin, highlighting their suitability for threecandidate elections.
+        
+        Related Work Paper Abstract:
+        The main idea of the {\em distance rationalizability} approach to view the
+voters' preferences as an imperfect approximation to some kind of consensus is
+deeply rooted in social choice literature. It allows one to define
+(""rationalize"") voting rules via a consensus class of elections and a distance:
+a candidate is said to be an election winner if she is ranked first in one of
+the nearest (with respect to the given distance) consensus elections. It is
+known that many classic voting rules can be distance rationalized. In this
+paper, we provide new results on distance rationalizability of several
+Condorcet-consistent voting rules. In particular, we distance rationalize
+Young's rule and Maximin rule using distances similar to the Hamming distance.
+We show that the claim that Young's rule can be rationalized by the Condorcet
+consensus class and the Hamming distance is incorrect; in fact, these consensus
+class and distance yield a new rule which has not been studied before. We prove
+that, similarly to Young's rule, this new rule has a computationally hard
+winner determination problem.
+        
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    ",7.0,"
+    Source Abstract:
+    A voting rule is a Condorcet extension if it returns a candidate that beats every
+other candidate in pairwise majority comparisons whenever one exists. Condorcet
+extensions have faced criticism due to their susceptibility to variable-electorate
+paradoxes, especially the reinforcement paradox (Young and Levenglick, 1978) and
+the no-show paradox (Moulin, 1988b). In this paper, we investigate the susceptibility
+of Condorcet extensions to these paradoxes for the case of exactly three candidates.
+For the reinforcement paradox, we establish that it must occur for every Condorcet
+extension when there are at least eight voters and demonstrate that certain refinements
+of maximin—a voting rule originally proposed by Condorcet (1785)—are immune
+to this paradox when there are at most seven voters. For the no-show paradox, we
+prove that the only homogeneous Condorcet extensions immune to it are refinements
+of maximin. We also provide axiomatic characterizations of maximin and two of
+its refinements, Nanson’s rule and leximin, highlighting their suitability for threecandidate elections.
+    
+    Related Works Section:
+    In the realm of social choice theory, the study of Condorcet extensions and their susceptibility to paradoxes has been a focal point of research. Several works have explored various aspects of Condorcet-consistent voting rules, providing insights into their theoretical underpinnings and practical implications. A significant contribution to this field is the exploration of distance rationalizability, as discussed by Elkind, Faliszewski, and Slinko (2010). Their work investigates the rationalization of Condorcet-consistent rules using distances akin to the Hamming distance, offering a novel perspective on how these rules can be conceptualized. This approach is particularly relevant to our study, as it highlights the complexity and computational challenges associated with Condorcet extensions, which are central to understanding their susceptibility to paradoxes.
+
+Another pertinent area of research is the computational complexity of Condorcet-consistent voting rules, as examined by Schlotter and Cechlárová (2025). Their analysis of the Possible President problem provides a comprehensive view of the computational challenges faced by various Condorcet-consistent rules, including Maximin. By classifying cases based on the number of voters and other parameters, they delineate the boundaries of tractability for these problems. This work complements our investigation by underscoring the computational aspects of Condorcet extensions, particularly in the context of three-candidate elections, where paradoxes such as the reinforcement and no-show paradoxes are prevalent.
+
+The manipulation of Condorcet-consistent voting rules is another critical theme explored in the literature. Peters (2017) addresses the preference reversal paradox, demonstrating the vulnerability of these rules to strategic manipulation by voters. This study is instrumental in understanding the broader implications of Condorcet extensions, as it reveals inherent weaknesses that can be exploited under certain conditions. Our research builds on this foundation by examining specific paradoxes that arise in three-candidate scenarios, thereby contributing to a more nuanced understanding of the limitations and potential refinements of Condorcet extensions.
+
+The Maximin rule, a central focus of our paper, has been extended to various voting contexts, as illustrated by Sánchez-Fernández et al. (2016). Their work on the maximin support method extends the D'Hondt apportionment method to approval-based multiwinner elections, showcasing the versatility and applicability of maximin principles. This extension is particularly relevant to our study, as it highlights the adaptability of maximin refinements in addressing paradoxes within Condorcet extensions. By demonstrating the immunity of certain maximin refinements to the reinforcement and no-show paradoxes, our research aligns with the broader discourse on enhancing the robustness of voting rules.
+
+In summary, our work contributes to the ongoing dialogue on Condorcet extensions by providing a focused analysis of their susceptibility to paradoxes in three-candidate elections. By establishing the conditions under which these paradoxes occur and identifying refinements of maximin that are immune to them, we offer a novel perspective on the suitability of these voting rules. Our axiomatic characterizations of maximin and its refinements further enrich the theoretical landscape, paving the way for future research on the refinement and application of Condorcet-consistent rules in diverse electoral contexts.
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+    
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+    
+    - **0**: Completely irrelevant, unclear, or inaccurate. 
+     *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.
+      
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.
+     *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.
+      
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.
+      *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    ","In the realm of social choice theory, the study of Condorcet extensions and their susceptibility to paradoxes has been a focal point of research. Several works have explored various aspects of Condorcet-consistent voting rules, providing insights into their theoretical underpinnings and practical implications. A significant contribution to this field is the exploration of distance rationalizability, as discussed by Elkind, Faliszewski, and Slinko (2010). Their work investigates the rationalization of Condorcet-consistent rules using distances akin to the Hamming distance, offering a novel perspective on how these rules can be conceptualized. This approach is particularly relevant to our study, as it highlights the complexity and computational challenges associated with Condorcet extensions, which are central to understanding their susceptibility to paradoxes.
+
+Another pertinent area of research is the computational complexity of Condorcet-consistent voting rules, as examined by Schlotter and Cechlárová (2025). Their analysis of the Possible President problem provides a comprehensive view of the computational challenges faced by various Condorcet-consistent rules, including Maximin. By classifying cases based on the number of voters and other parameters, they delineate the boundaries of tractability for these problems. This work complements our investigation by underscoring the computational aspects of Condorcet extensions, particularly in the context of three-candidate elections, where paradoxes such as the reinforcement and no-show paradoxes are prevalent.
+
+The manipulation of Condorcet-consistent voting rules is another critical theme explored in the literature. Peters (2017) addresses the preference reversal paradox, demonstrating the vulnerability of these rules to strategic manipulation by voters. This study is instrumental in understanding the broader implications of Condorcet extensions, as it reveals inherent weaknesses that can be exploited under certain conditions. Our research builds on this foundation by examining specific paradoxes that arise in three-candidate scenarios, thereby contributing to a more nuanced understanding of the limitations and potential refinements of Condorcet extensions.
+
+The Maximin rule, a central focus of our paper, has been extended to various voting contexts, as illustrated by Sánchez-Fernández et al. (2016). Their work on the maximin support method extends the D'Hondt apportionment method to approval-based multiwinner elections, showcasing the versatility and applicability of maximin principles. This extension is particularly relevant to our study, as it highlights the adaptability of maximin refinements in addressing paradoxes within Condorcet extensions. By demonstrating the immunity of certain maximin refinements to the reinforcement and no-show paradoxes, our research aligns with the broader discourse on enhancing the robustness of voting rules.
+
+In summary, our work contributes to the ongoing dialogue on Condorcet extensions by providing a focused analysis of their susceptibility to paradoxes in three-candidate elections. By establishing the conditions under which these paradoxes occur and identifying refinements of maximin that are immune to them, we offer a novel perspective on the suitability of these voting rules. Our axiomatic characterizations of maximin and its refinements further enrich the theoretical landscape, paving the way for future research on the refinement and application of Condorcet-consistent rules in diverse electoral contexts."
+"Condorcet-Consistent Choice
+Among Three Candidates",2411.19857,Condorcet extensions voting paradoxes maximin Nanson,1707.08760v1,Condorcet's Principle and the Preference Reversal Paradox,5.0,"
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+        
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+        
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+        
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+        
+        Source Paper Abstract:
+        A voting rule is a Condorcet extension if it returns a candidate that beats every
+other candidate in pairwise majority comparisons whenever one exists. Condorcet
+extensions have faced criticism due to their susceptibility to variable-electorate
+paradoxes, especially the reinforcement paradox (Young and Levenglick, 1978) and
+the no-show paradox (Moulin, 1988b). In this paper, we investigate the susceptibility
+of Condorcet extensions to these paradoxes for the case of exactly three candidates.
+For the reinforcement paradox, we establish that it must occur for every Condorcet
+extension when there are at least eight voters and demonstrate that certain refinements
+of maximin—a voting rule originally proposed by Condorcet (1785)—are immune
+to this paradox when there are at most seven voters. For the no-show paradox, we
+prove that the only homogeneous Condorcet extensions immune to it are refinements
+of maximin. We also provide axiomatic characterizations of maximin and two of
+its refinements, Nanson’s rule and leximin, highlighting their suitability for threecandidate elections.
+        
+        Related Work Paper Abstract:
+        We prove that every Condorcet-consistent voting rule can be manipulated by a
+voter who completely reverses their preference ranking, assuming that there are
+at least 4 alternatives. This corrects an error and improves a result of
+[Sanver, M. R. and Zwicker, W. S. (2009). One-way monotonicity as a form of
+strategy-proofness. Int J Game Theory 38(4), 553-574.] For the case of
+precisely 4 alternatives, we exactly characterise the number of voters for
+which this impossibility result can be proven. We also show analogues of our
+result for irresolute voting rules. We then leverage our result to state a
+strong form of the Gibbard-Satterthwaite Theorem.
+        
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    ",7.0,"
+    Source Abstract:
+    A voting rule is a Condorcet extension if it returns a candidate that beats every
+other candidate in pairwise majority comparisons whenever one exists. Condorcet
+extensions have faced criticism due to their susceptibility to variable-electorate
+paradoxes, especially the reinforcement paradox (Young and Levenglick, 1978) and
+the no-show paradox (Moulin, 1988b). In this paper, we investigate the susceptibility
+of Condorcet extensions to these paradoxes for the case of exactly three candidates.
+For the reinforcement paradox, we establish that it must occur for every Condorcet
+extension when there are at least eight voters and demonstrate that certain refinements
+of maximin—a voting rule originally proposed by Condorcet (1785)—are immune
+to this paradox when there are at most seven voters. For the no-show paradox, we
+prove that the only homogeneous Condorcet extensions immune to it are refinements
+of maximin. We also provide axiomatic characterizations of maximin and two of
+its refinements, Nanson’s rule and leximin, highlighting their suitability for threecandidate elections.
+    
+    Related Works Section:
+    In the realm of social choice theory, the study of Condorcet extensions and their susceptibility to paradoxes has been a focal point of research. Several works have explored various aspects of Condorcet-consistent voting rules, providing insights into their theoretical underpinnings and practical implications. A significant contribution to this field is the exploration of distance rationalizability, as discussed by Elkind, Faliszewski, and Slinko (2010). Their work investigates the rationalization of Condorcet-consistent rules using distances akin to the Hamming distance, offering a novel perspective on how these rules can be conceptualized. This approach is particularly relevant to our study, as it highlights the complexity and computational challenges associated with Condorcet extensions, which are central to understanding their susceptibility to paradoxes.
+
+Another pertinent area of research is the computational complexity of Condorcet-consistent voting rules, as examined by Schlotter and Cechlárová (2025). Their analysis of the Possible President problem provides a comprehensive view of the computational challenges faced by various Condorcet-consistent rules, including Maximin. By classifying cases based on the number of voters and other parameters, they delineate the boundaries of tractability for these problems. This work complements our investigation by underscoring the computational aspects of Condorcet extensions, particularly in the context of three-candidate elections, where paradoxes such as the reinforcement and no-show paradoxes are prevalent.
+
+The manipulation of Condorcet-consistent voting rules is another critical theme explored in the literature. Peters (2017) addresses the preference reversal paradox, demonstrating the vulnerability of these rules to strategic manipulation by voters. This study is instrumental in understanding the broader implications of Condorcet extensions, as it reveals inherent weaknesses that can be exploited under certain conditions. Our research builds on this foundation by examining specific paradoxes that arise in three-candidate scenarios, thereby contributing to a more nuanced understanding of the limitations and potential refinements of Condorcet extensions.
+
+The Maximin rule, a central focus of our paper, has been extended to various voting contexts, as illustrated by Sánchez-Fernández et al. (2016). Their work on the maximin support method extends the D'Hondt apportionment method to approval-based multiwinner elections, showcasing the versatility and applicability of maximin principles. This extension is particularly relevant to our study, as it highlights the adaptability of maximin refinements in addressing paradoxes within Condorcet extensions. By demonstrating the immunity of certain maximin refinements to the reinforcement and no-show paradoxes, our research aligns with the broader discourse on enhancing the robustness of voting rules.
+
+In summary, our work contributes to the ongoing dialogue on Condorcet extensions by providing a focused analysis of their susceptibility to paradoxes in three-candidate elections. By establishing the conditions under which these paradoxes occur and identifying refinements of maximin that are immune to them, we offer a novel perspective on the suitability of these voting rules. Our axiomatic characterizations of maximin and its refinements further enrich the theoretical landscape, paving the way for future research on the refinement and application of Condorcet-consistent rules in diverse electoral contexts.
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+    
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+    
+    - **0**: Completely irrelevant, unclear, or inaccurate. 
+     *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.
+      
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.
+     *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.
+      
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.
+      *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    ","In the realm of social choice theory, the study of Condorcet extensions and their susceptibility to paradoxes has been a focal point of research. Several works have explored various aspects of Condorcet-consistent voting rules, providing insights into their theoretical underpinnings and practical implications. A significant contribution to this field is the exploration of distance rationalizability, as discussed by Elkind, Faliszewski, and Slinko (2010). Their work investigates the rationalization of Condorcet-consistent rules using distances akin to the Hamming distance, offering a novel perspective on how these rules can be conceptualized. This approach is particularly relevant to our study, as it highlights the complexity and computational challenges associated with Condorcet extensions, which are central to understanding their susceptibility to paradoxes.
+
+Another pertinent area of research is the computational complexity of Condorcet-consistent voting rules, as examined by Schlotter and Cechlárová (2025). Their analysis of the Possible President problem provides a comprehensive view of the computational challenges faced by various Condorcet-consistent rules, including Maximin. By classifying cases based on the number of voters and other parameters, they delineate the boundaries of tractability for these problems. This work complements our investigation by underscoring the computational aspects of Condorcet extensions, particularly in the context of three-candidate elections, where paradoxes such as the reinforcement and no-show paradoxes are prevalent.
+
+The manipulation of Condorcet-consistent voting rules is another critical theme explored in the literature. Peters (2017) addresses the preference reversal paradox, demonstrating the vulnerability of these rules to strategic manipulation by voters. This study is instrumental in understanding the broader implications of Condorcet extensions, as it reveals inherent weaknesses that can be exploited under certain conditions. Our research builds on this foundation by examining specific paradoxes that arise in three-candidate scenarios, thereby contributing to a more nuanced understanding of the limitations and potential refinements of Condorcet extensions.
+
+The Maximin rule, a central focus of our paper, has been extended to various voting contexts, as illustrated by Sánchez-Fernández et al. (2016). Their work on the maximin support method extends the D'Hondt apportionment method to approval-based multiwinner elections, showcasing the versatility and applicability of maximin principles. This extension is particularly relevant to our study, as it highlights the adaptability of maximin refinements in addressing paradoxes within Condorcet extensions. By demonstrating the immunity of certain maximin refinements to the reinforcement and no-show paradoxes, our research aligns with the broader discourse on enhancing the robustness of voting rules.
+
+In summary, our work contributes to the ongoing dialogue on Condorcet extensions by providing a focused analysis of their susceptibility to paradoxes in three-candidate elections. By establishing the conditions under which these paradoxes occur and identifying refinements of maximin that are immune to them, we offer a novel perspective on the suitability of these voting rules. Our axiomatic characterizations of maximin and its refinements further enrich the theoretical landscape, paving the way for future research on the refinement and application of Condorcet-consistent rules in diverse electoral contexts."
+"Condorcet-Consistent Choice
+Among Three Candidates",2411.19857,Condorcet extensions voting paradoxes maximin Nanson,2502.03197v1,Candidate nomination for Condorcet-consistent voting rules,7.0,"
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+        
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+        
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+        
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+        
+        Source Paper Abstract:
+        A voting rule is a Condorcet extension if it returns a candidate that beats every
+other candidate in pairwise majority comparisons whenever one exists. Condorcet
+extensions have faced criticism due to their susceptibility to variable-electorate
+paradoxes, especially the reinforcement paradox (Young and Levenglick, 1978) and
+the no-show paradox (Moulin, 1988b). In this paper, we investigate the susceptibility
+of Condorcet extensions to these paradoxes for the case of exactly three candidates.
+For the reinforcement paradox, we establish that it must occur for every Condorcet
+extension when there are at least eight voters and demonstrate that certain refinements
+of maximin—a voting rule originally proposed by Condorcet (1785)—are immune
+to this paradox when there are at most seven voters. For the no-show paradox, we
+prove that the only homogeneous Condorcet extensions immune to it are refinements
+of maximin. We also provide axiomatic characterizations of maximin and two of
+its refinements, Nanson’s rule and leximin, highlighting their suitability for threecandidate elections.
+        
+        Related Work Paper Abstract:
+        Consider elections where the set of candidates is partitioned into parties,
+and each party must nominate exactly one candidate. The Possible President
+problem asks whether some candidate of a given party can become the winner of
+the election for some nominations from other parties. We perform a multivariate
+computational complexity analysis of Possible President for a range of
+Condorcet-consistent voting rules, namely for Copeland$^\alpha$ for $\alpha \in
+[0,1]$ and Maximin. The parameters we study are the number of voters, the
+number of parties, and the maximum size of a party. For all voting rules under
+consideration, we obtain dichotomies based on the number of voters, classifying
+$\mathsf{NP}$-complete and polynomial-time solvable cases. Moreover, for each
+$\mathsf{NP}$-complete variant, we determine the parameterized complexity of
+every possible parameterization with the studied parameters as either (a)
+fixed-parameter tractable, (b) $\mathsf{W}[1]$-hard but in $\mathsf{XP}$, or
+(c) $\mathsf{paraNP}$-hard, outlining the limits of tractability for these
+problems.
+        
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    ",7.0,"
+    Source Abstract:
+    A voting rule is a Condorcet extension if it returns a candidate that beats every
+other candidate in pairwise majority comparisons whenever one exists. Condorcet
+extensions have faced criticism due to their susceptibility to variable-electorate
+paradoxes, especially the reinforcement paradox (Young and Levenglick, 1978) and
+the no-show paradox (Moulin, 1988b). In this paper, we investigate the susceptibility
+of Condorcet extensions to these paradoxes for the case of exactly three candidates.
+For the reinforcement paradox, we establish that it must occur for every Condorcet
+extension when there are at least eight voters and demonstrate that certain refinements
+of maximin—a voting rule originally proposed by Condorcet (1785)—are immune
+to this paradox when there are at most seven voters. For the no-show paradox, we
+prove that the only homogeneous Condorcet extensions immune to it are refinements
+of maximin. We also provide axiomatic characterizations of maximin and two of
+its refinements, Nanson’s rule and leximin, highlighting their suitability for threecandidate elections.
+    
+    Related Works Section:
+    In the realm of social choice theory, the study of Condorcet extensions and their susceptibility to paradoxes has been a focal point of research. Several works have explored various aspects of Condorcet-consistent voting rules, providing insights into their theoretical underpinnings and practical implications. A significant contribution to this field is the exploration of distance rationalizability, as discussed by Elkind, Faliszewski, and Slinko (2010). Their work investigates the rationalization of Condorcet-consistent rules using distances akin to the Hamming distance, offering a novel perspective on how these rules can be conceptualized. This approach is particularly relevant to our study, as it highlights the complexity and computational challenges associated with Condorcet extensions, which are central to understanding their susceptibility to paradoxes.
+
+Another pertinent area of research is the computational complexity of Condorcet-consistent voting rules, as examined by Schlotter and Cechlárová (2025). Their analysis of the Possible President problem provides a comprehensive view of the computational challenges faced by various Condorcet-consistent rules, including Maximin. By classifying cases based on the number of voters and other parameters, they delineate the boundaries of tractability for these problems. This work complements our investigation by underscoring the computational aspects of Condorcet extensions, particularly in the context of three-candidate elections, where paradoxes such as the reinforcement and no-show paradoxes are prevalent.
+
+The manipulation of Condorcet-consistent voting rules is another critical theme explored in the literature. Peters (2017) addresses the preference reversal paradox, demonstrating the vulnerability of these rules to strategic manipulation by voters. This study is instrumental in understanding the broader implications of Condorcet extensions, as it reveals inherent weaknesses that can be exploited under certain conditions. Our research builds on this foundation by examining specific paradoxes that arise in three-candidate scenarios, thereby contributing to a more nuanced understanding of the limitations and potential refinements of Condorcet extensions.
+
+The Maximin rule, a central focus of our paper, has been extended to various voting contexts, as illustrated by Sánchez-Fernández et al. (2016). Their work on the maximin support method extends the D'Hondt apportionment method to approval-based multiwinner elections, showcasing the versatility and applicability of maximin principles. This extension is particularly relevant to our study, as it highlights the adaptability of maximin refinements in addressing paradoxes within Condorcet extensions. By demonstrating the immunity of certain maximin refinements to the reinforcement and no-show paradoxes, our research aligns with the broader discourse on enhancing the robustness of voting rules.
+
+In summary, our work contributes to the ongoing dialogue on Condorcet extensions by providing a focused analysis of their susceptibility to paradoxes in three-candidate elections. By establishing the conditions under which these paradoxes occur and identifying refinements of maximin that are immune to them, we offer a novel perspective on the suitability of these voting rules. Our axiomatic characterizations of maximin and its refinements further enrich the theoretical landscape, paving the way for future research on the refinement and application of Condorcet-consistent rules in diverse electoral contexts.
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+    
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+    
+    - **0**: Completely irrelevant, unclear, or inaccurate. 
+     *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.
+      
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.
+     *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.
+      
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.
+      *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    ","In the realm of social choice theory, the study of Condorcet extensions and their susceptibility to paradoxes has been a focal point of research. Several works have explored various aspects of Condorcet-consistent voting rules, providing insights into their theoretical underpinnings and practical implications. A significant contribution to this field is the exploration of distance rationalizability, as discussed by Elkind, Faliszewski, and Slinko (2010). Their work investigates the rationalization of Condorcet-consistent rules using distances akin to the Hamming distance, offering a novel perspective on how these rules can be conceptualized. This approach is particularly relevant to our study, as it highlights the complexity and computational challenges associated with Condorcet extensions, which are central to understanding their susceptibility to paradoxes.
+
+Another pertinent area of research is the computational complexity of Condorcet-consistent voting rules, as examined by Schlotter and Cechlárová (2025). Their analysis of the Possible President problem provides a comprehensive view of the computational challenges faced by various Condorcet-consistent rules, including Maximin. By classifying cases based on the number of voters and other parameters, they delineate the boundaries of tractability for these problems. This work complements our investigation by underscoring the computational aspects of Condorcet extensions, particularly in the context of three-candidate elections, where paradoxes such as the reinforcement and no-show paradoxes are prevalent.
+
+The manipulation of Condorcet-consistent voting rules is another critical theme explored in the literature. Peters (2017) addresses the preference reversal paradox, demonstrating the vulnerability of these rules to strategic manipulation by voters. This study is instrumental in understanding the broader implications of Condorcet extensions, as it reveals inherent weaknesses that can be exploited under certain conditions. Our research builds on this foundation by examining specific paradoxes that arise in three-candidate scenarios, thereby contributing to a more nuanced understanding of the limitations and potential refinements of Condorcet extensions.
+
+The Maximin rule, a central focus of our paper, has been extended to various voting contexts, as illustrated by Sánchez-Fernández et al. (2016). Their work on the maximin support method extends the D'Hondt apportionment method to approval-based multiwinner elections, showcasing the versatility and applicability of maximin principles. This extension is particularly relevant to our study, as it highlights the adaptability of maximin refinements in addressing paradoxes within Condorcet extensions. By demonstrating the immunity of certain maximin refinements to the reinforcement and no-show paradoxes, our research aligns with the broader discourse on enhancing the robustness of voting rules.
+
+In summary, our work contributes to the ongoing dialogue on Condorcet extensions by providing a focused analysis of their susceptibility to paradoxes in three-candidate elections. By establishing the conditions under which these paradoxes occur and identifying refinements of maximin that are immune to them, we offer a novel perspective on the suitability of these voting rules. Our axiomatic characterizations of maximin and its refinements further enrich the theoretical landscape, paving the way for future research on the refinement and application of Condorcet-consistent rules in diverse electoral contexts."

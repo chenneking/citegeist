@@ -1,0 +1,352 @@
+title,arxiv_id,search_query,paper_id,paper_title,relevance_score,relevance_prompt,related_work_score,related_work_prompt,related_work_text
+Money Burning Improves Mediated Communication,2411.19431,"mediated communication, money-burning tactics, commitment power, Bayesian persuasion, Web 3.0 communities",2202.06479v1,Order of Commitments in Bayesian Persuasion with Partial-informed Senders,7.0,"
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+        
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+        
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+        
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+        
+        Source Paper Abstract:
+        This paper explores the problem of mediated communication enhanced by moneyburning tactics for commitment power. In our model, the sender has state-independent
+preferences and can design a communication mechanism that both transmits messages
+and burns money. We characterize the sender’s maximum equilibrium payoff, which has
+clear geometric interpretations and is linked to two types of robust Bayesian persuasion.
+We demonstrate that, generically, the money-burning tactic strictly improves the sender’s
+payoff for almost all prior beliefs where commitment is valuable for the sender. Furthermore, our communication model directly applies to Web 3.0 communities, clarifying the
+commitment value within these contexts.
+        
+        Related Work Paper Abstract:
+        The commitment power of senders distinguishes Bayesian persuasion problems
+from other games with (strategic) communication. Persuasion games with multiple
+senders have largely studied simultaneous commitment and signalling settings.
+However, many real-world instances with multiple senders have sequential
+signalling. In such contexts, commitments can also be made sequentially, and
+then the order of commitment by the senders -- the sender signalling last
+committing first or last -- could significantly impact the equilibrium payoffs
+and strategies. For a two-sender persuasion game where the senders are
+partially aware of the state of the world, we find necessary and sufficient
+conditions to determine when different commitment orders yield different payoff
+profiles. In particular, for the two-sender setting, we show that different
+payoff profiles arise if two properties hold: 1) the two senders are willing to
+collaborate in persuading the receiver in some state(s); and 2) the sender
+signalling second can carry out a credible threat when committing first such
+that the other sender's room to design signals gets constrained.
+        
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    ",8.0,"
+    Source Abstract:
+    This paper explores the problem of mediated communication enhanced by moneyburning tactics for commitment power. In our model, the sender has state-independent
+preferences and can design a communication mechanism that both transmits messages
+and burns money. We characterize the sender’s maximum equilibrium payoff, which has
+clear geometric interpretations and is linked to two types of robust Bayesian persuasion.
+We demonstrate that, generically, the money-burning tactic strictly improves the sender’s
+payoff for almost all prior beliefs where commitment is valuable for the sender. Furthermore, our communication model directly applies to Web 3.0 communities, clarifying the
+commitment value within these contexts.
+    
+    Related Works Section:
+    In the realm of Bayesian persuasion, the commitment power of senders plays a pivotal role in shaping the dynamics and outcomes of strategic communication games. The paper by Su and Subramanian (2022) delves into the intricacies of commitment order in Bayesian persuasion scenarios involving multiple senders. Their research highlights the impact of sequential signaling and commitment on equilibrium payoffs, particularly when senders possess partial information about the state of the world. This study provides necessary and sufficient conditions under which different commitment orders lead to distinct payoff profiles, emphasizing the collaborative potential of senders and the strategic use of credible threats. This exploration of commitment order is relevant to our work, as it underscores the importance of strategic commitment in enhancing sender payoffs, a theme central to our investigation of money-burning tactics for commitment power (Su & Subramanian, 2022).
+
+Arieli, Babichenko, and Sandomirskiy (2022) extend the discussion of Bayesian persuasion by introducing mediators into the communication process. Their work characterizes the sender's optimal value across varying numbers of mediators, revealing that while a single mediator does not benefit the sender, the presence of a second mediator can enhance the sender's value. This geometric interpretation of constrained concavification aligns with our approach of using geometric insights to characterize sender payoffs. The notion of mediators, although distinct from our focus on money-burning, parallels our exploration of mechanisms that can alter sender-receiver dynamics, offering a complementary perspective on enhancing sender utility through strategic design (Arieli, Babichenko, & Sandomirskiy, 2022).
+
+The concept of multi-channel communication, as explored by Babichenko et al. (2021), introduces a nuanced perspective on information dissemination in Bayesian persuasion. Their model bridges the gap between private and public persuasion by considering receivers who observe subsets of the sender's communication channels. This framework provides a comprehensive characterization of communication structures that optimize sender utility, based on information dominance among receivers. While our research does not directly address multi-channel communication, the underlying principle of optimizing sender utility through strategic communication design resonates with our investigation into money-burning tactics. The computational challenges identified in their work further highlight the complexity of designing optimal communication mechanisms, a challenge we address through our model's geometric interpretations (Babichenko et al., 2021).
+
+Arieli, Geffner, and Tennenholtz (2022) explore mediated cheap talk design, focusing on scenarios where senders lack commitment power. Their study introduces a trusted mediator who gathers data and recommends actions to the receiver, characterizing the set of implementable action distributions in equilibrium. This approach contrasts with traditional Bayesian persuasion settings, offering insights into alternative mechanisms for influencing receiver actions. While our research emphasizes the role of commitment power through money-burning, the concept of mediated communication provides a broader context for understanding how strategic mechanisms can shape sender-receiver interactions. The algorithmic solutions proposed in their work also highlight the potential for computational approaches to optimize communication strategies, a theme relevant to our geometric characterization of sender payoffs (Arieli, Geffner, & Tennenholtz, 2022).
+
+In summary, our research contributes to the ongoing discourse on strategic communication in Bayesian persuasion by introducing money-burning tactics as a novel mechanism for enhancing commitment power. By characterizing the sender's maximum equilibrium payoff through geometric interpretations, we offer a unique perspective that complements existing studies on commitment order, mediator influence, and multi-channel communication. Our model's applicability to Web 3.0 communities further contextualizes the commitment value within contemporary digital environments, providing a practical framework for understanding and leveraging strategic communication in decentralized settings.
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+    
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+    
+    - **0**: Completely irrelevant, unclear, or inaccurate. 
+     *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.
+      
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.
+     *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.
+      
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.
+      *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    ","In the realm of Bayesian persuasion, the commitment power of senders plays a pivotal role in shaping the dynamics and outcomes of strategic communication games. The paper by Su and Subramanian (2022) delves into the intricacies of commitment order in Bayesian persuasion scenarios involving multiple senders. Their research highlights the impact of sequential signaling and commitment on equilibrium payoffs, particularly when senders possess partial information about the state of the world. This study provides necessary and sufficient conditions under which different commitment orders lead to distinct payoff profiles, emphasizing the collaborative potential of senders and the strategic use of credible threats. This exploration of commitment order is relevant to our work, as it underscores the importance of strategic commitment in enhancing sender payoffs, a theme central to our investigation of money-burning tactics for commitment power (Su & Subramanian, 2022).
+
+Arieli, Babichenko, and Sandomirskiy (2022) extend the discussion of Bayesian persuasion by introducing mediators into the communication process. Their work characterizes the sender's optimal value across varying numbers of mediators, revealing that while a single mediator does not benefit the sender, the presence of a second mediator can enhance the sender's value. This geometric interpretation of constrained concavification aligns with our approach of using geometric insights to characterize sender payoffs. The notion of mediators, although distinct from our focus on money-burning, parallels our exploration of mechanisms that can alter sender-receiver dynamics, offering a complementary perspective on enhancing sender utility through strategic design (Arieli, Babichenko, & Sandomirskiy, 2022).
+
+The concept of multi-channel communication, as explored by Babichenko et al. (2021), introduces a nuanced perspective on information dissemination in Bayesian persuasion. Their model bridges the gap between private and public persuasion by considering receivers who observe subsets of the sender's communication channels. This framework provides a comprehensive characterization of communication structures that optimize sender utility, based on information dominance among receivers. While our research does not directly address multi-channel communication, the underlying principle of optimizing sender utility through strategic communication design resonates with our investigation into money-burning tactics. The computational challenges identified in their work further highlight the complexity of designing optimal communication mechanisms, a challenge we address through our model's geometric interpretations (Babichenko et al., 2021).
+
+Arieli, Geffner, and Tennenholtz (2022) explore mediated cheap talk design, focusing on scenarios where senders lack commitment power. Their study introduces a trusted mediator who gathers data and recommends actions to the receiver, characterizing the set of implementable action distributions in equilibrium. This approach contrasts with traditional Bayesian persuasion settings, offering insights into alternative mechanisms for influencing receiver actions. While our research emphasizes the role of commitment power through money-burning, the concept of mediated communication provides a broader context for understanding how strategic mechanisms can shape sender-receiver interactions. The algorithmic solutions proposed in their work also highlight the potential for computational approaches to optimize communication strategies, a theme relevant to our geometric characterization of sender payoffs (Arieli, Geffner, & Tennenholtz, 2022).
+
+In summary, our research contributes to the ongoing discourse on strategic communication in Bayesian persuasion by introducing money-burning tactics as a novel mechanism for enhancing commitment power. By characterizing the sender's maximum equilibrium payoff through geometric interpretations, we offer a unique perspective that complements existing studies on commitment order, mediator influence, and multi-channel communication. Our model's applicability to Web 3.0 communities further contextualizes the commitment value within contemporary digital environments, providing a practical framework for understanding and leveraging strategic communication in decentralized settings."
+Money Burning Improves Mediated Communication,2411.19431,"mediated communication, money-burning tactics, commitment power, Bayesian persuasion, Web 3.0 communities",2203.04285v2,Bayesian Persuasion with Mediators,7.0,"
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+        
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+        
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+        
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+        
+        Source Paper Abstract:
+        This paper explores the problem of mediated communication enhanced by moneyburning tactics for commitment power. In our model, the sender has state-independent
+preferences and can design a communication mechanism that both transmits messages
+and burns money. We characterize the sender’s maximum equilibrium payoff, which has
+clear geometric interpretations and is linked to two types of robust Bayesian persuasion.
+We demonstrate that, generically, the money-burning tactic strictly improves the sender’s
+payoff for almost all prior beliefs where commitment is valuable for the sender. Furthermore, our communication model directly applies to Web 3.0 communities, clarifying the
+commitment value within these contexts.
+        
+        Related Work Paper Abstract:
+        An informed sender communicates with an uninformed receiver through a
+sequence of uninformed mediators; agents' utilities depend on receiver's action
+and the state. For any number of mediators, the sender's optimal value is
+characterized. For one mediator, the characterization has a geometric meaning
+of constrained concavification of sender's utility, optimal persuasion requires
+the same number of signals as without mediators, and the presence of the
+mediator is never profitable for the sender. Surprisingly, the second mediator
+may improve the value but optimal persuasion may require more signals.
+        
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    ",8.0,"
+    Source Abstract:
+    This paper explores the problem of mediated communication enhanced by moneyburning tactics for commitment power. In our model, the sender has state-independent
+preferences and can design a communication mechanism that both transmits messages
+and burns money. We characterize the sender’s maximum equilibrium payoff, which has
+clear geometric interpretations and is linked to two types of robust Bayesian persuasion.
+We demonstrate that, generically, the money-burning tactic strictly improves the sender’s
+payoff for almost all prior beliefs where commitment is valuable for the sender. Furthermore, our communication model directly applies to Web 3.0 communities, clarifying the
+commitment value within these contexts.
+    
+    Related Works Section:
+    In the realm of Bayesian persuasion, the commitment power of senders plays a pivotal role in shaping the dynamics and outcomes of strategic communication games. The paper by Su and Subramanian (2022) delves into the intricacies of commitment order in Bayesian persuasion scenarios involving multiple senders. Their research highlights the impact of sequential signaling and commitment on equilibrium payoffs, particularly when senders possess partial information about the state of the world. This study provides necessary and sufficient conditions under which different commitment orders lead to distinct payoff profiles, emphasizing the collaborative potential of senders and the strategic use of credible threats. This exploration of commitment order is relevant to our work, as it underscores the importance of strategic commitment in enhancing sender payoffs, a theme central to our investigation of money-burning tactics for commitment power (Su & Subramanian, 2022).
+
+Arieli, Babichenko, and Sandomirskiy (2022) extend the discussion of Bayesian persuasion by introducing mediators into the communication process. Their work characterizes the sender's optimal value across varying numbers of mediators, revealing that while a single mediator does not benefit the sender, the presence of a second mediator can enhance the sender's value. This geometric interpretation of constrained concavification aligns with our approach of using geometric insights to characterize sender payoffs. The notion of mediators, although distinct from our focus on money-burning, parallels our exploration of mechanisms that can alter sender-receiver dynamics, offering a complementary perspective on enhancing sender utility through strategic design (Arieli, Babichenko, & Sandomirskiy, 2022).
+
+The concept of multi-channel communication, as explored by Babichenko et al. (2021), introduces a nuanced perspective on information dissemination in Bayesian persuasion. Their model bridges the gap between private and public persuasion by considering receivers who observe subsets of the sender's communication channels. This framework provides a comprehensive characterization of communication structures that optimize sender utility, based on information dominance among receivers. While our research does not directly address multi-channel communication, the underlying principle of optimizing sender utility through strategic communication design resonates with our investigation into money-burning tactics. The computational challenges identified in their work further highlight the complexity of designing optimal communication mechanisms, a challenge we address through our model's geometric interpretations (Babichenko et al., 2021).
+
+Arieli, Geffner, and Tennenholtz (2022) explore mediated cheap talk design, focusing on scenarios where senders lack commitment power. Their study introduces a trusted mediator who gathers data and recommends actions to the receiver, characterizing the set of implementable action distributions in equilibrium. This approach contrasts with traditional Bayesian persuasion settings, offering insights into alternative mechanisms for influencing receiver actions. While our research emphasizes the role of commitment power through money-burning, the concept of mediated communication provides a broader context for understanding how strategic mechanisms can shape sender-receiver interactions. The algorithmic solutions proposed in their work also highlight the potential for computational approaches to optimize communication strategies, a theme relevant to our geometric characterization of sender payoffs (Arieli, Geffner, & Tennenholtz, 2022).
+
+In summary, our research contributes to the ongoing discourse on strategic communication in Bayesian persuasion by introducing money-burning tactics as a novel mechanism for enhancing commitment power. By characterizing the sender's maximum equilibrium payoff through geometric interpretations, we offer a unique perspective that complements existing studies on commitment order, mediator influence, and multi-channel communication. Our model's applicability to Web 3.0 communities further contextualizes the commitment value within contemporary digital environments, providing a practical framework for understanding and leveraging strategic communication in decentralized settings.
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+    
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+    
+    - **0**: Completely irrelevant, unclear, or inaccurate. 
+     *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.
+      
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.
+     *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.
+      
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.
+      *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    ","In the realm of Bayesian persuasion, the commitment power of senders plays a pivotal role in shaping the dynamics and outcomes of strategic communication games. The paper by Su and Subramanian (2022) delves into the intricacies of commitment order in Bayesian persuasion scenarios involving multiple senders. Their research highlights the impact of sequential signaling and commitment on equilibrium payoffs, particularly when senders possess partial information about the state of the world. This study provides necessary and sufficient conditions under which different commitment orders lead to distinct payoff profiles, emphasizing the collaborative potential of senders and the strategic use of credible threats. This exploration of commitment order is relevant to our work, as it underscores the importance of strategic commitment in enhancing sender payoffs, a theme central to our investigation of money-burning tactics for commitment power (Su & Subramanian, 2022).
+
+Arieli, Babichenko, and Sandomirskiy (2022) extend the discussion of Bayesian persuasion by introducing mediators into the communication process. Their work characterizes the sender's optimal value across varying numbers of mediators, revealing that while a single mediator does not benefit the sender, the presence of a second mediator can enhance the sender's value. This geometric interpretation of constrained concavification aligns with our approach of using geometric insights to characterize sender payoffs. The notion of mediators, although distinct from our focus on money-burning, parallels our exploration of mechanisms that can alter sender-receiver dynamics, offering a complementary perspective on enhancing sender utility through strategic design (Arieli, Babichenko, & Sandomirskiy, 2022).
+
+The concept of multi-channel communication, as explored by Babichenko et al. (2021), introduces a nuanced perspective on information dissemination in Bayesian persuasion. Their model bridges the gap between private and public persuasion by considering receivers who observe subsets of the sender's communication channels. This framework provides a comprehensive characterization of communication structures that optimize sender utility, based on information dominance among receivers. While our research does not directly address multi-channel communication, the underlying principle of optimizing sender utility through strategic communication design resonates with our investigation into money-burning tactics. The computational challenges identified in their work further highlight the complexity of designing optimal communication mechanisms, a challenge we address through our model's geometric interpretations (Babichenko et al., 2021).
+
+Arieli, Geffner, and Tennenholtz (2022) explore mediated cheap talk design, focusing on scenarios where senders lack commitment power. Their study introduces a trusted mediator who gathers data and recommends actions to the receiver, characterizing the set of implementable action distributions in equilibrium. This approach contrasts with traditional Bayesian persuasion settings, offering insights into alternative mechanisms for influencing receiver actions. While our research emphasizes the role of commitment power through money-burning, the concept of mediated communication provides a broader context for understanding how strategic mechanisms can shape sender-receiver interactions. The algorithmic solutions proposed in their work also highlight the potential for computational approaches to optimize communication strategies, a theme relevant to our geometric characterization of sender payoffs (Arieli, Geffner, & Tennenholtz, 2022).
+
+In summary, our research contributes to the ongoing discourse on strategic communication in Bayesian persuasion by introducing money-burning tactics as a novel mechanism for enhancing commitment power. By characterizing the sender's maximum equilibrium payoff through geometric interpretations, we offer a unique perspective that complements existing studies on commitment order, mediator influence, and multi-channel communication. Our model's applicability to Web 3.0 communities further contextualizes the commitment value within contemporary digital environments, providing a practical framework for understanding and leveraging strategic communication in decentralized settings."
+Money Burning Improves Mediated Communication,2411.19431,"mediated communication, money-burning tactics, commitment power, Bayesian persuasion, Web 3.0 communities",2111.09789v2,Multi-Channel Bayesian Persuasion,7.0,"
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+        
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+        
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+        
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+        
+        Source Paper Abstract:
+        This paper explores the problem of mediated communication enhanced by moneyburning tactics for commitment power. In our model, the sender has state-independent
+preferences and can design a communication mechanism that both transmits messages
+and burns money. We characterize the sender’s maximum equilibrium payoff, which has
+clear geometric interpretations and is linked to two types of robust Bayesian persuasion.
+We demonstrate that, generically, the money-burning tactic strictly improves the sender’s
+payoff for almost all prior beliefs where commitment is valuable for the sender. Furthermore, our communication model directly applies to Web 3.0 communities, clarifying the
+commitment value within these contexts.
+        
+        Related Work Paper Abstract:
+        The celebrated Bayesian persuasion model considers strategic communication
+between an informed agent (the sender) and uninformed decision makers (the
+receivers). The current rapidly-growing literature mostly assumes a dichotomy:
+either the sender is powerful enough to communicate separately with each
+receiver (a.k.a. private persuasion), or she cannot communicate separately at
+all (a.k.a. public persuasion). We study a model that smoothly interpolates
+between the two, by considering a natural multi-channel communication structure
+in which each receiver observes a subset of the sender's communication
+channels. This captures, e.g., receivers on a network, where information
+spillover is almost inevitable.
+  We completely characterize when one communication structure is better for the
+sender than another, in the sense of yielding higher optimal expected utility
+universally over all prior distributions and utility functions. The
+characterization is based on a simple pairwise relation among receivers - one
+receiver information-dominates another if he observes at least the same
+channels. We prove that a communication structure $M_1$ is (weakly) better than
+$M_2$ if and only if every information-dominating pair of receivers in $M_1$ is
+also such in $M_2$. We also provide an additive FPTAS for the optimal sender's
+signaling scheme when the number of states is constant and the graph of
+information-dominating pairs is a directed forest. Finally, we prove that
+finding an optimal signaling scheme under multi-channel persuasion is,
+generally, computationally harder than under both public and private
+persuasion.
+        
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    ",8.0,"
+    Source Abstract:
+    This paper explores the problem of mediated communication enhanced by moneyburning tactics for commitment power. In our model, the sender has state-independent
+preferences and can design a communication mechanism that both transmits messages
+and burns money. We characterize the sender’s maximum equilibrium payoff, which has
+clear geometric interpretations and is linked to two types of robust Bayesian persuasion.
+We demonstrate that, generically, the money-burning tactic strictly improves the sender’s
+payoff for almost all prior beliefs where commitment is valuable for the sender. Furthermore, our communication model directly applies to Web 3.0 communities, clarifying the
+commitment value within these contexts.
+    
+    Related Works Section:
+    In the realm of Bayesian persuasion, the commitment power of senders plays a pivotal role in shaping the dynamics and outcomes of strategic communication games. The paper by Su and Subramanian (2022) delves into the intricacies of commitment order in Bayesian persuasion scenarios involving multiple senders. Their research highlights the impact of sequential signaling and commitment on equilibrium payoffs, particularly when senders possess partial information about the state of the world. This study provides necessary and sufficient conditions under which different commitment orders lead to distinct payoff profiles, emphasizing the collaborative potential of senders and the strategic use of credible threats. This exploration of commitment order is relevant to our work, as it underscores the importance of strategic commitment in enhancing sender payoffs, a theme central to our investigation of money-burning tactics for commitment power (Su & Subramanian, 2022).
+
+Arieli, Babichenko, and Sandomirskiy (2022) extend the discussion of Bayesian persuasion by introducing mediators into the communication process. Their work characterizes the sender's optimal value across varying numbers of mediators, revealing that while a single mediator does not benefit the sender, the presence of a second mediator can enhance the sender's value. This geometric interpretation of constrained concavification aligns with our approach of using geometric insights to characterize sender payoffs. The notion of mediators, although distinct from our focus on money-burning, parallels our exploration of mechanisms that can alter sender-receiver dynamics, offering a complementary perspective on enhancing sender utility through strategic design (Arieli, Babichenko, & Sandomirskiy, 2022).
+
+The concept of multi-channel communication, as explored by Babichenko et al. (2021), introduces a nuanced perspective on information dissemination in Bayesian persuasion. Their model bridges the gap between private and public persuasion by considering receivers who observe subsets of the sender's communication channels. This framework provides a comprehensive characterization of communication structures that optimize sender utility, based on information dominance among receivers. While our research does not directly address multi-channel communication, the underlying principle of optimizing sender utility through strategic communication design resonates with our investigation into money-burning tactics. The computational challenges identified in their work further highlight the complexity of designing optimal communication mechanisms, a challenge we address through our model's geometric interpretations (Babichenko et al., 2021).
+
+Arieli, Geffner, and Tennenholtz (2022) explore mediated cheap talk design, focusing on scenarios where senders lack commitment power. Their study introduces a trusted mediator who gathers data and recommends actions to the receiver, characterizing the set of implementable action distributions in equilibrium. This approach contrasts with traditional Bayesian persuasion settings, offering insights into alternative mechanisms for influencing receiver actions. While our research emphasizes the role of commitment power through money-burning, the concept of mediated communication provides a broader context for understanding how strategic mechanisms can shape sender-receiver interactions. The algorithmic solutions proposed in their work also highlight the potential for computational approaches to optimize communication strategies, a theme relevant to our geometric characterization of sender payoffs (Arieli, Geffner, & Tennenholtz, 2022).
+
+In summary, our research contributes to the ongoing discourse on strategic communication in Bayesian persuasion by introducing money-burning tactics as a novel mechanism for enhancing commitment power. By characterizing the sender's maximum equilibrium payoff through geometric interpretations, we offer a unique perspective that complements existing studies on commitment order, mediator influence, and multi-channel communication. Our model's applicability to Web 3.0 communities further contextualizes the commitment value within contemporary digital environments, providing a practical framework for understanding and leveraging strategic communication in decentralized settings.
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+    
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+    
+    - **0**: Completely irrelevant, unclear, or inaccurate. 
+     *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.
+      
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.
+     *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.
+      
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.
+      *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    ","In the realm of Bayesian persuasion, the commitment power of senders plays a pivotal role in shaping the dynamics and outcomes of strategic communication games. The paper by Su and Subramanian (2022) delves into the intricacies of commitment order in Bayesian persuasion scenarios involving multiple senders. Their research highlights the impact of sequential signaling and commitment on equilibrium payoffs, particularly when senders possess partial information about the state of the world. This study provides necessary and sufficient conditions under which different commitment orders lead to distinct payoff profiles, emphasizing the collaborative potential of senders and the strategic use of credible threats. This exploration of commitment order is relevant to our work, as it underscores the importance of strategic commitment in enhancing sender payoffs, a theme central to our investigation of money-burning tactics for commitment power (Su & Subramanian, 2022).
+
+Arieli, Babichenko, and Sandomirskiy (2022) extend the discussion of Bayesian persuasion by introducing mediators into the communication process. Their work characterizes the sender's optimal value across varying numbers of mediators, revealing that while a single mediator does not benefit the sender, the presence of a second mediator can enhance the sender's value. This geometric interpretation of constrained concavification aligns with our approach of using geometric insights to characterize sender payoffs. The notion of mediators, although distinct from our focus on money-burning, parallels our exploration of mechanisms that can alter sender-receiver dynamics, offering a complementary perspective on enhancing sender utility through strategic design (Arieli, Babichenko, & Sandomirskiy, 2022).
+
+The concept of multi-channel communication, as explored by Babichenko et al. (2021), introduces a nuanced perspective on information dissemination in Bayesian persuasion. Their model bridges the gap between private and public persuasion by considering receivers who observe subsets of the sender's communication channels. This framework provides a comprehensive characterization of communication structures that optimize sender utility, based on information dominance among receivers. While our research does not directly address multi-channel communication, the underlying principle of optimizing sender utility through strategic communication design resonates with our investigation into money-burning tactics. The computational challenges identified in their work further highlight the complexity of designing optimal communication mechanisms, a challenge we address through our model's geometric interpretations (Babichenko et al., 2021).
+
+Arieli, Geffner, and Tennenholtz (2022) explore mediated cheap talk design, focusing on scenarios where senders lack commitment power. Their study introduces a trusted mediator who gathers data and recommends actions to the receiver, characterizing the set of implementable action distributions in equilibrium. This approach contrasts with traditional Bayesian persuasion settings, offering insights into alternative mechanisms for influencing receiver actions. While our research emphasizes the role of commitment power through money-burning, the concept of mediated communication provides a broader context for understanding how strategic mechanisms can shape sender-receiver interactions. The algorithmic solutions proposed in their work also highlight the potential for computational approaches to optimize communication strategies, a theme relevant to our geometric characterization of sender payoffs (Arieli, Geffner, & Tennenholtz, 2022).
+
+In summary, our research contributes to the ongoing discourse on strategic communication in Bayesian persuasion by introducing money-burning tactics as a novel mechanism for enhancing commitment power. By characterizing the sender's maximum equilibrium payoff through geometric interpretations, we offer a unique perspective that complements existing studies on commitment order, mediator influence, and multi-channel communication. Our model's applicability to Web 3.0 communities further contextualizes the commitment value within contemporary digital environments, providing a practical framework for understanding and leveraging strategic communication in decentralized settings."
+Money Burning Improves Mediated Communication,2411.19431,"mediated communication, money-burning tactics, commitment power, Bayesian persuasion, Web 3.0 communities",2211.14670v2,Mediated Cheap Talk Design (with proofs),4.0,"
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+        
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+        
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+        
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+        
+        Source Paper Abstract:
+        This paper explores the problem of mediated communication enhanced by moneyburning tactics for commitment power. In our model, the sender has state-independent
+preferences and can design a communication mechanism that both transmits messages
+and burns money. We characterize the sender’s maximum equilibrium payoff, which has
+clear geometric interpretations and is linked to two types of robust Bayesian persuasion.
+We demonstrate that, generically, the money-burning tactic strictly improves the sender’s
+payoff for almost all prior beliefs where commitment is valuable for the sender. Furthermore, our communication model directly applies to Web 3.0 communities, clarifying the
+commitment value within these contexts.
+        
+        Related Work Paper Abstract:
+        We study an information design problem with two informed senders and a
+receiver in which, in contrast to traditional Bayesian persuasion settings,
+senders do not have commitment power. In our setting, a trusted
+mediator/platform gathers data from the senders and recommends the receiver
+which action to play. We characterize the set of implementable action
+distributions that can be obtained in equilibrium, and provide an $O(n \log n)$
+algorithm (where $n$ is the number of states) that computes the optimal
+equilibrium for the senders. Additionally, we show that the optimal equilibrium
+for the receiver can be obtained by a simple revelation mechanism.
+        
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    ",8.0,"
+    Source Abstract:
+    This paper explores the problem of mediated communication enhanced by moneyburning tactics for commitment power. In our model, the sender has state-independent
+preferences and can design a communication mechanism that both transmits messages
+and burns money. We characterize the sender’s maximum equilibrium payoff, which has
+clear geometric interpretations and is linked to two types of robust Bayesian persuasion.
+We demonstrate that, generically, the money-burning tactic strictly improves the sender’s
+payoff for almost all prior beliefs where commitment is valuable for the sender. Furthermore, our communication model directly applies to Web 3.0 communities, clarifying the
+commitment value within these contexts.
+    
+    Related Works Section:
+    In the realm of Bayesian persuasion, the commitment power of senders plays a pivotal role in shaping the dynamics and outcomes of strategic communication games. The paper by Su and Subramanian (2022) delves into the intricacies of commitment order in Bayesian persuasion scenarios involving multiple senders. Their research highlights the impact of sequential signaling and commitment on equilibrium payoffs, particularly when senders possess partial information about the state of the world. This study provides necessary and sufficient conditions under which different commitment orders lead to distinct payoff profiles, emphasizing the collaborative potential of senders and the strategic use of credible threats. This exploration of commitment order is relevant to our work, as it underscores the importance of strategic commitment in enhancing sender payoffs, a theme central to our investigation of money-burning tactics for commitment power (Su & Subramanian, 2022).
+
+Arieli, Babichenko, and Sandomirskiy (2022) extend the discussion of Bayesian persuasion by introducing mediators into the communication process. Their work characterizes the sender's optimal value across varying numbers of mediators, revealing that while a single mediator does not benefit the sender, the presence of a second mediator can enhance the sender's value. This geometric interpretation of constrained concavification aligns with our approach of using geometric insights to characterize sender payoffs. The notion of mediators, although distinct from our focus on money-burning, parallels our exploration of mechanisms that can alter sender-receiver dynamics, offering a complementary perspective on enhancing sender utility through strategic design (Arieli, Babichenko, & Sandomirskiy, 2022).
+
+The concept of multi-channel communication, as explored by Babichenko et al. (2021), introduces a nuanced perspective on information dissemination in Bayesian persuasion. Their model bridges the gap between private and public persuasion by considering receivers who observe subsets of the sender's communication channels. This framework provides a comprehensive characterization of communication structures that optimize sender utility, based on information dominance among receivers. While our research does not directly address multi-channel communication, the underlying principle of optimizing sender utility through strategic communication design resonates with our investigation into money-burning tactics. The computational challenges identified in their work further highlight the complexity of designing optimal communication mechanisms, a challenge we address through our model's geometric interpretations (Babichenko et al., 2021).
+
+Arieli, Geffner, and Tennenholtz (2022) explore mediated cheap talk design, focusing on scenarios where senders lack commitment power. Their study introduces a trusted mediator who gathers data and recommends actions to the receiver, characterizing the set of implementable action distributions in equilibrium. This approach contrasts with traditional Bayesian persuasion settings, offering insights into alternative mechanisms for influencing receiver actions. While our research emphasizes the role of commitment power through money-burning, the concept of mediated communication provides a broader context for understanding how strategic mechanisms can shape sender-receiver interactions. The algorithmic solutions proposed in their work also highlight the potential for computational approaches to optimize communication strategies, a theme relevant to our geometric characterization of sender payoffs (Arieli, Geffner, & Tennenholtz, 2022).
+
+In summary, our research contributes to the ongoing discourse on strategic communication in Bayesian persuasion by introducing money-burning tactics as a novel mechanism for enhancing commitment power. By characterizing the sender's maximum equilibrium payoff through geometric interpretations, we offer a unique perspective that complements existing studies on commitment order, mediator influence, and multi-channel communication. Our model's applicability to Web 3.0 communities further contextualizes the commitment value within contemporary digital environments, providing a practical framework for understanding and leveraging strategic communication in decentralized settings.
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+    
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+    
+    - **0**: Completely irrelevant, unclear, or inaccurate. 
+     *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.
+      
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.
+     *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.
+      
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.
+      *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    ","In the realm of Bayesian persuasion, the commitment power of senders plays a pivotal role in shaping the dynamics and outcomes of strategic communication games. The paper by Su and Subramanian (2022) delves into the intricacies of commitment order in Bayesian persuasion scenarios involving multiple senders. Their research highlights the impact of sequential signaling and commitment on equilibrium payoffs, particularly when senders possess partial information about the state of the world. This study provides necessary and sufficient conditions under which different commitment orders lead to distinct payoff profiles, emphasizing the collaborative potential of senders and the strategic use of credible threats. This exploration of commitment order is relevant to our work, as it underscores the importance of strategic commitment in enhancing sender payoffs, a theme central to our investigation of money-burning tactics for commitment power (Su & Subramanian, 2022).
+
+Arieli, Babichenko, and Sandomirskiy (2022) extend the discussion of Bayesian persuasion by introducing mediators into the communication process. Their work characterizes the sender's optimal value across varying numbers of mediators, revealing that while a single mediator does not benefit the sender, the presence of a second mediator can enhance the sender's value. This geometric interpretation of constrained concavification aligns with our approach of using geometric insights to characterize sender payoffs. The notion of mediators, although distinct from our focus on money-burning, parallels our exploration of mechanisms that can alter sender-receiver dynamics, offering a complementary perspective on enhancing sender utility through strategic design (Arieli, Babichenko, & Sandomirskiy, 2022).
+
+The concept of multi-channel communication, as explored by Babichenko et al. (2021), introduces a nuanced perspective on information dissemination in Bayesian persuasion. Their model bridges the gap between private and public persuasion by considering receivers who observe subsets of the sender's communication channels. This framework provides a comprehensive characterization of communication structures that optimize sender utility, based on information dominance among receivers. While our research does not directly address multi-channel communication, the underlying principle of optimizing sender utility through strategic communication design resonates with our investigation into money-burning tactics. The computational challenges identified in their work further highlight the complexity of designing optimal communication mechanisms, a challenge we address through our model's geometric interpretations (Babichenko et al., 2021).
+
+Arieli, Geffner, and Tennenholtz (2022) explore mediated cheap talk design, focusing on scenarios where senders lack commitment power. Their study introduces a trusted mediator who gathers data and recommends actions to the receiver, characterizing the set of implementable action distributions in equilibrium. This approach contrasts with traditional Bayesian persuasion settings, offering insights into alternative mechanisms for influencing receiver actions. While our research emphasizes the role of commitment power through money-burning, the concept of mediated communication provides a broader context for understanding how strategic mechanisms can shape sender-receiver interactions. The algorithmic solutions proposed in their work also highlight the potential for computational approaches to optimize communication strategies, a theme relevant to our geometric characterization of sender payoffs (Arieli, Geffner, & Tennenholtz, 2022).
+
+In summary, our research contributes to the ongoing discourse on strategic communication in Bayesian persuasion by introducing money-burning tactics as a novel mechanism for enhancing commitment power. By characterizing the sender's maximum equilibrium payoff through geometric interpretations, we offer a unique perspective that complements existing studies on commitment order, mediator influence, and multi-channel communication. Our model's applicability to Web 3.0 communities further contextualizes the commitment value within contemporary digital environments, providing a practical framework for understanding and leveraging strategic communication in decentralized settings."

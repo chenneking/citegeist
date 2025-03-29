@@ -2,7 +2,7 @@
 """
 Script to generate related works sections for papers in papers.csv using
 SimpleWorkflow approach with GPT-4o via Azure OpenAI for generation,
-and Google Vertex AI Gemini model for evaluation.
+and Mistral AI for evaluation.
 """
 
 import os
@@ -14,20 +14,14 @@ import json
 from typing import Dict, Any, List, Tuple, Optional
 import argparse
 import logging
-import random
 
 # Import workflow class
 from simple_agentic_workflow import SimpleWorkflow
 
 # Import utilities for LLM clients
-from citegeist.utils.llm_clients import AzureClient, GeminiClient
+from citegeist.utils.llm_clients import AzureClient
+from citegeist.utils.llm_clients.mistral_client import MistralClient
 from citegeist.utils.helpers import load_api_key
-
-# Google Cloud imports
-import google
-from google.oauth2 import service_account
-import vertexai
-from vertexai.preview.generative_models import GenerationConfig, GenerativeModel
 
 
 def generate_relevance_evaluation_prompt(source_abstract: str, target_abstract: str) -> str:
@@ -48,8 +42,6 @@ def generate_relevance_evaluation_prompt(source_abstract: str, target_abstract: 
         - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
         - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
         - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
-        
-        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
         
         Source Paper Abstract:
         {source_abstract}
@@ -97,25 +89,25 @@ def generate_related_work_score_prompt(source_abstract: str, related_work: str) 
     """
 
 
-class EnhancedSimpleWorkflowWithGemini(SimpleWorkflow):
+class EnhancedSimpleWorkflowWithMistral(SimpleWorkflow):
     """
-    Enhanced version of SimpleWorkflow that uses Gemini for evaluation functionality.
+    Enhanced version of SimpleWorkflow that uses Mistral for evaluation functionality.
     """
     
-    def __init__(self, gpt_client, gemini_client, results_csv_path: str = "evaluation_results.csv"):
+    def __init__(self, gpt_client, mistral_client, results_csv_path: str = "evaluation_results.csv"):
         """
-        Initialize the EnhancedSimpleWorkflowWithGemini.
+        Initialize the EnhancedSimpleWorkflowWithMistral.
         
         Args:
             gpt_client: The GPT (Azure) client for generation tasks
-            gemini_client: The Gemini client for evaluation tasks
+            mistral_client: The Mistral client for evaluation tasks
             results_csv_path: Path to save evaluation results
         """
         # Call the parent constructor with the GPT client for generation tasks
         super().__init__(gpt_client)
         
-        # Store the Gemini client for evaluation tasks
-        self.gemini_client = gemini_client
+        # Store the Mistral client for evaluation tasks
+        self.mistral_client = mistral_client
         self.results_csv_path = results_csv_path
         
         # Ensure the CSV file exists with headers
@@ -151,7 +143,7 @@ class EnhancedSimpleWorkflowWithGemini(SimpleWorkflow):
                                related_work_score: float = None,
                                related_work_prompt: str = None,
                                related_work_text: str = None,
-                               evaluator: str = "gemini"):
+                               evaluator: str = "mistral"):
         """
         Save evaluation results to CSV.
         
@@ -166,7 +158,7 @@ class EnhancedSimpleWorkflowWithGemini(SimpleWorkflow):
             related_work_score: Related work section score (if applicable)
             related_work_prompt: Related work evaluation prompt (if applicable)
             related_work_text: The actual related work section text (if applicable)
-            evaluator: Which model performed the evaluation (default: "gemini")
+            evaluator: Which model performed the evaluation (default: "mistral")
         """
         # Create a new evaluation CSV file with timestamp for this run if it doesn't exist
         if not hasattr(self, 'evaluation_csv_path_with_timestamp'):
@@ -212,7 +204,7 @@ class EnhancedSimpleWorkflowWithGemini(SimpleWorkflow):
     
     def evaluate_paper_relevance(self, source_abstract: str, target_abstract: str) -> float:
         """
-        Evaluate the relevance of a paper to the source abstract using Gemini.
+        Evaluate the relevance of a paper to the source abstract using Mistral.
         
         Args:
             source_abstract: Source paper abstract
@@ -223,8 +215,8 @@ class EnhancedSimpleWorkflowWithGemini(SimpleWorkflow):
         """
         prompt = generate_relevance_evaluation_prompt(source_abstract, target_abstract)
         
-        # Use Gemini for evaluation
-        response = self.gemini_client.get_completion(prompt)
+        # Use Mistral for evaluation
+        response = self.mistral_client.get_completion(prompt)
         
         # Try to extract a numeric score from the response
         try:
@@ -234,8 +226,8 @@ class EnhancedSimpleWorkflowWithGemini(SimpleWorkflow):
                 score = float(match.group(0))
                 return score
             else:
-                print(f"WARNING: Failed to extract score from Gemini response: {response}")
-                # Fallback to GPT for evaluation if Gemini fails
+                print(f"WARNING: Failed to extract score from Mistral response: {response}")
+                # Fallback to GPT for evaluation if Mistral fails
                 print("Falling back to GPT for evaluation...")
                 gpt_response = self.llm_client.get_completion(prompt)
                 match = re.search(r'\b([0-9]|10)(\.\d+)?\b', gpt_response)
@@ -251,7 +243,7 @@ class EnhancedSimpleWorkflowWithGemini(SimpleWorkflow):
     
     def evaluate_related_work_section(self, source_abstract: str, related_work: str) -> float:
         """
-        Evaluate the quality of the generated related work section using Gemini.
+        Evaluate the quality of the generated related work section using Mistral.
         
         Args:
             source_abstract: Source paper abstract
@@ -262,8 +254,8 @@ class EnhancedSimpleWorkflowWithGemini(SimpleWorkflow):
         """
         prompt = generate_related_work_score_prompt(source_abstract, related_work)
         
-        # Use Gemini for evaluation
-        response = self.gemini_client.get_completion(prompt)
+        # Use Mistral for evaluation
+        response = self.mistral_client.get_completion(prompt)
         
         # Try to extract a numeric score from the response
         try:
@@ -273,8 +265,8 @@ class EnhancedSimpleWorkflowWithGemini(SimpleWorkflow):
                 score = float(match.group(0))
                 return score
             else:
-                print(f"WARNING: Failed to extract score from Gemini response: {response}")
-                # Fallback to GPT for evaluation if Gemini fails
+                print(f"WARNING: Failed to extract score from Mistral response: {response}")
+                # Fallback to GPT for evaluation if Mistral fails
                 print("Falling back to GPT for evaluation...")
                 gpt_response = self.llm_client.get_completion(prompt)
                 match = re.search(r'\b([0-9]|10)(\.\d+)?\b', gpt_response)
@@ -289,146 +281,41 @@ class EnhancedSimpleWorkflowWithGemini(SimpleWorkflow):
             return 0.0
 
 
-class GeminiClient:
-    """
-    Client for interacting with Google's Gemini model via Vertex AI.
-    """
-    
-    def __init__(self, project_id: str, location: str = "us-central1", credentials_path: str = None):
-        """
-        Initialize the Gemini client.
-        
-        Args:
-            project_id: Google Cloud project ID
-            location: Google Cloud region (default: "us-central1")
-            credentials_path: Path to service account credentials JSON file
-        """
-        self.project_id = project_id
-        self.location = location
-        self.model_name = "gemini-1.5-pro" # Using the latest Gemini model
-        
-        # Set up credentials
-        if credentials_path:
-            credentials = service_account.Credentials.from_service_account_file(
-                credentials_path, 
-                scopes=["https://www.googleapis.com/auth/cloud-platform"]
-            )
-            # Initialize Vertex AI with credentials
-            vertexai.init(project=project_id, location=location, credentials=credentials)
-        else:
-            # Use default credentials
-            vertexai.init(project=project_id, location=location)
-        
-        # Initialize the model
-        self.model = GenerativeModel(self.model_name)
-    
-    def get_completion(self, prompt: str, temperature: float = 0.0, max_output_tokens: int = 4096) -> str:
-        """
-        Get a completion from the Gemini model.
-        
-        Args:
-            prompt: The prompt to send to the model
-            temperature: The temperature to use for generation (default: 0.0)
-            max_output_tokens: Maximum number of tokens to generate (default: 4096)
-            
-        Returns:
-            String response from the model
-        """
-        try:
-            generation_config = GenerationConfig(
-                temperature=temperature,
-                max_output_tokens=max_output_tokens,
-            )
-            
-            response = self.model.generate_content(
-                prompt,
-                generation_config=generation_config
-            )
-            
-            return response.text
-            
-        except Exception as e:
-            print(f"Error getting completion from Gemini: {e}")
-            # Implement exponential backoff for rate limits
-            if "429" in str(e) or "rate limit" in str(e).lower():
-                return self._retry_with_backoff(prompt, temperature, max_output_tokens)
-            raise e
-    
-    def _retry_with_backoff(self, prompt: str, temperature: float, max_output_tokens: int, 
-                           max_retries: int = 5, initial_delay: float = 1.0) -> str:
-        """
-        Retry the request with exponential backoff.
-        
-        Args:
-            prompt: The prompt to send
-            temperature: The temperature to use
-            max_output_tokens: Maximum number of tokens to generate
-            max_retries: Maximum number of retry attempts (default: 5)
-            initial_delay: Initial delay in seconds (default: 1.0)
-            
-        Returns:
-            String response from the model
-        """
-        delay = initial_delay
-        
-        for attempt in range(max_retries):
-            try:
-                # Add jitter to the delay
-                jittered_delay = delay * (0.5 + random.random())
-                print(f"Rate limit exceeded. Retrying in {jittered_delay:.2f} seconds (attempt {attempt+1}/{max_retries})...")
-                time.sleep(jittered_delay)
-                
-                # Try again
-                generation_config = GenerationConfig(
-                    temperature=temperature,
-                    max_output_tokens=max_output_tokens,
-                )
-                
-                response = self.model.generate_content(
-                    prompt,
-                    generation_config=generation_config
-                )
-                
-                return response.text
-                
-            except Exception as e:
-                print(f"Retry failed: {e}")
-                # Increase delay exponentially
-                delay *= 2
-                
-                # If this is not a rate limit error or it's the last retry, raise the exception
-                if ("429" not in str(e) and "rate limit" not in str(e).lower()) or attempt == max_retries - 1:
-                    raise e
-        
-        raise Exception("Exceeded maximum retries due to rate limiting")
+class EnhancedRelatedWorksGeneratorWithMistral:
+    """Generate related works sections with Mistral for evaluation."""
 
-
-class EnhancedRelatedWorksGeneratorWithGemini:
-    """Generate related works sections with Gemini for evaluation."""
-
-    def __init__(self, api_key_file: str, gemini_credentials_path: str, 
-                 gemini_project_id: str, evaluation_csv_path: str = "evaluation_results.csv"):
+    def __init__(self, azure_api_key_file: str, mistral_api_key_file: str, 
+                 mistral_model_name: str = "mistral-large-latest", 
+                 evaluation_csv_path: str = "evaluation_results.csv"):
         """
         Initialize the generator.
         
         Args:
-            api_key_file: Path to Azure API key file
-            gemini_credentials_path: Path to Google Cloud service account credentials JSON file
-            gemini_project_id: Google Cloud project ID
+            azure_api_key_file: Path to Azure API key file
+            mistral_api_key_file: Path to Mistral API key file
+            mistral_model_name: Mistral model name to use
             evaluation_csv_path: Path to save evaluation results
         """
-        self.api_key_file = api_key_file
-        self.gemini_credentials_path = gemini_credentials_path
-        self.gemini_project_id = gemini_project_id
+        self.azure_api_key_file = azure_api_key_file
+        self.mistral_api_key_file = mistral_api_key_file
+        self.mistral_model_name = mistral_model_name
         self.evaluation_csv_path = evaluation_csv_path
         
         # Load Azure API key
-        with open(api_key_file, 'r') as f:
+        with open(azure_api_key_file, 'r') as f:
             key_data = json.load(f)
-            self.api_key = key_data.get("secret_key")
+            self.azure_api_key = key_data.get("secret_key")
         
-        if not self.api_key:
-            raise ValueError("Could not find 'secret_key' in the API key file.")
+        if not self.azure_api_key:
+            raise ValueError("Could not find 'secret_key' in the Azure API key file.")
+        
+        # Load Mistral API key
+        with open(mistral_api_key_file, 'r') as f:
+            key_data = json.load(f)
+            self.mistral_api_key = key_data.get("secret_key")
+        
+        if not self.mistral_api_key:
+            raise ValueError("Could not find 'secret_key' in the Mistral API key file.")
             
         # Azure configuration based on workflow_demo.py
         self.azure_endpoint = "https://cai-project.openai.azure.com"
@@ -437,45 +324,44 @@ class EnhancedRelatedWorksGeneratorWithGemini:
         
         # Store these as None initially and initialize them only when needed
         self.azure_client = None
-        self.gemini_client = None
+        self.mistral_client = None
         self.enhanced_workflow = None
     
     def _init_azure_client(self):
         """Initialize the Azure OpenAI client if it hasn't been initialized yet."""
         if self.azure_client is None:
             self.azure_client = AzureClient(
-                api_key=self.api_key,
+                api_key=self.azure_api_key,
                 endpoint=self.azure_endpoint,
                 deployment_id=self.azure_deployment_id,
                 api_version=self.azure_api_version
             )
         return self.azure_client
     
-    def _init_gemini_client(self):
-        """Initialize the Gemini client if it hasn't been initialized yet."""
-        if self.gemini_client is None:
-            self.gemini_client = GeminiClient(
-                project_id=self.gemini_project_id,
-                location="us-central1",
-                credentials_path=self.gemini_credentials_path
+    def _init_mistral_client(self):
+        """Initialize the Mistral client if it hasn't been initialized yet."""
+        if self.mistral_client is None:
+            self.mistral_client = MistralClient(
+                self.mistral_api_key,
+                self.mistral_model_name
             )
-        return self.gemini_client
+        return self.mistral_client
     
     def _init_enhanced_workflow(self):
-        """Initialize the EnhancedSimpleWorkflowWithGemini if it hasn't been initialized yet."""
+        """Initialize the EnhancedSimpleWorkflowWithMistral if it hasn't been initialized yet."""
         if self.enhanced_workflow is None:
             self._init_azure_client()
-            self._init_gemini_client()
-            self.enhanced_workflow = EnhancedSimpleWorkflowWithGemini(
+            self._init_mistral_client()
+            self.enhanced_workflow = EnhancedSimpleWorkflowWithMistral(
                 gpt_client=self.azure_client,
-                gemini_client=self.gemini_client,
+                mistral_client=self.mistral_client,
                 results_csv_path=self.evaluation_csv_path
             )
         return self.enhanced_workflow
     
     def generate_with_enhanced_workflow(self, title: str, abstract: str, arxiv_id: str = None) -> Dict[str, Any]:
         """
-        Generate related works section using GPT with Gemini for evaluation.
+        Generate related works section using GPT with Mistral for evaluation.
         
         Args:
             title: Title of the paper
@@ -485,7 +371,7 @@ class EnhancedRelatedWorksGeneratorWithGemini:
         Returns:
             Dictionary with related_works, evaluation scores, and other metadata
         """
-        print(f"Generating related works with GPT, evaluating with Gemini...")
+        print(f"Generating related works with GPT, evaluating with Mistral...")
         workflow = self._init_enhanced_workflow()
         
         # Override arXiv ID for Classical transport paper (fix for the corrupted ID)
@@ -645,8 +531,8 @@ class EnhancedRelatedWorksGeneratorWithGemini:
                 "related_work_score": 0.0
             }
         
-        # Step 6: Evaluate the relevance of the selected papers using Gemini
-        print("Evaluating relevance of selected papers using Gemini...")
+        # Step 6: Evaluate the relevance of the selected papers using Mistral
+        print("Evaluating relevance of selected papers using Mistral...")
         paper_scores = []
         
         for paper in selected_papers:
@@ -663,7 +549,7 @@ class EnhancedRelatedWorksGeneratorWithGemini:
                 "relevance_score": relevance_score
             })
             
-            print(f"Relevance Score from Gemini: {relevance_score}/10")
+            print(f"Relevance Score from Mistral: {relevance_score}/10")
         
         # Step 7: Generate the related work section using GPT
         print("Generating related work section with GPT...")
@@ -697,11 +583,11 @@ class EnhancedRelatedWorksGeneratorWithGemini:
         
         related_works = workflow.llm_client.get_completion(generation_prompt)
         
-        # Step 8: Evaluate the related work section using Gemini
-        print("Evaluating the related work section using Gemini...")
+        # Step 8: Evaluate the related work section using Mistral
+        print("Evaluating the related work section using Mistral...")
         related_work_prompt = generate_related_work_score_prompt(abstract, related_works)
         related_work_score = workflow.evaluate_related_work_section(abstract, related_works)
-        print(f"Related Work Quality Score from Gemini: {related_work_score}/10")
+        print(f"Related Work Quality Score from Mistral: {related_work_score}/10")
         
         # Step 9: Save evaluation results for each paper
         print("Saving evaluation results to CSV...")
@@ -717,7 +603,7 @@ class EnhancedRelatedWorksGeneratorWithGemini:
                 related_work_score=related_work_score,
                 related_work_prompt=related_work_prompt,
                 related_work_text=related_works,
-                evaluator="gemini"
+                evaluator="mistral"
             )
         
         return {
@@ -730,7 +616,7 @@ class EnhancedRelatedWorksGeneratorWithGemini:
     
     def process_papers(self, papers_df: pd.DataFrame, output_dir: str = "./outputs", retry_failed_only: bool = False, failed_papers: List[str] = None):
         """
-        Process all papers in the DataFrame and generate related works sections with Gemini evaluation.
+        Process all papers in the DataFrame and generate related works sections with Mistral evaluation.
         
         Args:
             papers_df: DataFrame containing paper information
@@ -744,9 +630,9 @@ class EnhancedRelatedWorksGeneratorWithGemini:
         # Create a unique filename for this run
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         if retry_failed_only:
-            results_csv_path = os.path.join(output_dir, f'retry_gemini_results_{timestamp}.csv')
+            results_csv_path = os.path.join(output_dir, f'retry_mistral_results_{timestamp}.csv')
         else:
-            results_csv_path = os.path.join(output_dir, f'gpt_gemini_workflow_results_{timestamp}.csv')
+            results_csv_path = os.path.join(output_dir, f'gpt_mistral_workflow_results_{timestamp}.csv')
         
         print(f"Results will be saved to: {results_csv_path}")
         
@@ -787,7 +673,7 @@ class EnhancedRelatedWorksGeneratorWithGemini:
                 print(f"Paper has arXiv ID: {arxiv_id} - will exclude this paper from the retrieval results")
             
             try:
-                # Generate with GPT, evaluate with Gemini
+                # Generate with GPT, evaluate with Mistral
                 enhanced_result = self.generate_with_enhanced_workflow(title, abstract, arxiv_id)
                 papers_processed += 1
                 
@@ -800,7 +686,7 @@ class EnhancedRelatedWorksGeneratorWithGemini:
                     'papers_used': [p.get('citation', '') for p in enhanced_result.get('papers', [])],
                     'paper_relevance_scores': [ps for ps in enhanced_result.get('paper_scores', [])],
                     'related_work_score': enhanced_result.get('related_work_score', 0.0),
-                    'evaluator': 'gemini'
+                    'evaluator': 'mistral'
                 }
                 
                 # Add new result
@@ -833,14 +719,14 @@ class EnhancedRelatedWorksGeneratorWithGemini:
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Generate related works sections using GPT with Gemini evaluation')
+    parser = argparse.ArgumentParser(description='Generate related works sections using GPT with Mistral evaluation')
     parser.add_argument('--input', type=str, default='../evaluation/out/papers.csv', help='Path to papers CSV file')
     parser.add_argument('--output', type=str, default='./outputs', help='Output directory for results')
     parser.add_argument('--api-key', type=str, default='../api_key.json', help='Path to Azure API key file')
-    parser.add_argument('--gemini-credentials', type=str, default='../cs6158-structuralunderstanding-2647462afe3e.json', 
-                        help='Path to Google Cloud service account credentials JSON file')
-    parser.add_argument('--gemini-project', type=str, default='cs6158-structuralunderstanding', 
-                        help='Google Cloud project ID for Gemini')
+    parser.add_argument('--mistral-key', type=str, default='../mistral_key.json', 
+                        help='Path to Mistral API key file')
+    parser.add_argument('--mistral-model', type=str, default='mistral-large-latest', 
+                        help='Mistral model name to use')
     parser.add_argument('--evaluation', type=str, default='evaluation_results.csv', help='Path to save evaluation results')
     parser.add_argument('--retry-failed', action='store_true', help='Only retry papers that failed in previous runs')
     parser.add_argument('--failed-papers', type=str, help='Comma-separated list of paper titles that failed and should be retried')
@@ -862,9 +748,9 @@ def main():
         print(f"Error: Azure API key file not found at {args.api_key}")
         return
     
-    # Check if Gemini credentials file exists
-    if not os.path.exists(args.gemini_credentials):
-        print(f"Error: Gemini credentials file not found at {args.gemini_credentials}")
+    # Check if Mistral API key file exists
+    if not os.path.exists(args.mistral_key):
+        print(f"Error: Mistral API key file not found at {args.mistral_key}")
         return
     
     # Load papers data
@@ -885,10 +771,10 @@ def main():
             print(f"Using default list of failed papers: {failed_papers}")
     
     # Initialize generator
-    generator = EnhancedRelatedWorksGeneratorWithGemini(
-        api_key_file=args.api_key,
-        gemini_credentials_path=args.gemini_credentials,
-        gemini_project_id=args.gemini_project,
+    generator = EnhancedRelatedWorksGeneratorWithMistral(
+        azure_api_key_file=args.api_key,
+        mistral_api_key_file=args.mistral_key,
+        mistral_model_name=args.mistral_model,
         evaluation_csv_path=args.evaluation
     )
     

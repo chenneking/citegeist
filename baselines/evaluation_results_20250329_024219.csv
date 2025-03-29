@@ -1,0 +1,250 @@
+title,arxiv_id,search_query,paper_id,paper_title,relevance_score,relevance_prompt,related_work_score,related_work_prompt,related_work_text
+Classical transport in a maximally chaotic chain,2411.19828,lattice models coupled cat maps Lyapunov exponents ergodic properties chaos diffusion,1410.4806v2,Extensive numerical investigations on the ergodic properties of two coupled Pomeau-Manneville maps,6.0,"
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+        
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+        
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+        
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+        
+        Source Paper Abstract:
+        A model for a lattice of coupled cat maps has been recently introduced.
+This new and specific choice of the coupling makes the description especially easy
+and nontrivial quantities as Lyapunov exponents determined exactly. We studied the
+ergodic property of the dynamics along such a chain for a local perturbation. While the
+perturbation spreads across a front growing ballistically, the position and momentum
+profiles show large fluctuations due to chaos leading to diffusive transport in the phase
+space. It provides an example where the diffusion can be directly inferred from the
+microscopic chaos.
+        
+        Related Work Paper Abstract:
+        We present extensive numerical investigations on the ergodic properties of
+two identical Pomeau-Manneville maps interacting on the unit square through a
+diffusive linear coupling. The system exhibits anomalous statistics, as
+expected, but with strong deviations from the single intermittent map: Such
+differences are characterized by numerical experiments with densities which
+{\it do not} have singularities in the marginal fixed point, escape and
+Poincar\'e recurrence time statistics that share a power-law decay exponent
+modified by a clear {\it dimensional} scaling, while the rate of phase-space
+filling and the convergence of ensembles of Lyapunov exponents show a {\it
+stretched} instead of pure exponential behaviour. In spite of the lack of
+rigorous results about this system, the dependence on both the intermittency
+and the coupling parameters appears to be smooth, paving the way for further
+analytical development. We remark that dynamical exponents appear to be
+independent of the (nonzero) coupling strength.
+        
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    ",7.0,"
+    Source Abstract:
+    A model for a lattice of coupled cat maps has been recently introduced.
+This new and specific choice of the coupling makes the description especially easy
+and nontrivial quantities as Lyapunov exponents determined exactly. We studied the
+ergodic property of the dynamics along such a chain for a local perturbation. While the
+perturbation spreads across a front growing ballistically, the position and momentum
+profiles show large fluctuations due to chaos leading to diffusive transport in the phase
+space. It provides an example where the diffusion can be directly inferred from the
+microscopic chaos.
+    
+    Related Works Section:
+    In recent years, the study of coupled dynamical systems has garnered significant attention, particularly in the context of understanding ergodic properties and chaotic behavior. A notable contribution in this domain is the work by Sala et al. (2014), which investigates the ergodic properties of two coupled Pomeau-Manneville maps. Their research highlights the anomalous statistical behavior of these systems, characterized by deviations from single intermittent maps. Through extensive numerical experiments, they demonstrate how the coupling influences the phase-space dynamics, leading to stretched exponential behavior in Lyapunov exponents and modified power-law decay in recurrence time statistics. This work underscores the importance of coupling parameters in shaping the dynamical properties of systems, a theme that resonates with our study of coupled cat maps, where the specific choice of coupling facilitates the exact determination of Lyapunov exponents (Sala et al., 2014).
+
+Another significant contribution to the understanding of chaotic systems is the work by Chiem (2025), which focuses on the uniform positivity of the Lyapunov exponent for $C^1$ monotone potentials generated by the cat map. Chiem's research demonstrates that, under sufficiently large coupling, the Lyapunov exponent remains uniformly positive across all energies. This finding is crucial for understanding the stability and chaotic nature of systems governed by cat maps, providing a theoretical foundation for analyzing the ergodic properties of such systems. Our research builds upon this by exploring how local perturbations in a lattice of coupled cat maps lead to diffusive transport in phase space, further elucidating the relationship between microscopic chaos and macroscopic diffusion (Chiem, 2025).
+
+The construction of Arnol'd cat map lattices, as explored by Axenides et al. (2022), offers another perspective on the chaotic dynamics of coupled systems. Their work delves into the spatio-temporal chaotic properties of cat map lattices, emphasizing the role of symplectic group elements in the evolution of linearly coupled maps. By drawing parallels between cat maps and Fibonacci sequences, they provide insights into the ergodicity and mixing properties of these systems. The study of inverted harmonic oscillators and the interplay between potential runaway behavior and toroidal compactification further enriches the understanding of chaotic dynamics. Our research complements these findings by providing a model where the diffusion process can be directly inferred from the underlying chaotic dynamics, offering a tangible example of how chaos influences transport properties in phase space (Axenides et al., 2022).
+
+In summary, the existing body of work on coupled dynamical systems, particularly those involving cat maps, provides a rich foundation for understanding the complex interplay between chaos, coupling, and ergodic properties. Our research contributes to this field by introducing a model for a lattice of coupled cat maps with a specific coupling choice that simplifies the description and allows for the exact determination of nontrivial quantities like Lyapunov exponents. By examining the spread of local perturbations and the resulting diffusive transport, we offer a novel perspective on how microscopic chaos can lead to macroscopic diffusion, thereby advancing the theoretical understanding of chaotic systems and their transport properties.
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+    
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+    
+    - **0**: Completely irrelevant, unclear, or inaccurate. 
+     *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.
+      
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.
+     *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.
+      
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.
+      *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    ","In recent years, the study of coupled dynamical systems has garnered significant attention, particularly in the context of understanding ergodic properties and chaotic behavior. A notable contribution in this domain is the work by Sala et al. (2014), which investigates the ergodic properties of two coupled Pomeau-Manneville maps. Their research highlights the anomalous statistical behavior of these systems, characterized by deviations from single intermittent maps. Through extensive numerical experiments, they demonstrate how the coupling influences the phase-space dynamics, leading to stretched exponential behavior in Lyapunov exponents and modified power-law decay in recurrence time statistics. This work underscores the importance of coupling parameters in shaping the dynamical properties of systems, a theme that resonates with our study of coupled cat maps, where the specific choice of coupling facilitates the exact determination of Lyapunov exponents (Sala et al., 2014).
+
+Another significant contribution to the understanding of chaotic systems is the work by Chiem (2025), which focuses on the uniform positivity of the Lyapunov exponent for $C^1$ monotone potentials generated by the cat map. Chiem's research demonstrates that, under sufficiently large coupling, the Lyapunov exponent remains uniformly positive across all energies. This finding is crucial for understanding the stability and chaotic nature of systems governed by cat maps, providing a theoretical foundation for analyzing the ergodic properties of such systems. Our research builds upon this by exploring how local perturbations in a lattice of coupled cat maps lead to diffusive transport in phase space, further elucidating the relationship between microscopic chaos and macroscopic diffusion (Chiem, 2025).
+
+The construction of Arnol'd cat map lattices, as explored by Axenides et al. (2022), offers another perspective on the chaotic dynamics of coupled systems. Their work delves into the spatio-temporal chaotic properties of cat map lattices, emphasizing the role of symplectic group elements in the evolution of linearly coupled maps. By drawing parallels between cat maps and Fibonacci sequences, they provide insights into the ergodicity and mixing properties of these systems. The study of inverted harmonic oscillators and the interplay between potential runaway behavior and toroidal compactification further enriches the understanding of chaotic dynamics. Our research complements these findings by providing a model where the diffusion process can be directly inferred from the underlying chaotic dynamics, offering a tangible example of how chaos influences transport properties in phase space (Axenides et al., 2022).
+
+In summary, the existing body of work on coupled dynamical systems, particularly those involving cat maps, provides a rich foundation for understanding the complex interplay between chaos, coupling, and ergodic properties. Our research contributes to this field by introducing a model for a lattice of coupled cat maps with a specific coupling choice that simplifies the description and allows for the exact determination of nontrivial quantities like Lyapunov exponents. By examining the spread of local perturbations and the resulting diffusive transport, we offer a novel perspective on how microscopic chaos can lead to macroscopic diffusion, thereby advancing the theoretical understanding of chaotic systems and their transport properties."
+Classical transport in a maximally chaotic chain,2411.19828,lattice models coupled cat maps Lyapunov exponents ergodic properties chaos diffusion,2502.18628v2,Uniform positivity of the Lyapunov exponent for $C^1$ monotone potentials generated by the cat map,7.0,"
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+        
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+        
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+        
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+        
+        Source Paper Abstract:
+        A model for a lattice of coupled cat maps has been recently introduced.
+This new and specific choice of the coupling makes the description especially easy
+and nontrivial quantities as Lyapunov exponents determined exactly. We studied the
+ergodic property of the dynamics along such a chain for a local perturbation. While the
+perturbation spreads across a front growing ballistically, the position and momentum
+profiles show large fluctuations due to chaos leading to diffusive transport in the phase
+space. It provides an example where the diffusion can be directly inferred from the
+microscopic chaos.
+        
+        Related Work Paper Abstract:
+        We consider an Arnold's Cat Map generated $C^1$ bounded potential with the
+directional derivative in the unstable direction bounded away from zero. We
+show that the Lyapunov exponent for the associated Shr\""odinger Operator is
+uniformly positive for all energies provided the coupling is sufficiently
+large.
+        
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    ",7.0,"
+    Source Abstract:
+    A model for a lattice of coupled cat maps has been recently introduced.
+This new and specific choice of the coupling makes the description especially easy
+and nontrivial quantities as Lyapunov exponents determined exactly. We studied the
+ergodic property of the dynamics along such a chain for a local perturbation. While the
+perturbation spreads across a front growing ballistically, the position and momentum
+profiles show large fluctuations due to chaos leading to diffusive transport in the phase
+space. It provides an example where the diffusion can be directly inferred from the
+microscopic chaos.
+    
+    Related Works Section:
+    In recent years, the study of coupled dynamical systems has garnered significant attention, particularly in the context of understanding ergodic properties and chaotic behavior. A notable contribution in this domain is the work by Sala et al. (2014), which investigates the ergodic properties of two coupled Pomeau-Manneville maps. Their research highlights the anomalous statistical behavior of these systems, characterized by deviations from single intermittent maps. Through extensive numerical experiments, they demonstrate how the coupling influences the phase-space dynamics, leading to stretched exponential behavior in Lyapunov exponents and modified power-law decay in recurrence time statistics. This work underscores the importance of coupling parameters in shaping the dynamical properties of systems, a theme that resonates with our study of coupled cat maps, where the specific choice of coupling facilitates the exact determination of Lyapunov exponents (Sala et al., 2014).
+
+Another significant contribution to the understanding of chaotic systems is the work by Chiem (2025), which focuses on the uniform positivity of the Lyapunov exponent for $C^1$ monotone potentials generated by the cat map. Chiem's research demonstrates that, under sufficiently large coupling, the Lyapunov exponent remains uniformly positive across all energies. This finding is crucial for understanding the stability and chaotic nature of systems governed by cat maps, providing a theoretical foundation for analyzing the ergodic properties of such systems. Our research builds upon this by exploring how local perturbations in a lattice of coupled cat maps lead to diffusive transport in phase space, further elucidating the relationship between microscopic chaos and macroscopic diffusion (Chiem, 2025).
+
+The construction of Arnol'd cat map lattices, as explored by Axenides et al. (2022), offers another perspective on the chaotic dynamics of coupled systems. Their work delves into the spatio-temporal chaotic properties of cat map lattices, emphasizing the role of symplectic group elements in the evolution of linearly coupled maps. By drawing parallels between cat maps and Fibonacci sequences, they provide insights into the ergodicity and mixing properties of these systems. The study of inverted harmonic oscillators and the interplay between potential runaway behavior and toroidal compactification further enriches the understanding of chaotic dynamics. Our research complements these findings by providing a model where the diffusion process can be directly inferred from the underlying chaotic dynamics, offering a tangible example of how chaos influences transport properties in phase space (Axenides et al., 2022).
+
+In summary, the existing body of work on coupled dynamical systems, particularly those involving cat maps, provides a rich foundation for understanding the complex interplay between chaos, coupling, and ergodic properties. Our research contributes to this field by introducing a model for a lattice of coupled cat maps with a specific coupling choice that simplifies the description and allows for the exact determination of nontrivial quantities like Lyapunov exponents. By examining the spread of local perturbations and the resulting diffusive transport, we offer a novel perspective on how microscopic chaos can lead to macroscopic diffusion, thereby advancing the theoretical understanding of chaotic systems and their transport properties.
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+    
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+    
+    - **0**: Completely irrelevant, unclear, or inaccurate. 
+     *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.
+      
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.
+     *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.
+      
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.
+      *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    ","In recent years, the study of coupled dynamical systems has garnered significant attention, particularly in the context of understanding ergodic properties and chaotic behavior. A notable contribution in this domain is the work by Sala et al. (2014), which investigates the ergodic properties of two coupled Pomeau-Manneville maps. Their research highlights the anomalous statistical behavior of these systems, characterized by deviations from single intermittent maps. Through extensive numerical experiments, they demonstrate how the coupling influences the phase-space dynamics, leading to stretched exponential behavior in Lyapunov exponents and modified power-law decay in recurrence time statistics. This work underscores the importance of coupling parameters in shaping the dynamical properties of systems, a theme that resonates with our study of coupled cat maps, where the specific choice of coupling facilitates the exact determination of Lyapunov exponents (Sala et al., 2014).
+
+Another significant contribution to the understanding of chaotic systems is the work by Chiem (2025), which focuses on the uniform positivity of the Lyapunov exponent for $C^1$ monotone potentials generated by the cat map. Chiem's research demonstrates that, under sufficiently large coupling, the Lyapunov exponent remains uniformly positive across all energies. This finding is crucial for understanding the stability and chaotic nature of systems governed by cat maps, providing a theoretical foundation for analyzing the ergodic properties of such systems. Our research builds upon this by exploring how local perturbations in a lattice of coupled cat maps lead to diffusive transport in phase space, further elucidating the relationship between microscopic chaos and macroscopic diffusion (Chiem, 2025).
+
+The construction of Arnol'd cat map lattices, as explored by Axenides et al. (2022), offers another perspective on the chaotic dynamics of coupled systems. Their work delves into the spatio-temporal chaotic properties of cat map lattices, emphasizing the role of symplectic group elements in the evolution of linearly coupled maps. By drawing parallels between cat maps and Fibonacci sequences, they provide insights into the ergodicity and mixing properties of these systems. The study of inverted harmonic oscillators and the interplay between potential runaway behavior and toroidal compactification further enriches the understanding of chaotic dynamics. Our research complements these findings by providing a model where the diffusion process can be directly inferred from the underlying chaotic dynamics, offering a tangible example of how chaos influences transport properties in phase space (Axenides et al., 2022).
+
+In summary, the existing body of work on coupled dynamical systems, particularly those involving cat maps, provides a rich foundation for understanding the complex interplay between chaos, coupling, and ergodic properties. Our research contributes to this field by introducing a model for a lattice of coupled cat maps with a specific coupling choice that simplifies the description and allows for the exact determination of nontrivial quantities like Lyapunov exponents. By examining the spread of local perturbations and the resulting diffusive transport, we offer a novel perspective on how microscopic chaos can lead to macroscopic diffusion, thereby advancing the theoretical understanding of chaotic systems and their transport properties."
+Classical transport in a maximally chaotic chain,2411.19828,lattice models coupled cat maps Lyapunov exponents ergodic properties chaos diffusion,2208.03267v3,Arnol'd cat map lattices,8.0,"
+        You are given two paper abstracts: the first is the source paper abstract, and the second is a related work paper abstract. Your task is to assess the relevance of the related work abstract to the source paper abstract on a scale of 0 to 10, where:
+        
+        - 0 means no relevance at all (completely unrelated).
+        - 10 means the highest relevance (directly related and closely aligned with the source paper's topic and content).
+        
+        Consider factors such as:
+        - Topic alignment: Does the related work paper address a similar research problem or area as the source paper?
+        - Methodology: Does the related work discuss methods or techniques similar to those in the source paper?
+        - Findings or contributions: Are the findings or contributions of the related work closely related to the source paper's content or conclusions?
+        - The relationship between the two papers, such as whether the related work builds on, contrasts, or expands the source paper's work.
+        
+        Provide a score (0–10) and a brief explanation of your reasoning for the assigned score.
+        
+        Source Paper Abstract:
+        A model for a lattice of coupled cat maps has been recently introduced.
+This new and specific choice of the coupling makes the description especially easy
+and nontrivial quantities as Lyapunov exponents determined exactly. We studied the
+ergodic property of the dynamics along such a chain for a local perturbation. While the
+perturbation spreads across a front growing ballistically, the position and momentum
+profiles show large fluctuations due to chaos leading to diffusive transport in the phase
+space. It provides an example where the diffusion can be directly inferred from the
+microscopic chaos.
+        
+        Related Work Paper Abstract:
+        We construct Arnol'd cat map lattice field theories in phase space and
+configuration space. In phase space we impose that the evolution operator of
+the linearly coupled maps be an element of the symplectic group, in direct
+generalization of the case of one map. To this end we exploit the
+correspondence between the cat map and the Fibonacci sequence. The chaotic
+properties of these systems can be, also, understood from the equations of
+motion in configuration space, where they describe inverted harmonic
+oscillators, with the runaway behavior of the potential competing with the
+toroidal compactification of the phase space. We highlight the spatio-temporal
+chaotic properties of these systems using standard benchmarks for probing
+deterministic chaos of dynamical systems, namely the complete dense set of
+unstable periodic orbits, which, for long periods, lead to ergodicity and
+mixing. The spectrum of the periods exhibits a strong dependence on the
+strength and the range of the interaction.
+        
+        Please provide only the score as your reply. Do not produce any other output, including things like formatting or markdown. Only the score.
+    ",7.0,"
+    Source Abstract:
+    A model for a lattice of coupled cat maps has been recently introduced.
+This new and specific choice of the coupling makes the description especially easy
+and nontrivial quantities as Lyapunov exponents determined exactly. We studied the
+ergodic property of the dynamics along such a chain for a local perturbation. While the
+perturbation spreads across a front growing ballistically, the position and momentum
+profiles show large fluctuations due to chaos leading to diffusive transport in the phase
+space. It provides an example where the diffusion can be directly inferred from the
+microscopic chaos.
+    
+    Related Works Section:
+    In recent years, the study of coupled dynamical systems has garnered significant attention, particularly in the context of understanding ergodic properties and chaotic behavior. A notable contribution in this domain is the work by Sala et al. (2014), which investigates the ergodic properties of two coupled Pomeau-Manneville maps. Their research highlights the anomalous statistical behavior of these systems, characterized by deviations from single intermittent maps. Through extensive numerical experiments, they demonstrate how the coupling influences the phase-space dynamics, leading to stretched exponential behavior in Lyapunov exponents and modified power-law decay in recurrence time statistics. This work underscores the importance of coupling parameters in shaping the dynamical properties of systems, a theme that resonates with our study of coupled cat maps, where the specific choice of coupling facilitates the exact determination of Lyapunov exponents (Sala et al., 2014).
+
+Another significant contribution to the understanding of chaotic systems is the work by Chiem (2025), which focuses on the uniform positivity of the Lyapunov exponent for $C^1$ monotone potentials generated by the cat map. Chiem's research demonstrates that, under sufficiently large coupling, the Lyapunov exponent remains uniformly positive across all energies. This finding is crucial for understanding the stability and chaotic nature of systems governed by cat maps, providing a theoretical foundation for analyzing the ergodic properties of such systems. Our research builds upon this by exploring how local perturbations in a lattice of coupled cat maps lead to diffusive transport in phase space, further elucidating the relationship between microscopic chaos and macroscopic diffusion (Chiem, 2025).
+
+The construction of Arnol'd cat map lattices, as explored by Axenides et al. (2022), offers another perspective on the chaotic dynamics of coupled systems. Their work delves into the spatio-temporal chaotic properties of cat map lattices, emphasizing the role of symplectic group elements in the evolution of linearly coupled maps. By drawing parallels between cat maps and Fibonacci sequences, they provide insights into the ergodicity and mixing properties of these systems. The study of inverted harmonic oscillators and the interplay between potential runaway behavior and toroidal compactification further enriches the understanding of chaotic dynamics. Our research complements these findings by providing a model where the diffusion process can be directly inferred from the underlying chaotic dynamics, offering a tangible example of how chaos influences transport properties in phase space (Axenides et al., 2022).
+
+In summary, the existing body of work on coupled dynamical systems, particularly those involving cat maps, provides a rich foundation for understanding the complex interplay between chaos, coupling, and ergodic properties. Our research contributes to this field by introducing a model for a lattice of coupled cat maps with a specific coupling choice that simplifies the description and allows for the exact determination of nontrivial quantities like Lyapunov exponents. By examining the spread of local perturbations and the resulting diffusive transport, we offer a novel perspective on how microscopic chaos can lead to macroscopic diffusion, thereby advancing the theoretical understanding of chaotic systems and their transport properties.
+    
+    Objective:
+    Evaluate this related works section with regard to the source abstract provided.
+    
+    Consider factors such as comprehensiveness, clarity of writing, relevance, etc. when making your decision.
+    If invalid citations occur, consider the information to be invalid (or even completely false).
+    
+    Exclusively respond with your choice of rating. For this purpose you can assign a score from 0-10 where 0 is worst and 10 is best.
+    
+    - **0**: Completely irrelevant, unclear, or inaccurate. 
+     *Example*: The section does not address the Source Abstract's topics and contains multiple invalid citations.
+      
+    - **5**: Somewhat relevant but lacks comprehensiveness, clarity or relevance.
+     *Example*: The section references a few relevant works but also includes irrelevant ones and has minor errors.
+      
+    - **10**: Exceptionally relevant, comprehensive, clear, and accurate.
+      *Example*: The section thoroughly addresses all key topics, includes all relevant works, and is clearly written with no factual errors.
+    
+    Do not include anything else in your output.
+    ","In recent years, the study of coupled dynamical systems has garnered significant attention, particularly in the context of understanding ergodic properties and chaotic behavior. A notable contribution in this domain is the work by Sala et al. (2014), which investigates the ergodic properties of two coupled Pomeau-Manneville maps. Their research highlights the anomalous statistical behavior of these systems, characterized by deviations from single intermittent maps. Through extensive numerical experiments, they demonstrate how the coupling influences the phase-space dynamics, leading to stretched exponential behavior in Lyapunov exponents and modified power-law decay in recurrence time statistics. This work underscores the importance of coupling parameters in shaping the dynamical properties of systems, a theme that resonates with our study of coupled cat maps, where the specific choice of coupling facilitates the exact determination of Lyapunov exponents (Sala et al., 2014).
+
+Another significant contribution to the understanding of chaotic systems is the work by Chiem (2025), which focuses on the uniform positivity of the Lyapunov exponent for $C^1$ monotone potentials generated by the cat map. Chiem's research demonstrates that, under sufficiently large coupling, the Lyapunov exponent remains uniformly positive across all energies. This finding is crucial for understanding the stability and chaotic nature of systems governed by cat maps, providing a theoretical foundation for analyzing the ergodic properties of such systems. Our research builds upon this by exploring how local perturbations in a lattice of coupled cat maps lead to diffusive transport in phase space, further elucidating the relationship between microscopic chaos and macroscopic diffusion (Chiem, 2025).
+
+The construction of Arnol'd cat map lattices, as explored by Axenides et al. (2022), offers another perspective on the chaotic dynamics of coupled systems. Their work delves into the spatio-temporal chaotic properties of cat map lattices, emphasizing the role of symplectic group elements in the evolution of linearly coupled maps. By drawing parallels between cat maps and Fibonacci sequences, they provide insights into the ergodicity and mixing properties of these systems. The study of inverted harmonic oscillators and the interplay between potential runaway behavior and toroidal compactification further enriches the understanding of chaotic dynamics. Our research complements these findings by providing a model where the diffusion process can be directly inferred from the underlying chaotic dynamics, offering a tangible example of how chaos influences transport properties in phase space (Axenides et al., 2022).
+
+In summary, the existing body of work on coupled dynamical systems, particularly those involving cat maps, provides a rich foundation for understanding the complex interplay between chaos, coupling, and ergodic properties. Our research contributes to this field by introducing a model for a lattice of coupled cat maps with a specific coupling choice that simplifies the description and allows for the exact determination of nontrivial quantities like Lyapunov exponents. By examining the spread of local perturbations and the resulting diffusive transport, we offer a novel perspective on how microscopic chaos can lead to macroscopic diffusion, thereby advancing the theoretical understanding of chaotic systems and their transport properties."

@@ -1,19 +1,22 @@
 """
-Demo of the simple workflow for related work generation.
-This script shows the step-by-step interaction with the LLM.
+Demo of the simple workflow for related work generation using Azure OpenAI's GPT-4o.
 """
 
-import os
-
-from citegeist.utils.llm_clients import GeminiClient
+import json
+from citegeist.utils.llm_clients import AzureClient
 from simple_agentic_workflow import SimpleWorkflow
-
+from citegeist.utils.helpers import load_api_key
 
 def main():
-    # Initialize the LLM client
-    llm_client = GeminiClient(
-        api_key=os.environ.get("GEMINI_API_KEY"),
-        model_name="gemini-2.0-flash-lite",
+    # Load API key from JSON file
+    api_key = load_api_key("../api_key.json")
+    
+    # Initialize the Azure OpenAI client with GPT-4o
+    llm_client = AzureClient(
+        api_key=api_key,
+        endpoint="https://cai-project.openai.azure.com",  # Update this if needed
+        deployment_id="gpt-4o",  # Update if your deployment has a different name
+        api_version="2024-02-15-preview",  # Make sure this is the correct API version
     )
     
     # Create the workflow
@@ -32,7 +35,7 @@ def main():
         methods, offering a promising direction for future advancements beyond traditional fine-tuning."""
     )
     
-    print("=== SIMPLE WORKFLOW DEMO ===")
+    print("=== SIMPLE WORKFLOW DEMO WITH AZURE GPT-4o ===")
     print("This demo shows how an LLM interacts with the arXiv search API")
     print()
     

@@ -70,9 +70,9 @@ If you wish to work on/modify the core citegeist code, please use the following 
 
 ### Customization
 Citegeist allows users to adjust three key parameters:
-- **Breadth**`n`: Number of candidate papers retrieved.
-- **Depth**`k`: Number of relevant pages extracted from each paper.
-- **Diversity**`w`: Balancing factor between similarity and variety in retrieved papers.
+- **Breadth**: Number of candidate papers retrieved.
+- **Depth**: Number of relevant pages extracted from each paper.
+- **Diversity**: Balancing factor between similarity and variety in retrieved papers.
 The parameters can either be set in the API calls in Python, or when using the Web-Interface.
 
 

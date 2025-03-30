@@ -61,6 +61,11 @@ If you wish to work on/modify the core citegeist code, please use the following 
    pip install -e .[dev] # if you're using uv: pip install -e ."[dev]" 
    ```
 
+4. Install pre-commit hooks
+   ```bash
+   pre-commit install
+   ```
+
 ## Usage
 
 ### Customization

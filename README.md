@@ -1,4 +1,3 @@
-> **⚡ TL;DR:** Citegeist is currently live at [https://citegeist.org](https://citegeist.org). Feel free to use it, but if you want to use the Python API, read the instructions below.
 # Citegeist: Automated Generation of Related Work Analysis on the arXiv Corpus
 
 Citegeist is an automated system that generates related work sections and citation-backed outputs using **Retrieval-Augmented Generation (RAG)** on the **arXiv corpus**. It leverages **embedding-based similarity search**, **multi-stage filtering**, and **summarization** to retrieve and synthesize the most relevant sources. Citegeist is designed to help researchers integrate factual and up-to-date references into their work.

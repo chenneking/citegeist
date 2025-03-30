@@ -153,4 +153,4 @@ Then, access the UI at `http://localhost`.
 
 
 ### Web-UI
-![Web-UI Overview](https://github.com/chenneking/citegeist/blob/main/img/citegeist.jpg?raw=true)
+![Web-UI Overview](/img/citegeist.png)

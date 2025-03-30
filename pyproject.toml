@@ -30,7 +30,8 @@ dependencies = [
 webapp = [
     "fastapi>=0.115.5,<0.116.0",
     "uvicorn>=0.32.1,<0.33.0",
-    "python-multipart>=0.0.18"
+    "python-multipart>=0.0.18",
+    "slowapi==0.1.9"
 ]
 # Dependencies required for core development activities in this repository
 dev = [

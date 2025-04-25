@@ -159,3 +159,18 @@ Then, access the UI at `http://localhost`.
 
 ### Web-UI
 ![Web-UI Overview](/img/citegeist.png)
+
+## 📖 Citation
+
+If you use **Citegeist** in your work or would like to reference it in research, please cite:
+
+```bibtex
+@misc{beger2025citegeistautomatedgenerationrelated,
+      title={Citegeist: Automated Generation of Related Work Analysis on the arXiv Corpus}, 
+      author={Claas Beger and Carl-Leander Henneking},
+      year={2025},
+      eprint={2503.23229},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2503.23229}, 
+}

@@ -53,7 +53,7 @@ plt.tight_layout()
 
 output_dir = "./out/plots"
 os.makedirs(output_dir, exist_ok=True)
-output_path = os.path.join(output_dir, "monthly_submissions_line_plot.png")
+output_path = os.path.join(output_dir, "monthly_submissions_line_plot.pdf")
 plt.savefig(output_path)
 plt.show()
 
@@ -96,7 +96,7 @@ for bar in bars:
 
 ax.grid(visible=True, which='major', linestyle='--', alpha=0.5)
 plt.tight_layout()
-output_path = os.path.join(output_dir, "cumulative_entries_by_category_histogram.png")
+output_path = os.path.join(output_dir, "cumulative_entries_by_category_histogram.pdf")
 plt.savefig(output_path)
 
 plt.show()

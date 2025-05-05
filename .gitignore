@@ -3,3 +3,5 @@ database.db
 .env
 .database.db.lock
 src/webapp/temporary
+dist
+*/*.egg-info

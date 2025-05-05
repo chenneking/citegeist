@@ -3,3 +3,4 @@ database.db
 .env
 .database.db.lock
 src/webapp/temporary
+api_key.json

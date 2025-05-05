@@ -1,7 +1,7 @@
 [project]
-name = "citegeist"
-version = "0.0.0"
-description = "Generates a relate work analysis including all used citations."
+name = "citegeist-arxiv"
+version = "0.0.1"
+description = "Generates a related work analysis including all used citations."
 authors = [
     {name = "Carl-Leander Henneking", email = "ch2273@cornell.edu"},
     {name = "Claas Beger", email = "cbb89@cornell.edu"}
@@ -30,7 +30,8 @@ dependencies = [
 webapp = [
     "fastapi>=0.115.5,<0.116.0",
     "uvicorn>=0.32.1,<0.33.0",
-    "python-multipart>=0.0.18"
+    "python-multipart>=0.0.18",
+    "slowapi==0.1.9"
 ]
 # Dependencies required for core development activities in this repository
 dev = [
@@ -65,6 +66,20 @@ exclude = '''
 
 [tool.isort]
 profile = "black"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = [
+    "citegeist.database*",
+    "webapp*",
+    "**/__pycache__",
+    "**/.DS_Store",
+    "**/.gitignore",
+    "tests*",
+]
+
+[tool.setuptools]
+include-package-data = false
 
 [build-system]
 requires = ["setuptools", "wheel"]

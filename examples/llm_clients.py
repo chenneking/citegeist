@@ -11,7 +11,7 @@ from citegeist.utils.llm_clients import (
     AzureClient,
     GeminiClient,
     LLMClient,
-    OpenAIClient,
+    OpenAIClient, MistralClient,
 )
 
 # Load environment variables from .env file
@@ -96,9 +96,27 @@ def openai() -> None:
         )
     )
 
+def mistral() -> None:
+    """
+    Example use of the MistralClient.
+    """
+    client: LLMClient = MistralClient(api_key=os.getenv("MISTRAL_API_KEY"), model_name="mistral-large-latest")
+    print("Using Mistral:")
+    print(client.get_completion("Hello World!"))
+    print(
+        client.get_chat_completion(
+            [
+                {"role": "user", "content": "Hello World!"},
+                {"role": "assistant", "content": "Hi! Great to meet you!"},
+                {"role": "user", "content": "What does the dog say?"},
+            ]
+        )
+    )
+
+
 
 if __name__ == "__main__":
     # Depending on the model you use, you will have to set the corresponding environment variable with the api key.
     # If you don't want to set it manually, you have the choice of placing an .env file in the project root folder.
     # Although we wouldn't recommend this, git ignores these files via .gitignore.
-    gemini()
+    mistral()

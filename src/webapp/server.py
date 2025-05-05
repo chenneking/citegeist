@@ -2,7 +2,7 @@ import asyncio
 import logging
 import os
 import uuid
-from typing import Any, Dict, Optional
+from typing import Annotated, Any, Dict, Optional
 
 from dotenv import load_dotenv
 from fastapi import (
@@ -16,7 +16,10 @@ from fastapi import (
 )
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, confloat, conint
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 from citegeist import Generator
 from citegeist.utils.citations import (
@@ -55,7 +58,10 @@ generator = Generator(
 )
 
 # FastAPI logic
+limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(title="Citegeist", summary="Delivers a related works section and all the included citations.")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Mount static files directory for assets (CSS, JS)
 app.mount("/static", StaticFiles(directory="./static"), name="static")
@@ -82,25 +88,25 @@ async def maintenance_mode_middleware(request: Request, call_next):
 
 
 @app.get("/")
-def frontpage():
+@limiter.limit("60/minute", error_message="Too many requests. Try again later.")
+def frontpage(request: Request):
     return FileResponse("static/index.html")
 
 
 @app.post("/create-job")
+@limiter.limit("10/day", error_message="Too many requests. Try again later.")
 async def create_job(
-    breadth: int = Form(...),
-    depth: int = Form(...),
-    diversity: float = Form(...),
-    abstract: Optional[str] = Form(None),
-    pdf: Optional[UploadFile] = File(None),
+    request: Request,
+    breadth: Annotated[conint(ge=5, le=20), Form()],
+    depth: Annotated[conint(ge=1, le=5), Form()],
+    diversity: Annotated[confloat(ge=0.0, le=1.0), Form()],
+    abstract: Annotated[Optional[str], Form(description="Provide either an abstract or a PDF")] = None,
+    pdf: Annotated[Optional[UploadFile], File(description="Provide either a PDF or an abstract")] = None,
     background_tasks: BackgroundTasks = None,
 ):
     # Validate input
     if not abstract and not pdf:
         raise HTTPException(status_code=400, detail="Either abstract text or PDF file must be provided")
-
-    if not (5 <= breadth <= 20) or not (1 <= depth <= 5) or not (0 <= diversity <= 1):
-        raise HTTPException(status_code=400, detail="Invalid breadth, depth, or diversity value")
 
     # Create a new job
     job_id: uuid = str(uuid.uuid4())
@@ -124,7 +130,8 @@ async def create_job(
 
 
 @app.get("/status/{job_id}")
-def status(job_id: str):
+@limiter.limit("80/minute", error_message="Too many requests. Try again later.")
+def status(request: Request, job_id: str):
     if job_id not in jobs:
         raise HTTPException(status_code=404, detail="Job not found")
 
@@ -141,6 +148,7 @@ def status(job_id: str):
 
 
 async def process_job(
+    request: Request,
     job_id: str,
     breadth: int,
     depth: int,

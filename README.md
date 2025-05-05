@@ -1,8 +1,9 @@
+> **⚡ TL;DR:** Citegeist is currently live at [https://citegeist.org](https://citegeist.org). Feel free to use it, but if you want to use the Python API, read the instructions below.
 # Citegeist: Automated Generation of Related Work Analysis on the arXiv Corpus
 
 Citegeist is an automated system that generates related work sections and citation-backed outputs using **Retrieval-Augmented Generation (RAG)** on the **arXiv corpus**. It leverages **embedding-based similarity search**, **multi-stage filtering**, and **summarization** to retrieve and synthesize the most relevant sources. Citegeist is designed to help researchers integrate factual and up-to-date references into their work.
 
-A preprint describing the system in detail can be found here: [arXiv link (todo)]()
+A preprint describing the system in detail can be found here: [arXiv](https://arxiv.org/abs/2503.23229)
 
 
 ## Features
@@ -21,7 +22,7 @@ A preprint describing the system in detail can be found here: [arXiv link (todo)
 ### Setup (Regular Users)
 1. Install the citgeist package.
     ```bash
-    pip install citegeist
+    pip install citegeist-arxiv
     ```
 2. Setup the Milvus database. As of March 2025, we provide a hosted version of this database that you can use for free (see usage instructions below). If we discontinue this, please refer to the additional information provided in the respective sections below.
 3. Run the pipeline.
@@ -60,13 +61,18 @@ If you wish to work on/modify the core citegeist code, please use the following 
    pip install -e .[dev] # if you're using uv: pip install -e ."[dev]" 
    ```
 
+4. Install pre-commit hooks
+   ```bash
+   pre-commit install
+   ```
+
 ## Usage
 
 ### Customization
 Citegeist allows users to adjust three key parameters:
-- **Breadth**`n`: Number of candidate papers retrieved.
-- **Depth**`k`: Number of relevant pages extracted from each paper.
-- **Diversity**`w`: Balancing factor between similarity and variety in retrieved papers.
+- **Breadth**: Number of candidate papers retrieved.
+- **Depth**: Number of relevant pages extracted from each paper.
+- **Diversity**: Balancing factor between similarity and variety in retrieved papers.
 The parameters can either be set in the API calls in Python, or when using the Web-Interface.
 
 
@@ -119,7 +125,7 @@ depth = 2
 diversity = 0.0
 related_works, citations = generator.generate_related_work(abstract, breadth, depth, diversity)
 ```
-Please refer to examples/ for more usage examples.
+Please refer to [examples](/examples) for more usage examples.
 
 ### Running the Web Interface
 Beyond the python interface, citegeist also provides a **web-based interface** to input abstracts or upload full papers. 
@@ -152,4 +158,19 @@ Then, access the UI at `http://localhost`.
 
 
 ### Web-UI
-![Web-UI Overview](https://github.com/chenneking/citegeist/blob/main/img/citegeist.jpg?raw=true)
+![Web-UI Overview](/img/citegeist.png)
+
+## 📖 Citation
+
+If you use **Citegeist** in your work or would like to reference it in research, please cite:
+
+```bibtex
+@misc{beger2025citegeistautomatedgenerationrelated,
+      title={Citegeist: Automated Generation of Related Work Analysis on the arXiv Corpus}, 
+      author={Claas Beger and Carl-Leander Henneking},
+      year={2025},
+      eprint={2503.23229},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2503.23229}, 
+}

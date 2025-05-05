@@ -22,7 +22,7 @@ A preprint describing the system in detail can be found here: [arXiv](https://ar
 ### Setup (Regular Users)
 1. Install the citgeist package.
     ```bash
-    pip install citegeist
+    pip install citegeist-arxiv
     ```
 2. Setup the Milvus database. As of March 2025, we provide a hosted version of this database that you can use for free (see usage instructions below). If we discontinue this, please refer to the additional information provided in the respective sections below.
 3. Run the pipeline.

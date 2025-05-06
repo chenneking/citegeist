@@ -40,8 +40,9 @@ ax.set_xlabel('Breadth', fontsize=16)
 ax.set_ylabel('Score', fontsize=16)
 ax.set_ylim(0, 10)
 ax.legend(loc='lower right', fontsize=14)
+ax.grid(True, linestyle='--', alpha=0.7)
 
-# Plot 2: Depth
+# Plot 2: Depth 
 ax = axes[1]
 ax.set_title("Depth vs Scores", fontsize=20)
 ax.plot(agg_data['depth']['depth'], agg_data['depth']['quality_score'],
@@ -53,6 +54,7 @@ ax.set_xlabel('Depth', fontsize=16)
 ax.set_ylabel('Score', fontsize=16)
 ax.set_ylim(0, 10)
 ax.legend(loc='lower right', fontsize=14)
+ax.grid(True, linestyle='--', alpha=0.7)
 
 # Plot 3: Diversity
 ax = axes[2]
@@ -66,6 +68,7 @@ ax.set_xlabel('Diversity', fontsize=16)
 ax.set_ylabel('Score', fontsize=16)
 ax.set_ylim(0, 10)
 ax.legend(loc='lower right', fontsize=14)
+ax.grid(True, linestyle='--', alpha=0.7)
 
 # Adjust layout for better visualization
 plt.tight_layout()

@@ -47,7 +47,7 @@ ax.fill_between(
 )
 
 plt.xticks(rotation=45, fontsize = 14)
-plt.yticks(fontsize = 14)
+plt.yticks(fontsize=14)
 ax.legend(fontsize=14)
 
 plt.tight_layout()

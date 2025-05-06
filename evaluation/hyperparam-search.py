@@ -7,17 +7,17 @@ import os
 
 BREADTH_VALUES = [5, 10, 15, 20]
 DEPTH_VALUES = [1, 2, 3, 4, 5]
-DIVERSITY_VALUES = [0.0, 0.33, 0.66, 1.0]
+DIVERSITY_VALUES = [0.33, 0.66, 1.0]
 
 DEFAULT_BREADTH = 10
 DEFAULT_DEPTH = 2
 DEFAULT_DIVERSITY = 0.0
 
-OUTPUT_FILE = "/Users/carl/PycharmProjects/citegeist/evaluation/out/hyperparam-search-2.csv"
+OUTPUT_FILE = "/Users/carl/PycharmProjects/citegeist/evaluation/out/hyperparam-search-3.csv"
 RESULTS = []
 
 source_abstract = f"""\
-Reverse thinking plays a crucial role in human reasoning. Humans can reason not only from a problem to a solution but also in reverse, i.e., start from the solution and reason towards the problem. This often enhances overall reasoning performance as it enables consistency checks between their forward and backward thinking. To enable Large Language Models (LLMs) to perform reverse thinking, we introduce Reverse-Enhanced Thinking (REVTHINK), a framework composed of data augmentation and learning objectives. In REVTHINK, we augment the dataset by collecting structured forward-backward reasoning from a teacher model, consisting of: (1) the original question, (2) forward reasoning, (3) backward question, and (4) backward reasoning. We then employ three objectives to train a smaller student model in a multi-task learning fashion: (a) generate forward reasoning from a question, (b) generate a backward question from a question, and (c) generate backward reasoning from the backward question. Experiments across 12 datasets covering commonsense, math, and logical reasoning show an average 13.53% improvement over the student model’s zero-shot performance and a 6.84% improvement over the strongest knowledge distillation baselines. Moreover, our method demonstrates sample efficiency – using only 10% of the correct forward reasoning from the training data, it outperforms a standard fine-tuning method trained on 10× more forward reasoning. REVTHINK also exhibits strong generalization to out-of-distribution held-out datasets.
+The Transformer architecture is widely regarded as the most powerful tool for natural language processing, but due to the high number of complex operations, it inherently faces the issue of extensive energy consumption. To address this issue, we consider spiking neural networks (SNN), an energy-efficient alternative to common artificial neural networks (ANN) due to their naturally event-driven way of processing information. However, this inherently makes them difficult to train, which is why many SNN-related models circumvent this issue through the conversion of pre-trained ANN networks. More recently, attempts have been made to create directly trained SNN-based adaptions of the Transformer model structure. While the results showed great promise, their sole application field was computer vision and based on incorporating encoder blocks. In this paper, we propose SpikeDecoder, a fully spike-based low-power version of the Transformer decoder-only model, for application on the field of natural language processing. We further analyze the impact of exchanging different blocks of the ANN model with their spike-based alternatives to identify pain points and significant sources of performance loss. Similarly, we extend our investigation to the role of residual connections and the selection of spike-compatible normalization techniques. Besides the work on the model architecture, we formulate and compare different embedding methods to project text data into spike-range. Finally, it will be demonstrated that the spiking decoder block reduces the theoretical energy consumption by 87 to 93 percent compared to the power required for a regular encoder block.
 """
 
 def generate_relevance_evaluation_prompt(source_abstract: str, target_abstract: str) -> str:
@@ -130,55 +130,53 @@ generator: Generator = Generator(
     api_version="2024-10-21",
 )
 
-
-
 # Vary breadth
-# print("Varying breadth...")
-# for breadth in BREADTH_VALUES:
-#     result = generator.generate_related_work(abstract=source_abstract, breadth=breadth, depth=DEFAULT_DEPTH, diversity=DEFAULT_DIVERSITY)
-#     related_works: str = result["related_works"]
-#     citations: list[str] = result["citations"]
-#
-#     # Calculate eval results
-#     quality_score = evaluate_related_work_section(client, source_abstract, result["related_works"])
-#     relevance_scores = []
-#     for citation in citations:
-#         try:
-#             match = re.search(r"(?<=arXiv:)\d+\.[\d|\w]+(?=\. )", citation)
-#             arxiv_id = match.group(0)
-#             paper_abstract = get_arxiv_abstract(arxiv_id)
-#             if not paper_abstract.startswith("No paper found"):
-#                 relevance_score = evaluate_paper_relevance(client, source_abstract, paper_abstract)
-#                 relevance_scores.append(relevance_score)
-#             else:
-#                 print(f"ERROR finding abstract for {arxiv_id}: {e}")
-#                 relevance_scores.append(0.0)
-#         except Exception as e:
-#             print(f"ERROR extracting arxiv id: {e}")
-#             relevance_scores.append(0.0)
-#
-#     avg_relevance_score = statistics.mean(relevance_scores)
-#     std_relevance_score = statistics.stdev(relevance_scores) if len(relevance_scores) > 1 else 0.0
-#     relevance_score_string = "|".join([str(f) for f in relevance_scores])
-#     # Store eval results
-#     RESULTS.append({
-#         "breadth": breadth,
-#         "depth": DEFAULT_DEPTH,
-#         "diversity": DEFAULT_DIVERSITY,
-#         "quality_score": quality_score,
-#         "avg_relevance_score": avg_relevance_score,
-#         "std_relevance_score": std_relevance_score,
-#         "relevance_scores": relevance_score_string,
-#     })
-#     print(f"Breadth: {breadth}, Quality Score: {quality_score}, Average Relevance Score: {avg_relevance_score}, Standard Deviation: {std_relevance_score}, Relevance Scores: {relevance_score_string}")
-#
-# print("Completed breadth experiments. Saving results...")
-# # intermediate save of results
-# with open(OUTPUT_FILE, "w") as f:
-#     f.write("breadth,depth,diversity,quality_score,avg_relevance_score,std_relevance_score,relevance_scores\n")
-#     for result in RESULTS:
-#         f.write(f"{result['breadth']},{result['depth']},{result['diversity']},{result['quality_score']},{result['avg_relevance_score']},{result['std_relevance_score']},{result['relevance_scores']}\n")
-# print("Intermediate results saved.")
+print("Varying breadth...")
+for breadth in BREADTH_VALUES:
+    result = generator.generate_related_work(abstract=source_abstract, breadth=breadth, depth=DEFAULT_DEPTH, diversity=DEFAULT_DIVERSITY)
+    related_works: str = result["related_works"]
+    citations: list[str] = result["citations"]
+
+    # Calculate eval results
+    quality_score = evaluate_related_work_section(client, source_abstract, result["related_works"])
+    relevance_scores = []
+    for citation in citations:
+        try:
+            match = re.search(r"(?<=arXiv:)\d+\.[\d|\w]+(?=\. )", citation)
+            arxiv_id = match.group(0)
+            paper_abstract = get_arxiv_abstract(arxiv_id)
+            if not paper_abstract.startswith("No paper found"):
+                relevance_score = evaluate_paper_relevance(client, source_abstract, paper_abstract)
+                relevance_scores.append(relevance_score)
+            else:
+                print(f"ERROR finding abstract for {arxiv_id}: {e}")
+                relevance_scores.append(0.0)
+        except Exception as e:
+            print(f"ERROR extracting arxiv id: {e}")
+            relevance_scores.append(0.0)
+
+    avg_relevance_score = statistics.mean(relevance_scores)
+    std_relevance_score = statistics.stdev(relevance_scores) if len(relevance_scores) > 1 else 0.0
+    relevance_score_string = "|".join([str(f) for f in relevance_scores])
+    # Store eval results
+    RESULTS.append({
+        "breadth": breadth,
+        "depth": DEFAULT_DEPTH,
+        "diversity": DEFAULT_DIVERSITY,
+        "quality_score": quality_score,
+        "avg_relevance_score": avg_relevance_score,
+        "std_relevance_score": std_relevance_score,
+        "relevance_scores": relevance_score_string,
+    })
+    print(f"Breadth: {breadth}, Quality Score: {quality_score}, Average Relevance Score: {avg_relevance_score}, Standard Deviation: {std_relevance_score}, Relevance Scores: {relevance_score_string}")
+
+print("Completed breadth experiments. Saving results...")
+# intermediate save of results
+with open(OUTPUT_FILE, "w") as f:
+    f.write("breadth,depth,diversity,quality_score,avg_relevance_score,std_relevance_score,relevance_scores\n")
+    for result in RESULTS:
+        f.write(f"{result['breadth']},{result['depth']},{result['diversity']},{result['quality_score']},{result['avg_relevance_score']},{result['std_relevance_score']},{result['relevance_scores']}\n")
+print("Intermediate results saved.")
 
 # Vary depth
 print("Varying depth...")

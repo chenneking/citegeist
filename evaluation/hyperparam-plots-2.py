@@ -41,6 +41,7 @@ ax.set_ylabel('Score', fontsize=16)
 ax.set_ylim(0, 10)
 ax.legend(loc='lower right', fontsize=14)
 ax.grid(True, linestyle='--', alpha=0.7)
+ax.tick_params(labelsize=16)
 
 # Plot 2: Depth 
 ax = axes[1]
@@ -55,6 +56,7 @@ ax.set_ylabel('Score', fontsize=16)
 ax.set_ylim(0, 10)
 ax.legend(loc='lower right', fontsize=14)
 ax.grid(True, linestyle='--', alpha=0.7)
+ax.tick_params(labelsize=16)
 
 # Plot 3: Diversity
 ax = axes[2]
@@ -69,6 +71,7 @@ ax.set_ylabel('Score', fontsize=16)
 ax.set_ylim(0, 10)
 ax.legend(loc='lower right', fontsize=14)
 ax.grid(True, linestyle='--', alpha=0.7)
+ax.tick_params(labelsize=16)
 
 # Adjust layout for better visualization
 plt.tight_layout()

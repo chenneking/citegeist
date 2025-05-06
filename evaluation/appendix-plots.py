@@ -26,7 +26,7 @@ ax.scatter(
 ax.text(
         max_month, max_value / 1000 + 1,
         f'Max: {max_value/1000:.1f}k ({max_month.strftime("%m/%Y")})',
-        fontsize=12, ha='right', color='black'
+        fontsize=14, ha='right', color='black'
 )
 
 plt.ylim(0, (df['submissions'].max() / 1000) + 3)
@@ -35,9 +35,9 @@ plt.xlim(xlim[0], xlim[1]-400)
 
 ax.grid(visible=True, which='major', linestyle='--', alpha=0.5)
 
-ax.set_title("Monthly Submissions Over Time", fontsize=16)
-ax.set_xlabel("Month", fontsize=12)
-ax.set_ylabel("Submissions (in thousands)", fontsize=12)
+ax.set_title("Monthly Submissions Over Time", fontsize=20)
+ax.set_xlabel("Month", fontsize=16)
+ax.set_ylabel("Submissions (in thousands)", fontsize=16)
 
 ax.fill_between(
     df['month'],
@@ -46,8 +46,9 @@ ax.fill_between(
     alpha=0.3
 )
 
-plt.xticks(rotation=45)
-ax.legend(fontsize=12)
+plt.xticks(rotation=45, fontsize = 14)
+plt.yticks(fontsize = 14)
+ax.legend(fontsize=14)
 
 plt.tight_layout()
 
@@ -73,15 +74,15 @@ bars = ax.bar(
     df['Count'],
     color=bar_colors
 )
-ax.set_title("Cumulative Entries by Category", fontsize=16)
-ax.set_xlabel("Category", fontsize=12)
-ax.set_ylabel("Entries (in thousands)", fontsize=12)
+ax.set_title("Cumulative Entries by Category", fontsize=20)
+ax.set_xlabel("Category", fontsize=16)
+ax.set_ylabel("Entries (in thousands)", fontsize=16)
 
 
-plt.xticks(rotation=45, fontsize=10)
+plt.xticks(rotation=45, fontsize=14)
 ax.set_yticks(ax.get_yticks())
 ax.set_yticklabels([f"{int(tick / 1000)}" for tick in ax.get_yticks()])
-
+plt.yticks(fontsize=14)
 for bar in bars:
     height = bar.get_height()
     ax.text(
@@ -90,7 +91,7 @@ for bar in bars:
         f"{height / 1000:.1f}k",
         ha='center',
         va='bottom',
-        fontsize=10
+        fontsize=14
     )
 
 

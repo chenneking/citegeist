@@ -273,39 +273,6 @@ class Generator:
         )
 
 
-def generate_related_work(
-    abstract: str,
-    breadth: int,
-    depth: int,
-    diversity: float,
-    topic_model=None,
-    embedding_model=None,
-    client=None,
-    llm_client=None,
-    api_version=None,
-    status_callback=None,
-) -> dict[str, str | list[str]]:
-    """
-    Generate a related work section based on an abstract.
-
-    Args:
-        abstract: The input abstract text
-        breadth: Number of papers to consider
-        depth: Number of pages to extract from each paper
-        diversity: Diversity factor for paper selection (0-1)
-        topic_model: Optional pre-initialized BERTopic model
-        embedding_model: Optional pre-initialized SentenceTransformer model
-        client: Optional pre-initialized MilvusClient
-        llm_client: Optional pre-initialized LLM client
-        api_version: API version (for Azure compatibility)
-        status_callback: Optional callback function that updates job status
-
-    Returns:
-        Dictionary with 'related_works' text and 'citations' list
-    """
-    pass
-
-
 def generate_answer_to_scientific_question(
     question: str,
     breadth: int,

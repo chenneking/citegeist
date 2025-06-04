@@ -119,4 +119,4 @@ if __name__ == "__main__":
     # Depending on the model you use, you will have to set the corresponding environment variable with the api key.
     # If you don't want to set it manually, you have the choice of placing an .env file in the project root folder.
     # Although we wouldn't recommend this, git ignores these files via .gitignore.
-    mistral()
+    azure()

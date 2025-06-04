@@ -22,7 +22,7 @@ class AzureClient(LLMClient):
 
         Args:
             api_key: Azure API key
-            endpoint: Azure API endpoint (without https:// or .openai.azure.com)
+            endpoint: Azure API endpoint
             deployment_id: Deployment ID for completions/chat (equivalent to model_name)
             api_version: API version to use
         """

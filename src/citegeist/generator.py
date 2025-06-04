@@ -178,29 +178,6 @@ class Generator:
             status_callback,
         )
 
-    # TODO: remove this in final version. just used for testing of webapp.
-    async def dummy(self, status_callback: Callable) -> dict[str, str | list[str]]:
-        time = 3.0
-        import asyncio
-
-        status_callback(1, "Initializing.")
-        await asyncio.sleep(time)
-        status_callback(2, "Querying Vector DB for matches.")
-        await asyncio.sleep(time)
-        status_callback(3, "Retrieved 60 papers from the DB.")
-        await asyncio.sleep(time)
-        status_callback(4, "Selected 40 papers for the longlist.")
-        await asyncio.sleep(time)
-        status_callback(5, "Generated page embeddings for 39 papers.")
-        await asyncio.sleep(time)
-        status_callback(6, "Selected 15 papers for the shortlist.")
-        await asyncio.sleep(time)
-        status_callback(7, "Generated summaries of papers (and their pages).")
-        await asyncio.sleep(time)
-        status_callback(8, "Generated related work section with 10 citations.")
-
-        return {"related_works": "testing1223", "citations": ["a", "b", "c"]}
-
 
 def generate_related_work(
     abstract: str,
@@ -336,7 +313,7 @@ def generate_related_work(
             sentence_count=5,
         )
 
-        # Use the appropriate LLM client based on provider
+        # Use the appropriate LLM client based on the provider
         response: str = llm_client.get_completion(prompt)
         obj["summary"] = response
         obj["citation"] = get_arxiv_citation(arxiv_id)

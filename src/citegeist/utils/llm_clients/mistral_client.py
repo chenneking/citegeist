@@ -66,7 +66,12 @@ class MistralClient(LLMClient):
             request_url = "https://api.mistral.ai/v1/chat/completions"
 
             response = requests.post(url=request_url, headers=headers, json=payload)
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except requests.exceptions.HTTPError as e:
+                raise RuntimeError(
+                    "Mistral API call failed with status code {}: {}".format(response.status_code, response.reason)
+                ) from e
             reply = response.json()
 
             return reply["choices"][0]["message"]["content"]

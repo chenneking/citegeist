@@ -81,7 +81,12 @@ class AzureClient(LLMClient):
             )
 
             response = requests.post(url=request_url, headers=headers, json=payload)
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except requests.exceptions.HTTPError as e:
+                raise RuntimeError(
+                    "Azure API call failed with status code {}: {}".format(response.status_code, response.reason)
+                ) from e
             reply = response.json()
 
             return reply["choices"][0]["message"]["content"]

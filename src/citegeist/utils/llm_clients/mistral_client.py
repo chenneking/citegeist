@@ -69,9 +69,7 @@ class MistralClient(LLMClient):
             try:
                 response.raise_for_status()
             except requests.exceptions.HTTPError as e:
-                raise RuntimeError(
-                    "Mistral API call failed with status code {}: {}".format(response.status_code, response.reason)
-                ) from e
+                raise RuntimeError(f"Mistral API call failed with status code {response.status_code}") from e
             reply = response.json()
 
             return reply["choices"][0]["message"]["content"]

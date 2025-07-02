@@ -68,9 +68,7 @@ class GeminiClient(LLMClient):
             try:
                 response.raise_for_status()
             except requests.exceptions.HTTPError as e:
-                raise RuntimeError(
-                    "Gemini API call failed with status code {}: {}".format(response.status_code, response.reason)
-                ) from e
+                raise RuntimeError(f"Gemini API call failed with status code {response.status_code}") from e
             reply = response.json()
 
             return reply["candidates"][0]["content"]["parts"][0]["text"]

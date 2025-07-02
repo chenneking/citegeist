@@ -112,6 +112,8 @@ async def create_job(
     job_id: uuid = str(uuid.uuid4())
     jobs[job_id] = JobStatus(status="created")
 
+    logger.info(f"Created job {job_id}")
+
     # Read PDF content if provided
     pdf_pages: list[str] = None
     if pdf:

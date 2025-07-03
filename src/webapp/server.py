@@ -158,6 +158,8 @@ async def process_job(
     abstract: Optional[str] = None,
     pdf_pages: Optional[list[str]] = None,
 ):
+    logger.info(f"process_job called with job_id={job_id} ({type(job_id)}), breadth={breadth}")
+
     def status_callback(step, status_text):
         progress: int = int((step / 8) * 100)
         jobs[job_id].progress = progress

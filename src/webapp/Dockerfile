@@ -24,4 +24,4 @@ WORKDIR /app/src/webapp
 EXPOSE 80
 
 # Start uvicorn in HTTP mode on port 80
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "80", "--log-level", "info"]

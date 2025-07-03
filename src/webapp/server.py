@@ -150,7 +150,7 @@ def status(request: Request, job_id: str):
 
 
 async def process_job(
-    request: Request,
+    # request: Request,
     job_id: str,
     breadth: int,
     depth: int,
